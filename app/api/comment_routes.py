@@ -20,6 +20,10 @@ def get_user_comments(page):
     PER_PAGE=1
     comments = Comment.query.join(User).filter(User.id==current_user.id).order_by(Comment.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
 
+    # If there are no comments, then send a response
+    if len([comment for comment in comments]) < 1:
+        return jsonify({"Message": "You currently have no comments."})
+
     return jsonify({"comments": [comment.to_dict() for comment in comments.items]})
 
 # I MOVED THIS ROUTE TO QUESTION_ROUTES TO MAKE RESTFUL
@@ -98,6 +102,9 @@ def update_comment(id):
 
             if not comment_text:
                 return jsonify({"Error": "Please provide a comment"})
+            
+            if len(comment_text) < 15:
+                return jsonify({"Error": "Comment must be a minimum of 15 characters."})
             
             # Set the updated comment on original comment
             comment.comment_text = data["comment_text"]
