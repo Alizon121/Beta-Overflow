@@ -17,7 +17,9 @@ class Question(db.Model):
         return {
             'id': self.id,
             'question_text': self.question_text,
-            'created_by': self.created_by
+            'user_id': self.user_id,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }
     
     # Add relationships here:
