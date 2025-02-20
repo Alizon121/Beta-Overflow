@@ -9,17 +9,18 @@ from ..forms.comment_form import CommentForm
 
 question_routes = Blueprint('questions', __name__)
 
-@question_routes.route('/', methods=["GET"])
-def all_questions():
+@question_routes.route('/<int:page>', methods=["GET"])
+def all_questions(page):
     '''
         Query for all questions when a user is NOT logged-in or logged-in
     '''
-    page = request.args.get('page', 1, type=int)
     per_page = 5
     questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
-    return {'questions': [question.to_dict() for question in questions.items]}
+    if questions:
+        return {'questions': [question.to_dict() for question in questions.items]}
+    return jsonify({"Error": "Unable to retrieve questions"}), 404
 
-@question_routes.route("/", methods=["GET", "POST"])
+@question_routes.route("/", methods=["GET","POST"])
 @login_required
 def add_question():
     '''

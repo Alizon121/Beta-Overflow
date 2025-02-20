@@ -8,15 +8,15 @@ from app.models import db
 
 comment_routes = Blueprint('comments', __name__)
 
-@comment_routes.route("/", methods=["GET"])
+@comment_routes.route("/<int:page>", methods=["GET"])
 @login_required
-def get_user_comments():
+def get_user_comments(page):
     '''
         Query for all the comments for an authorized user
     '''
 
     # Query for all comments that have the current user's id
-    page = request.args.get('page', 1, type=int)
+    # page = request.args.get('page', 1, type=int)
     PER_PAGE=1
     comments = Comment.query.join(User).filter(User.id==current_user.id).order_by(Comment.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
 
