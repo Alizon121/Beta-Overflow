@@ -9,7 +9,7 @@ class Question(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.Text, nullable=False)
-    created_by = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)
 
@@ -17,7 +17,9 @@ class Question(db.Model):
         return {
             'id': self.id,
             'question_text': self.question_text,
-            'created_by': self.created_by
+            'user_id': self.user_id,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }
     
     # Add relationships here:
