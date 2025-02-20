@@ -8,17 +8,21 @@ from app.models import db
 
 comment_routes = Blueprint('comments', __name__)
 
-@comment_routes.route("/", methods=["GET"])
+@comment_routes.route("/<int:page>", methods=["GET"])
 @login_required
-def get_user_comments():
+def get_user_comments(page):
     '''
         Query for all the comments for an authorized user
     '''
 
     # Query for all comments that have the current user's id
-    page = request.args.get('page', 1, type=int)
+    # page = request.args.get('page', 1, type=int)
     PER_PAGE=1
     comments = Comment.query.join(User).filter(User.id==current_user.id).order_by(Comment.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
+
+    # If there are no comments, then send a response
+    if len([comment for comment in comments]) < 1:
+        return jsonify({"Message": "You currently have no comments."})
 
     return jsonify({"comments": [comment.to_dict() for comment in comments.items]})
 
@@ -98,6 +102,9 @@ def update_comment(id):
 
             if not comment_text:
                 return jsonify({"Error": "Please provide a comment"})
+            
+            if len(comment_text) < 15:
+                return jsonify({"Error": "Comment must be a minimum of 15 characters."})
             
             # Set the updated comment on original comment
             comment.comment_text = data["comment_text"]
