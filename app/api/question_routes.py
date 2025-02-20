@@ -69,3 +69,39 @@ def delete_question(id):
         return jsonify({"Error": "User is not authorized"}), 403
     
 
+@question_routes.route("/update/<int:id>", methods=["PUT"])
+@login_required
+def update_question(id):
+    '''
+        Query for a question, check for authorized user, and update question if authorized
+    '''
+
+    # Query for the question
+    question = Question.query.get(id)
+
+    if not question:
+        return jsonify({"Error": "Question was not found"}), 404
+    
+    # Authorize the user:
+    if current_user.id == question.user_id:
+        
+        # Get data from the json request
+        data = request.get_json()
+
+        if "question_text" in data:
+            question_text=data["question_text"].strip()
+
+            if not question_text:
+                return jsonify({"Error": "Question must be a minimum of 25 characters"})
+
+            # Set the updated question on the original question
+            question.question_text=data["question_text"]
+
+        # Commit change to db
+        db.session.commit()
+
+        # return jsonify reponse:
+        return jsonify({"question": question.to_dict()})
+    
+    # return jsonify error message if user is not authorized
+    return jsonify({"Error": "User is not authorized"}), 403
