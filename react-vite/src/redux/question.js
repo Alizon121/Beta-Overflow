@@ -49,8 +49,8 @@ export const thunkCreateQuestion = (question) => async dispatch => {
     }
 }
 
-export const thunkLoadUserQuestions = (id) => async dispatch => {
-    const response = await csrfFetch(`/api/questions/users/${id}`)
+export const thunkLoadUserQuestions = (page) => async dispatch => {
+    const response = await csrfFetch(`/api/questions/users/${page}`)
 
     if (response.ok) {
         const data = await response.json()

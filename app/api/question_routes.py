@@ -28,19 +28,22 @@ def all_questions(page):
         'allQuestions': len(all_questions)
         }
 
-@question_routes.route("/users/<int:id>")
+@question_routes.route("/users/<int:page>")
 @login_required
-def get_user_questions(id):
-    
-    # Query for the user's questions
-    user_questions = User.query.get(id).question
+def get_user_questions( page):
+    PER_PAGE=3
+    user_questions = Question.query.filter_by(user_id=current_user.id).order_by(Question.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
+    user_all_questions = User.query.get(current_user.id).question
 
     # Check if user does not have questions
-    if len(user_questions) < 1:
-        return jsonify({"Message": "User currently does not have any questions."})
+    if len(user_questions.items) < 1:
+        return jsonify({"Message": "User currently does not have any questions.",
+                        "questions": [question.to_dict() for question in user_questions.items]
+                        })
     
     return jsonify({
-        "questions": [question.to_dict() for question in user_questions]
+        "questions": [question.to_dict() for question in user_questions.items],
+        "allUserQuestions": len(user_all_questions)
     })
 
 
