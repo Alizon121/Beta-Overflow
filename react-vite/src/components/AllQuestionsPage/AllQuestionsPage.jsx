@@ -1,50 +1,57 @@
 import "./AllQuestions.css"
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { thunkLoadAllQuestions } from "../../redux/question"
 
-function AllQuestionsPage(){
-// We want to display the paginated questions 
+function AllQuestionsPage(){ 
 const user = useSelector(state => state.session.user)
 const questions = useSelector(state => state.questions.questions)
+const allQuestions = useSelector(state => state.questions.allQuestions)
 const dispatch = useDispatch()
 const navigate = useNavigate()
-
+const [page, setPage] = useState(1);
 
 useEffect(() => {
-    dispatch(thunkLoadAllQuestions())
-}, [thunkLoadAllQuestions])
-
+    dispatch(thunkLoadAllQuestions(page))
+}, [dispatch, page])
 
 const handleAskQuestion = () => {
-    if (!user) {
-        navigate("/login")
-    } else {
-        navigate("/questionForm")
-    }
+    if (!user) navigate("/login")
+    else navigate("/questionForm")
 }
+
+const handleNextPage = () => {
+    setPage(prevPage => prevPage + 1);
+};
+
+const handlePrevPage = () => {
+    setPage(prevPage => Math.max(prevPage - 1, 1));
+};
 
 return (
     <div>
         <div className="home_page_subheaders">
             <h1>Newest Questions</h1>
-            <button onClick={handleAskQuestion}>Ask a Question</button>
+            <div>
+                <p>{allQuestions} questions</p>
+                <button onClick={handleAskQuestion}>Ask a Question</button>
+            </div>
         </div>
         <div>
             {questions?.map((question, index) => 
-                <div className="all_questions_question_container">
-                    <div key={index}>
-                    <h4>{index+1}. {question.title}</h4>
-                    <p>{question.question_text}</p>
+                <div className="all_questions_question_container"  key={index}>
+                    <div className="question_container">
+                        <h4>{question.title}</h4>
+                        <p>{question.question_text}</p>
                     </div>
                 </div>
             )}
         </div>
+        <div className="pagination_controls">
+                <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
+                <button onClick={handleNextPage}>Next</button>
+        </div>
     </div>          
-)
-
-
-}
-
+)}
 export default AllQuestionsPage

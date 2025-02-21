@@ -17,12 +17,15 @@ def all_questions(page):
 
     per_page = 5
     questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
-
+    all_questions = Question.query.all()
     # If there are no questions, then send a response
     if len([question for question in questions]) < 1:
         return jsonify({"Message": "There are currently no questions. Post a question now!"}), 404
     
-    return {'questions': [question.to_dict() for question in questions.items]}
+    return {
+        'questions': [question.to_dict() for question in questions.items],
+        'allQuestions': len(all_questions)
+        }
 
 @question_routes.route("/", methods=["GET","POST"])
 @login_required
