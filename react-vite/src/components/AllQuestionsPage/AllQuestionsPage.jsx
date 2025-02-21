@@ -23,10 +23,14 @@ return (
             <h1>Newest Questions</h1>
             <button onClick={()=> navigate("/questionForm")}>Ask a Question</button>
         </div>
-        <div>
-            
-        </div>
-    </div>
+        <body>
+            {questions?.map((question, index) => 
+                <div>
+                    {index+1}. {question.question_text}
+                </div>
+            )}
+        </body>
+    </div>          
 )
 
 

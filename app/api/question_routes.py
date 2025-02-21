@@ -44,6 +44,7 @@ def add_question():
 
     if form.validate_on_submit():
         new_question = Question(
+            title = form.data["title"],
             question_text = form.data["question_text"],
             user_id = current_user.id,
             created_at=datetime.now(timezone.utc)
@@ -99,6 +100,12 @@ def update_question(id):
         # Get data from the json request
         data = request.get_json()
 
+        if "title" in data:
+            title=data["title"].strip()
+
+            if not title:
+                return jsonify({"Error": "Please provide a title"})
+
         if "question_text" in data:
             question_text=data["question_text"].strip()
 
@@ -106,6 +113,7 @@ def update_question(id):
                 return jsonify({"Error": "Please provide a question"})
 
             # Set the updated question on the original question
+            question.title=data["title"]
             question.question_text=data["question_text"]
 
         # Commit change to db
