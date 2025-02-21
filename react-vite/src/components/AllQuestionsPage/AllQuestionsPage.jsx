@@ -6,7 +6,7 @@ import { thunkLoadAllQuestions } from "../../redux/question"
 
 function AllQuestionsPage(){
 // We want to display the paginated questions 
-const user = useSelector(state => state.session)
+const user = useSelector(state => state.session.user)
 const questions = useSelector(state => state.questions.questions)
 const dispatch = useDispatch()
 const navigate = useNavigate()
@@ -16,17 +16,27 @@ useEffect(() => {
 }, [thunkLoadAllQuestions])
 
 
+const handleAskQuestion = () => {
+    if (!user) {
+        navigate("/login")
+    } else {
+        navigate("/questionForm")
+    }
+}
 
 return (
     <div>
         <div className="home_page_subheaders">
             <h1>Newest Questions</h1>
-            <button onClick={()=> navigate("/questionForm")}>Ask a Question</button>
+            <button onClick={()=> handleAskQuestion}>Ask a Question</button>
         </div>
         <body>
             {questions?.map((question, index) => 
-                <div>
-                    {index+1}. {question.question_text}
+                <div className="all_questions_question_container">
+                    {index+1}. {question.title}
+                    <p>
+                        {question.question_text}
+                    </p>
                 </div>
             )}
         </body>
