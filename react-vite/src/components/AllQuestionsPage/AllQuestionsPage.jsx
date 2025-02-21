@@ -35,7 +35,7 @@ return (
             <h1>Newest Questions</h1>
             <div>
                 <p>{allQuestions} questions</p>
-                <button onClick={handleAskQuestion}>Ask a Question</button>
+                <button onClick={handleAskQuestion}>Ask Question</button>
             </div>
         </div>
         <div>

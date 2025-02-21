@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
+import "./SideBar.css"
 
 function SideBarMenu() {
-    const user = useSelector(state => state.session)
+    const user = useSelector(state => state.session.user)
     const navigate = useNavigate()
 
 
     return (
-        <div>
+        <div className="side_bar_menu_container">
             <ul>
                 <li>
                     <button onClick={()=>navigate("/")}>
@@ -19,17 +20,23 @@ function SideBarMenu() {
                 user ? 
                 <div>
                     <li>
-                        <button onClick={()=> navigate("/questions")}>
+                        <button onClick={()=> navigate("/")}>
                             Questions
                         </button>
                     </li>
                     <li>
-                        <button onClick={()=> navigate("/comments")}>
+                        <button onClick={()=> navigate("/userComments")}>
                             Comments
                         </button>
                     </li>
                 </div> :
-                    <div></div>
+                    <div>
+                         <li>
+                            <button onClick={()=> navigate("/")}>
+                                Questions
+                            </button>
+                        </li>
+                    </div>
                 }
             </ul>
         </div>

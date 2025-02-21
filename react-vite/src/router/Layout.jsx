@@ -5,6 +5,7 @@ import { ModalProvider, Modal } from "../context/Modal";
 import { thunkAuthenticate } from "../redux/session";
 import Navigation from "../components/Navigation/Navigation";
 import SideBarMenu from "../components/SideBarMenu/SideBarMenu";
+import "./LayoutStyle.css"
 
 export default function Layout() {
   const dispatch = useDispatch();
@@ -23,13 +24,20 @@ export default function Layout() {
   return (
     <>
       <ModalProvider>
-        <Navigation />
-          {isLoaded && <Outlet />}
-          {location.pathname !== "/login" && location.pathname !== "/signup" && (
-            <div>
-              <SideBarMenu />
-            </div>
-          )}
+       <div className="layout_container">
+        <div className="main_content">
+          <Navigation />
+            {isLoaded && <Outlet />}
+        </div>
+          <div>
+            {location.pathname !== "/login" && location.pathname !== "/signup" && (
+              <div id="side_bar_menu_container">
+                <SideBarMenu />
+              </div>
+            )}
+          </div>
+
+       </div>
         <Modal />
       </ModalProvider>
     </>
