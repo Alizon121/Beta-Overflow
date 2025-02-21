@@ -20,12 +20,12 @@ function SideBarMenu() {
                 user ? 
                 <div>
                     <li>
-                        <button onClick={()=> navigate("/")}>
+                        <button onClick={()=> navigate("/user-questions")}>
                             Questions
                         </button>
                     </li>
                     <li>
-                        <button onClick={()=> navigate("/userComments")}>
+                        <button onClick={()=> navigate("/user-comments")}>
                             Comments
                         </button>
                     </li>

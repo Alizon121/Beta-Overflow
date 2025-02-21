@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from app.models import db
 from app.models.question import Question
 from app.models.comments import Comment
+from app.models.user import User
 from ..forms.question_form import QuestionForm
 from ..forms.comment_form import CommentForm
 
@@ -26,6 +27,22 @@ def all_questions(page):
         'questions': [question.to_dict() for question in questions.items],
         'allQuestions': len(all_questions)
         }
+
+@question_routes.route("/users/<int:id>")
+@login_required
+def get_user_questions(id):
+    
+    # Query for the user's questions
+    user_questions = User.query.get(id).question
+
+    # Check if user does not have questions
+    if len(user_questions) < 1:
+        return jsonify({"Message": "User currently does not have any questions."})
+    
+    return jsonify({
+        "questions": [question.to_dict() for question in user_questions]
+    })
+
 
 @question_routes.route("/", methods=["GET","POST"])
 @login_required

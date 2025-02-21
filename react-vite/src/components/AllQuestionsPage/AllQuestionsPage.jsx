@@ -1,7 +1,7 @@
 import "./AllQuestions.css"
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { thunkLoadAllQuestions } from "../../redux/question"
 
 function AllQuestionsPage(){ 
@@ -11,14 +11,18 @@ const allQuestions = useSelector(state => state.questions.allQuestions)
 const dispatch = useDispatch()
 const navigate = useNavigate()
 const [page, setPage] = useState(1);
+// const location = useLocation()
 
 useEffect(() => {
     dispatch(thunkLoadAllQuestions(page))
+    // if (location.pathname === "/") {
+    //     setPage(1)
+    // }
 }, [dispatch, page])
 
 const handleAskQuestion = () => {
     if (!user) navigate("/login")
-    else navigate("/questionForm")
+    else navigate("/question-form")
 }
 
 const handleNextPage = () => {

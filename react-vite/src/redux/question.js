@@ -6,6 +6,8 @@ const LOAD_ALL_QUESTIONS = "questions/loadAllQuestions"
 
 const CREATE_QUESTION = "questions/createQuestion"
 
+const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
+
 /***********************Action Creators *********************/
 
 const loadAllQuestions = (question) => ({
@@ -15,6 +17,11 @@ const loadAllQuestions = (question) => ({
 
 const createQuestion = (question) => ({
     type: CREATE_QUESTION,
+    payload: question
+})
+
+const loadUserQuestions = (question) => ({
+    type: LOAD_USER_QUESTIONS,
     payload: question
 })
 
@@ -38,13 +45,18 @@ export const thunkCreateQuestion = (question) => async dispatch => {
 
     if (response.ok) {
         const data = await response.json()
-        console.log("DATDATDTATDATDATDTAADTDATA", data)
         dispatch(createQuestion(data))
     }
 }
 
+export const thunkLoadUserQuestions = (id) => async dispatch => {
+    const response = await csrfFetch(`/api/questions/users/${id}`)
 
-
+    if (response.ok) {
+        const data = await response.json()
+        dispatch(loadUserQuestions(data))
+    }
+}
 
 
 /******************Reducer *********************************/
@@ -56,18 +68,17 @@ function questionReducer(state = {}, action) {
                 ...state,
                 ...action.payload
             }
-        case CREATE_QUESTION:
-            // console.log("POPOPOPOPOPO", action.payload)
+        case LOAD_USER_QUESTIONS:
             return {
-                // ...state,
-                // allQuestions: Number(state?.questions?.allQuestions) + 1,
-                // questions: state?.questions?.questions ?
-                // [...state.questions.questions, ...action.payload] :
-                // []
+                ...action.payload
+            }
+        case CREATE_QUESTION:
+            return {
                 ...state,
                 allQuestions: state.allQuestions + 1,
                 questions: [...state.questions, action.payload]
             }
+        
         default:
             return state
     }

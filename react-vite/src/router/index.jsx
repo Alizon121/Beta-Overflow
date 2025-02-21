@@ -3,6 +3,7 @@ import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
 import AllQuestionsPage from '../components/AllQuestionsPage';
 import QuestionFormPage from '../components/QuestionFormPage';
+import UserQuestionsPage from '../components/UserQuestionsPage';
 import Layout from './Layout';
 
 export const router = createBrowserRouter([
@@ -22,8 +23,12 @@ export const router = createBrowserRouter([
         element: <SignupFormPage />,
       },
       {
-        path: "/questionForm",
+        path: "/question-form",
         element: <QuestionFormPage/>
+      },
+      {
+        path: "/user-questions",
+        element:<UserQuestionsPage/>
       }
     ],
   },

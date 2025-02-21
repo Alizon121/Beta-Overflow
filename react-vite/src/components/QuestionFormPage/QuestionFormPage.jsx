@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { thunkCreateQuestion, thunkLoadAllQuestions } from "../../redux/question"
 
 
@@ -8,6 +9,7 @@ function QuestionFormPage() {
     const [ questionText, setQuestionText] = useState("")
     const [errors, setErrors] = useState({})
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     useEffect(() => {
         dispatch(thunkLoadAllQuestions())
@@ -41,8 +43,8 @@ function QuestionFormPage() {
         }
 
         try{
-            const response = await dispatch(thunkCreateQuestion(question))
-            console.log(response)
+            await dispatch(thunkCreateQuestion(question))
+            navigate("/")
         } catch(error) {
             console.error(error)
         }
