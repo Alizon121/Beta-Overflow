@@ -11,6 +11,7 @@ const questions = useSelector(state => state.questions.questions)
 const dispatch = useDispatch()
 const navigate = useNavigate()
 
+
 useEffect(() => {
     dispatch(thunkLoadAllQuestions())
 }, [thunkLoadAllQuestions])
@@ -28,18 +29,18 @@ return (
     <div>
         <div className="home_page_subheaders">
             <h1>Newest Questions</h1>
-            <button onClick={()=> handleAskQuestion}>Ask a Question</button>
+            <button onClick={handleAskQuestion}>Ask a Question</button>
         </div>
-        <body>
+        <div>
             {questions?.map((question, index) => 
                 <div className="all_questions_question_container">
-                    {index+1}. {question.title}
-                    <p>
-                        {question.question_text}
-                    </p>
+                    <div key={index}>
+                    <h4>{index+1}. {question.title}</h4>
+                    <p>{question.question_text}</p>
+                    </div>
                 </div>
             )}
-        </body>
+        </div>
     </div>          
 )
 

@@ -36,7 +36,6 @@ export const thunkLoadAllQuestions = (page) => async dispatch => {
 function questionReducer(state = {}, action) {
     switch(action.type) {
         case LOAD_ALL_QUESTIONS:
-            console.log("PAYAPYAPYAPAYAPYAPY", action.payload)
             return {
                 ...state,
                 ...action.payload

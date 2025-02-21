@@ -1,3 +1,25 @@
 .profile-dropdown {
   position: absolute;
 }
+
+.navigation_headers_no_user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation_login_signup_container{
+  display: flex;
+  gap:10px;
+}
+
+#navigation_no_user_home {
+  list-style: none;
+}
+
+#navigation_no_user_home a {
+  text-decoration: none;
+}
+
+.navigation_login_signup_container a {
+  text-decoration: none;
+}

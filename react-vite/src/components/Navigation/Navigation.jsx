@@ -1,10 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 import { useSelector } from "react-redux";
 import "./Navigation.css";
 
 function Navigation() {
   const user = useSelector(state => state.session.user)
+  const navigate = useNavigate()
 
   return (
     <div>
@@ -20,13 +21,13 @@ function Navigation() {
           </li>
         </div>
         :
-      <div>
-        <li>
+      <div className="navigation_headers_no_user">
+        <li id="navigation_no_user_home">
           <NavLink to="/">Home</NavLink>
         </li>
         <div className="navigation_login_signup_container">
-          <button><NavLink to={"/login"}/>Login</button>
-          <button><NavLink to={"/signup"}/>Signup</button>
+          <NavLink to={"/login"}>Login</NavLink>
+          <NavLink to={"/signup"}>Signup</NavLink>
           {/* MAYBE ADD A USERS TAB TO SEARCH FOR USERS? */}
           {/* WILL REQUIRE USE OF A THUNK ACTION TO FETCH ALL USERS */}
         </div>

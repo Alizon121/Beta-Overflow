@@ -12,20 +12,24 @@ export default function Layout() {
   const location = useLocation()
 
   useEffect(() => {
-    if (location.pathname !== "/") {
+    if (location.pathname !== "/"&& location.pathname !== "/login" && location.pathname !== "/signup")  {
       dispatch(thunkAuthenticate()).then(() => setIsLoaded(true));
     }
     else {
       setIsLoaded(true)
     }
-  }, [dispatch]);
+  }, [dispatch, location.pathname]);
 
   return (
     <>
       <ModalProvider>
         <Navigation />
           {isLoaded && <Outlet />}
-          <SideBarMenu/>
+          {location.pathname !== "/login" && location.pathname !== "/signup" && (
+            <div>
+              <SideBarMenu />
+            </div>
+          )}
         <Modal />
       </ModalProvider>
     </>
