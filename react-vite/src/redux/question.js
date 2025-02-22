@@ -8,6 +8,8 @@ const CREATE_QUESTION = "questions/createQuestion"
 
 const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
 
+const DELETE_QUESTION = "questions/deleteQuestion"
+
 /***********************Action Creators *********************/
 
 const loadAllQuestions = (question) => ({
@@ -22,6 +24,11 @@ const createQuestion = (question) => ({
 
 const loadUserQuestions = (question) => ({
     type: LOAD_USER_QUESTIONS,
+    payload: question
+})
+
+const deleteQuestion = (question) => ({
+    type: DELETE_QUESTION,
     payload: question
 })
 
@@ -58,6 +65,16 @@ export const thunkLoadUserQuestions = (page) => async dispatch => {
     }
 }
 
+export const thunkDeleteQuestion = (id) => async dispatch => {
+    const response = await csrfFetch(`/api/questions/${id}`, {
+        method:"DELETE"
+    })
+
+    if (response.ok) {
+        // const data = await response.json()
+        dispatch(deleteQuestion(id))
+    }
+}
 
 /******************Reducer *********************************/
 
@@ -78,7 +95,12 @@ function questionReducer(state = {}, action) {
                 allQuestions: state.allQuestions + 1,
                 questions: [...state.questions, action.payload]
             }
-        
+        case DELETE_QUESTION:
+            return {
+                ...state,
+                allUserQuestions: state.allUserQuestions -1,
+                questions: state?.questions?.filter(question => question.id !== action.payload)
+            }
         default:
             return state
     }
