@@ -11,14 +11,20 @@ const allQuestions = useSelector(state => state.questions.allQuestions)
 const dispatch = useDispatch()
 const navigate = useNavigate()
 const [page, setPage] = useState(1);
-// const location = useLocation()
+const [disabled, setDisabled] = useState(false)
+
 
 useEffect(() => {
     dispatch(thunkLoadAllQuestions(page))
-    // if (location.pathname === "/") {
-    //     setPage(1)
-    // }
 }, [dispatch, page])
+
+useEffect(() => {
+    if (questions?.length < 5) {
+        setDisabled(true)
+    } else {
+        setDisabled(false)
+    }
+}, [questions])
 
 const handleAskQuestion = () => {
     if (!user) navigate("/login")
@@ -42,6 +48,8 @@ return (
                 <button onClick={handleAskQuestion}>Ask Question</button>
             </div>
         </div>
+
+        
         <div>
             {questions?.map((question, index) => 
                 <div className="all_questions_question_container"  key={index}>
@@ -52,9 +60,11 @@ return (
                 </div>
             )}
         </div>
+
+
         <div className="pagination_controls">
                 <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
-                <button onClick={handleNextPage}>Next</button>
+                <button onClick={handleNextPage} disabled={disabled}>Next</button>
         </div>
     </div>          
 )}

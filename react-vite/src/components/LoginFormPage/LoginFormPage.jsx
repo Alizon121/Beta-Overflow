@@ -14,6 +14,19 @@ function LoginFormPage() {
 
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
+  const handleDemoUser = async () => {
+    const demoEmail = "demo@aa.io";
+    const demoPassword = "password";
+
+    setErrors({});
+    return dispatch(thunkLogin({ email: demoEmail, password: demoPassword }))
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) setErrors(data.errors);
+        else setErrors({ general: "The demo login failed. Please try again later" });
+      });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -57,7 +70,10 @@ function LoginFormPage() {
           />
         </label>
         {errors.password && <p>{errors.password}</p>}
-        <button type="submit">Log In</button>
+       <div>
+          <button type="submit">Log In</button>
+          <button type="button" onClick={handleDemoUser}>Demo</button>
+       </div>
       </form>
     </>
   );

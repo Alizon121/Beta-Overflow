@@ -20,6 +20,7 @@ def all_questions(page):
     questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
     all_questions = Question.query.all()
     # If there are no questions, then send a response
+    # Use this response in the thunk action to indicate "disable"
     if len([question for question in questions]) < 1:
         return jsonify({"Message": "There are currently no questions. Post a question now!"}), 404
     
@@ -62,6 +63,10 @@ def add_question():
 
     # Validation for min char length
     # WHY DOESN'T THE VALIDATION FROM THE FORM WORK?
+
+    if len(form.data["title"]) < 5:
+        return jsonify({"Error": "Title must be at least 5 characters long"})
+
     if len(form.data["question_text"]) < 25:
         return jsonify({"Error": "Question must be a minimum of 25 characters"})
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { thunkLoadUserQuestions } from "../../redux/question"
 import { useDispatch, useSelector } from "react-redux"
 import DeleteQuestionModal from "../DeleteQuestionModal"
+import UpdateUserQuestionModal from "../UpdateUserQuestion/UpdateUserQuestionModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 
 function UserQuestionsPage () {
@@ -24,7 +25,13 @@ function UserQuestionsPage () {
         }
    }, [userQuestions])
 
+//    Helper function for re-rendering upon deletion
    const onDelete = (page) => {
+        dispatch(thunkLoadUserQuestions(page))
+   }
+
+// Helper function for re-rendering on update
+   const onUpdate = (page) => {
         dispatch(thunkLoadUserQuestions(page))
    }
 
@@ -57,6 +64,12 @@ function UserQuestionsPage () {
                             <OpenModalMenuItem
                                 itemText={"Delete"}
                                 modalComponent={<DeleteQuestionModal onDelete={()=> onDelete(page)} id={question.id}/>}
+                            />
+                        </button>
+                        <button>
+                            <OpenModalMenuItem
+                                itemText={"Update"}
+                                modalComponent={<UpdateUserQuestionModal onUpdate={() => onUpdate(page)} id={question.id}/>}
                             />
                         </button>
                     </div>
