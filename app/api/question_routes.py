@@ -47,6 +47,18 @@ def get_user_questions( page):
         "allUserQuestions": len(user_all_questions)
     })
 
+@question_routes.route('/title', methods=["GET"])
+@login_required
+def all_question_titles():
+    '''
+        Query for all question titles needed for comments
+    '''
+
+    questions= Question.query.all()
+    return jsonify({
+        'questionTitles': [{'id': q.id, 'title': q.title} for q in questions]
+    })
+
 
 @question_routes.route("/", methods=["GET","POST"])
 @login_required

@@ -4,9 +4,11 @@ import { csrfFetch } from "./csrf"
 /*Actions */
 const LOAD_ALL_QUESTIONS = "questions/loadAllQuestions"
 
-const CREATE_QUESTION = "questions/createQuestion"
-
 const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
+
+const LOAD_ALL_QUESTION_TITLES = "questions/loadAllQuestionTitles"
+
+const CREATE_QUESTION = "questions/createQuestion"
 
 const DELETE_QUESTION = "questions/deleteQuestion"
 
@@ -17,6 +19,11 @@ const UPDATE_QUESTION = "questions/updateQuestion"
 const loadAllQuestions = (question) => ({
     type: LOAD_ALL_QUESTIONS,
     payload: question
+})
+
+const loadAllQuestionTitles = (title) => ({
+    type: LOAD_ALL_QUESTION_TITLES,
+    payload: title
 })
 
 const createQuestion = (question) => ({
@@ -48,6 +55,28 @@ export const thunkLoadAllQuestions = (page) => async dispatch => {
         const data = await response.json()
         dispatch(loadAllQuestions(data))
         return data
+    } else {
+        console.log(response)
+    }
+}
+
+export const thunkLoadAllQuestionTitles = () => async dispatch => {
+    const response = await csrfFetch("/api/questions/title")
+
+    if (response.ok) {
+        const data = await response.json()
+        dispatch(loadAllQuestionTitles(data))
+    } else {
+        console.error("Error")
+    }
+}
+
+export const thunkLoadUserQuestions = (page) => async dispatch => {
+    const response = await csrfFetch(`/api/questions/users/${page}`)
+
+    if (response.ok) {
+        const data = await response.json()
+        dispatch(loadUserQuestions(data))
     }
 }
 
@@ -63,14 +92,6 @@ export const thunkCreateQuestion = (question) => async dispatch => {
     }
 }
 
-export const thunkLoadUserQuestions = (page) => async dispatch => {
-    const response = await csrfFetch(`/api/questions/users/${page}`)
-
-    if (response.ok) {
-        const data = await response.json()
-        dispatch(loadUserQuestions(data))
-    }
-}
 
 export const thunkDeleteQuestion = (id) => async dispatch => {
     const response = await csrfFetch(`/api/questions/${id}`, {
@@ -108,6 +129,11 @@ function questionReducer(state = {}, action) {
             return {
                 ...action.payload
             }
+        case LOAD_ALL_QUESTION_TITLES:
+            return {
+                ...state,
+               ...action.payload
+            }
         case CREATE_QUESTION:
             return {
                 ...state,
@@ -121,8 +147,6 @@ function questionReducer(state = {}, action) {
                 questions: state?.questions?.filter(question => question.id !== action.payload)
             }
         case UPDATE_QUESTION:
-            console.log("POPOPOPOPO", action.payload)
-            console.log("QUESQUESQUESQUES", state.questions)
             return {
                 ...state,
                 questions: [...state.questions]

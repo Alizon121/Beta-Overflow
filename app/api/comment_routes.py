@@ -17,7 +17,7 @@ def get_user_comments(page):
 
     # Query for all comments that have the current user's id
     # page = request.args.get('page', 1, type=int)
-    PER_PAGE=1
+    PER_PAGE=3
     comments = Comment.query.join(User).filter(User.id==current_user.id).order_by(Comment.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
 
     # If there are no comments, then send a response
