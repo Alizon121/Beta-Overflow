@@ -20,6 +20,7 @@ class Comment(db.Model):
             'comment_text': self.comment_text,
             'user_id': self.user_id,
             'question_id': self.question_id,
+            'created_at': self.created_at
         }
     
     # Add relationships here:

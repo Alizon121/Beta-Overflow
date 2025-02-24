@@ -8,6 +8,8 @@ const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
 
 const LOAD_ALL_QUESTION_TITLES = "questions/loadAllQuestionTitles"
 
+const LOAD_SELECTED_QUESTION = "questions/loadSelectedQuestions"
+
 const CREATE_QUESTION = "questions/createQuestion"
 
 const DELETE_QUESTION = "questions/deleteQuestion"
@@ -36,6 +38,11 @@ const loadUserQuestions = (question) => ({
     payload: question
 })
 
+const loadSelectedQuestions = (question) => ({
+    type: LOAD_SELECTED_QUESTION,
+    payload: question
+})
+
 const deleteQuestion = (question) => ({
     type: DELETE_QUESTION,
     payload: question
@@ -57,6 +64,18 @@ export const thunkLoadAllQuestions = (page) => async dispatch => {
         return data
     } else {
         console.log(response)
+    }
+}
+
+export const thunkLoadSelectionQuestion = (id) => async dispatch => {
+    const response = await csrfFetch(`/api/questions/${id}/comments`, {
+        method: "GET"
+    })
+
+    if (response.ok) {
+        const data = await response.json()
+        dispatch(loadSelectedQuestions(data))
+        return data
     }
 }
 
@@ -133,6 +152,10 @@ function questionReducer(state = {}, action) {
             return {
                 ...state,
                ...action.payload
+            }
+        case LOAD_SELECTED_QUESTION: 
+            return {
+                ...action.payload
             }
         case CREATE_QUESTION:
             return {

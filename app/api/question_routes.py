@@ -183,6 +183,9 @@ def handle_comments(id):
         
         # Locate comments
         comments = Question.query.get(id).comment
+
+        # Query for all the users
+        users = User.query.all()
         
         # Check if there are any comments
         if not comments:
@@ -192,8 +195,9 @@ def handle_comments(id):
             })
         
         return jsonify({
-            "question": question.to_dict(),
-            "comments": [comment.to_dict() for comment in comments]
+            "userQuestion": question.to_dict(),
+            "comments": [comment.to_dict() for comment in comments],
+            "users": [user.to_dict() for user in users]
         })
     
     elif request.method == "POST":

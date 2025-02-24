@@ -1,7 +1,7 @@
 import "./AllQuestions.css"
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate, useLocation, NavLink } from "react-router-dom"
 import { thunkLoadAllQuestions } from "../../redux/question"
 
 function AllQuestionsPage(){ 
@@ -54,7 +54,7 @@ return (
             {questions?.map((question, index) => 
                 <div className="all_questions_question_container"  key={index}>
                     <div className="question_container">
-                        <h4>{question.title}</h4>
+                        <h4><NavLink to={`/question/${question.id}`}>{question.title}</NavLink></h4>
                         <p>{question.question_text}</p>
                     </div>
                 </div>
