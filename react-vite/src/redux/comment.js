@@ -3,7 +3,7 @@ import { csrfFetch } from "./csrf"
 /************** Actions ***************/ 
 const LOAD_USER_COMMENTS = "comments/loadUserComments"
 
-// const ADD_ANSWER = "comments/addAnswer"
+const DELETE_COMMENT = "comments/deleteComment"
 
 /*************** Action Creators ******************/
 
@@ -12,10 +12,10 @@ const loadUserQuestions = (comment) => ({
     payload: comment
 })
 
-// const addAnswer = (answer) => ({
-//     type: ADD_ANSWER,
-//     payload: answer
-// })
+const deleteComment = (comment) => ({
+    type: DELETE_COMMENT,
+    payload: comment
+})
 
 /******************* Thunk Actions ****************/
 
@@ -29,18 +29,15 @@ export const thunkLoadUserComments= (page) => async dispatch => {
     }
 }
 
-// export const thunkAddAnswer = (id, answer) => async dispatch => {
-//     const response = await csrfFetch(`/api/questions/${id}/comments`, {
-//         method: "POST",
-//         body: JSON.stringify(answer)
-//     })
+export const thunkDeleteComment = (id) => async dispatch => {
+    const response = await csrfFetch(`/api/comments/${id}`, {
+        method: "DELETE"
+    })
 
-//     if (response.ok) {
-//         const data = await response.json()
-//         console.log("DATATATAT", data)
-//         dispatch(addAnswer(data.comment))
-//     }
-// }
+    if (response.ok) {
+        dispatch(deleteComment(id))
+    }
+}
 
 /******************* Reducer *************************/
 
@@ -51,22 +48,12 @@ function commentReducer(state = {}, action) {
                 ...state,
                 ...action.payload
             }
-        // case ADD_ANSWER:
-        //     const initialState = {
-        //         questions: {
-        //             comments: [],
-        //             userQuestion: {},
-        //             users:[]
-        //         }
-        //     }
-        //     return {
-        //         ...initialState,
-        //         questions:{
-        //         //    ...state.questions,
-        //         //    comments: [...state.questions?.comments, action.payload],
-        //         //    users: []
-        //         }
-        //     } 
+        case DELETE_COMMENT:
+            return {
+                ...state,
+                comments: state?.comments?.filter(comment => comment.id !== action.payload)
+            }
+
                 default:
             return state
     }

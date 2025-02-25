@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { thunkLoadUserQuestions, updateQuestionThunk } from "../../redux/question"
+import { updateQuestionThunk } from "../../redux/question"
 import { useModal } from "../../context/Modal"
 
 function UpdateUserQuestionModal ({onUpdate, id}) {

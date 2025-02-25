@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { thunkLoadUserComments } from "../../redux/comment"
 import { thunkLoadAllQuestionTitles } from "../../redux/question"
+import DeleteCommentModal from "../DeleteCommentModal"
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 
 function UserCommentsPage() {
     const user = useSelector(state => state.session.user)
@@ -16,7 +18,10 @@ function UserCommentsPage() {
         dispatch(thunkLoadAllQuestionTitles())
     }, [dispatch])
 
-
+    // Make helper function to render component when comment deleted
+    const onDelete = (id) => {
+        dispatch(thunkLoadUserComments(id))
+    }
     return (
         <div>
             <h2>{user?.username}'s Comments</h2>
@@ -30,11 +35,23 @@ function UserCommentsPage() {
                             </div>
                         )}
                         <div>{comment.comment_text}</div>
+                        <div>
+                            <button>
+                                <OpenModalMenuItem
+                                    itemText={"Delete"}
+                                    modalComponent={<DeleteCommentModal onDelete={onDelete} id={comment?.id} />}
+                                />
+                            </button>
+                            <button>
+                                Update
+                            </button>
+                        </div>
                     </div>
                 );
             }) : (
                 <p>No comments yet!</p>
             )}</div>
+
          </div>
     )}
 
