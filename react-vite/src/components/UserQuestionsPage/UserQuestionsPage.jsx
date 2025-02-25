@@ -45,7 +45,7 @@ function UserQuestionsPage () {
 
     return (
         <div>
-            <h2>{user.username}'s Questions</h2>
+            <h2>{user?.username}'s Questions</h2>
             <li>{allUserQuestions ?
                 <p>{allUserQuestions} questions</p>    
                 :

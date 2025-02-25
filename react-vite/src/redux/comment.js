@@ -5,6 +5,8 @@ const LOAD_USER_COMMENTS = "comments/loadUserComments"
 
 const DELETE_COMMENT = "comments/deleteComment"
 
+const UPDATE_COMMENT = "comments/updateComment"
+
 /*************** Action Creators ******************/
 
 const loadUserQuestions = (comment) => ({
@@ -14,6 +16,11 @@ const loadUserQuestions = (comment) => ({
 
 const deleteComment = (comment) => ({
     type: DELETE_COMMENT,
+    payload: comment
+})
+
+const updateComment = (comment) => ({
+    type: UPDATE_COMMENT,
     payload: comment
 })
 
@@ -39,6 +46,17 @@ export const thunkDeleteComment = (id) => async dispatch => {
     }
 }
 
+export const thunkUpdateComment = (id, updatedComment) => async dispatch => {
+    const response = await csrfFetch(`/api/comments/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(updatedComment)
+    })
+
+    if (response.ok) {
+        dispatch(updateComment(id))
+    }
+}
+
 /******************* Reducer *************************/
 
 function commentReducer(state = {}, action) {
@@ -52,6 +70,11 @@ function commentReducer(state = {}, action) {
             return {
                 ...state,
                 comments: state?.comments?.filter(comment => comment.id !== action.payload)
+            }
+        case UPDATE_COMMENT:
+            return {
+                ...state,
+                comments: [...state.comments]
             }
 
                 default:

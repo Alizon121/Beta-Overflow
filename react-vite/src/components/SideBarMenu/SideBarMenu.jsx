@@ -31,11 +31,11 @@ function SideBarMenu() {
                     </li>
                 </div> :
                     <div>
-                         <li>
+                         {/* <li>
                             <button onClick={()=> navigate("/")}>
                                 Questions
                             </button>
-                        </li>
+                        </li> */}
                     </div>
                 }
             </ul>

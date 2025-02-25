@@ -169,6 +169,7 @@ def update_question(id):
 ##############################Comments#########################
 # We need a route that gets all comments for a question
 @question_routes.route("/<int:id>/comments", methods=["GET", "POST"])
+@login_required
 def handle_comments(id):
     if request.method == "GET":
         '''

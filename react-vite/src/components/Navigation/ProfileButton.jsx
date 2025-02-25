@@ -41,10 +41,10 @@ function ProfileButton() {
     closeMenu();
   };
 
-  const handleUserQuestionNav = (e) => {
-    e.preventDefault()
-    navigate("/userQuestions")
-  }
+  // const handleUserQuestionNav = (e) => {
+  //   e.preventDefault()
+  //   navigate("/userQuestions")
+  // }
 
   return (
     <>
@@ -57,9 +57,9 @@ function ProfileButton() {
             <>
               <li>{user.username}</li>
               <li>{user.email}</li>
-              <li>
+              {/* <li>
                 <button onClick={handleUserQuestionNav}>User Questions</button>
-              </li>
+              </li> */}
               <li>
                 <button onClick={logout}>Log Out</button>
               </li>

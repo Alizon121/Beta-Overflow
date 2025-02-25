@@ -24,9 +24,11 @@ function UserCommentsPage() {
         dispatch(thunkLoadUserComments(id))
     }
 
-    const onUpdate = () => {
-        
+    // May need to add page as a parameter when pagination is used
+    const onUpdate = (id) => {
+        dispatch(thunkLoadUserComments(id))
     }
+
     return (
         <div>
             <h2>{user?.username}'s Comments</h2>
@@ -39,7 +41,7 @@ function UserCommentsPage() {
                                 <div>{question.title}</div>
                             </div>
                         )}
-                        <div>{comment.comment_text}</div>
+                        <div>{comment?.comment_text}</div>
                         <div>
                             <button>
                                 <OpenModalMenuItem
@@ -48,9 +50,9 @@ function UserCommentsPage() {
                                 />
                             </button>
                             <button>
-                                <UpdateCommentModal
+                                <OpenModalMenuItem
                                     itemText={"Update"}
-                                    modalComponent={<UpdateCommentModal/>}
+                                    modalComponent={<UpdateCommentModal onUpdate={onUpdate} id={comment.id}/>}
                                 />
                             </button>
                         </div>
