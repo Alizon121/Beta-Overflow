@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { thunkLoadUserComments } from "../../redux/comment"
 import { thunkLoadAllQuestionTitles } from "../../redux/question"
 import DeleteCommentModal from "../DeleteCommentModal"
+import UpdateCommentModal from "../UpdateCommentModal/UpdateCommentModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 
 function UserCommentsPage() {
@@ -21,6 +22,10 @@ function UserCommentsPage() {
     // Make helper function to render component when comment deleted
     const onDelete = (id) => {
         dispatch(thunkLoadUserComments(id))
+    }
+
+    const onUpdate = () => {
+        
     }
     return (
         <div>
@@ -43,7 +48,10 @@ function UserCommentsPage() {
                                 />
                             </button>
                             <button>
-                                Update
+                                <UpdateCommentModal
+                                    itemText={"Update"}
+                                    modalComponent={<UpdateCommentModal/>}
+                                />
                             </button>
                         </div>
                     </div>
