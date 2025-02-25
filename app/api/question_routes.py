@@ -220,7 +220,7 @@ def handle_comments(id):
             return jsonify({"Error": "User is not authorized"}), 401
         
         if len(form.data["comment_text"]) < 15:
-            return jsonify({"Error": "Comment must be a minimum of 15 characters."}), 400
+            return jsonify({"Error": "Comment must be a minimum of 15 characters"}), 400
 
         if form.validate_on_submit():
             new_comment= Comment(

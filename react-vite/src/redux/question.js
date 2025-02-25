@@ -12,6 +12,8 @@ const LOAD_SELECTED_QUESTION = "questions/loadSelectedQuestions"
 
 const CREATE_QUESTION = "questions/createQuestion"
 
+const ADD_ANSWER = "questions/addAnswer"
+
 const DELETE_QUESTION = "questions/deleteQuestion"
 
 const UPDATE_QUESTION = "questions/updateQuestion"
@@ -31,6 +33,11 @@ const loadAllQuestionTitles = (title) => ({
 const createQuestion = (question) => ({
     type: CREATE_QUESTION,
     payload: question
+})
+
+const addAnswer = (answer) => ({
+    type: ADD_ANSWER,
+    payload: answer
 })
 
 const loadUserQuestions = (question) => ({
@@ -111,6 +118,18 @@ export const thunkCreateQuestion = (question) => async dispatch => {
     }
 }
 
+export const thunkAddAnswer = (id, answer) => async dispatch => {
+    const response = await csrfFetch(`/api/questions/${id}/comments`, {
+        method: "POST",
+        body: JSON.stringify(answer)
+    })
+
+    if (response.ok) {
+        const data = await response.json()
+        console.log("DATATATAT", data)
+        dispatch(addAnswer(data.comment))
+    }
+}
 
 export const thunkDeleteQuestion = (id) => async dispatch => {
     const response = await csrfFetch(`/api/questions/${id}`, {
@@ -163,6 +182,23 @@ function questionReducer(state = {}, action) {
                 allQuestions: state.allQuestions + 1,
                 questions: [...state.questions, action.payload]
             }
+            case ADD_ANSWER:
+                const initialState = {
+                    questions: {
+                        comments: [],
+                        userQuestion: {},
+                        users:[]
+                    }
+                }
+                return {
+                    ...initialState.questions,
+                    questions:{
+                       ...initialState.questions,
+                        comments: [...initialState.questions.comments, action.payload],
+                        userQuestion: {...initialState.questions.userQuestion},
+                        users: [...initialState.questions.users]
+                    }
+                } 
         case DELETE_QUESTION:
             return {
                 ...state,

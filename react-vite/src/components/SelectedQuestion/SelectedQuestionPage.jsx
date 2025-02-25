@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkLoadSelectionQuestion } from "../../redux/question";
+import CreateCommentSection from "../CreateCommentSection";
 
 function SelectedQuestionPage () {
     const {id} = useParams()
@@ -13,7 +14,6 @@ function SelectedQuestionPage () {
     const users = useSelector(state => state.questions.users)
 
 
-    console.log(comments)
     useEffect(() => {
         dispatch(thunkLoadSelectionQuestion(id))
     }, [dispatch, id])
@@ -28,6 +28,11 @@ function SelectedQuestionPage () {
             localStorage.setItem(key, initialCount +1)
         }
     }, [id])
+
+    // Function for re-rendering the thunk
+    const onCreate = () => {
+        dispatch(thunkLoadSelectionQuestion(id))
+    }
 
 
     return (
@@ -46,13 +51,13 @@ function SelectedQuestionPage () {
                         comments?.map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
-                                <div key={comment.id}>
+                                <div key={comment?.id}>
                                     <div>{comment?.comment_text}</div>
                                     <div>
                                         {selectedUserInfo && 
                                             <div>
-                                                <div>Posted by: {selectedUserInfo.username}</div>
-                                                <div>Created on: {comment.created_at}</div>
+                                                <div>Posted by: {selectedUserInfo?.username}</div>
+                                                <div>Created on: {comment?.created_at}</div>
                                             </div>
                                         }
                                     </div>
@@ -63,7 +68,7 @@ function SelectedQuestionPage () {
                     </div>
                 </div>
                 {/* Add create a comment component here */}
-                
+                <CreateCommentSection onCreate={onCreate} questionId={question?.id} />
             </div>
         </div>
     )
