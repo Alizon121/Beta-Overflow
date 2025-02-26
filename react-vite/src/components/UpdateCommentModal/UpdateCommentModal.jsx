@@ -41,6 +41,7 @@ function UpdateCommentModal({onUpdate, id}) {
                 value={comment}
                 onChange={(e)=> setComment(e.target.value)}
             ></textarea>
+            {errors.comment && <p className="error">{errors.comment}</p>}
             <div>
                 <button type="submit" onClick={handleSubmit}>Update</button>
                 <button type="button" onClick={closeModal}>Cancel</button>

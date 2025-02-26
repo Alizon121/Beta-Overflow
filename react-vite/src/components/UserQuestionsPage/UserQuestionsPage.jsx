@@ -35,6 +35,7 @@ function UserQuestionsPage () {
         dispatch(thunkLoadUserQuestions(page))
    }
 
+   // Helper functions for handling navigating pages
     const handleNextPage = () => {
         setPage(prevPage => prevPage + 1);
     };

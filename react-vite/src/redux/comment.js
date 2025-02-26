@@ -29,6 +29,7 @@ const updateComment = (comment) => ({
 export const thunkLoadUserComments= (page) => async dispatch => {
     const response = await csrfFetch(`/api/comments/${page}`)
 
+    console.log("RRRRREEEEESSS", response)
     if (response.ok) {
         const data = await response.json()
         dispatch(loadUserQuestions(data))
