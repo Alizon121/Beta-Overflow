@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { thunkAddAnswer } from "../../redux/question"
 
 function CreateCommentSection({onCreate, questionId}) {
     const dispatch = useDispatch()
     const [commentText, setCommentText] = useState("")
     const [errors, setErrors] = useState({})
+    const user = useSelector(state => state.session.user)
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         //  Add validations here
         const newErrors = {}
+        if (!user) newErrors.user = "User must be logged in to post a comment"
         if (commentText.length < 15) newErrors.commentText = "Comment must be a minimum of 15 characters"
 
         if (Object.values(newErrors).length > 0) {
@@ -40,6 +43,7 @@ function CreateCommentSection({onCreate, questionId}) {
                     onChange={(e)=> setCommentText(e.target.value)}
                 ></textarea>
                 {errors.commentText && <p className="error">{errors.commentText}</p>}
+                {errors.user && <p className="error">{errors.user}</p>}
                 <div>
                     <button type="submit">Post Answer</button>
                 </div>
