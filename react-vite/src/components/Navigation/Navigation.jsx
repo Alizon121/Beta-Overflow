@@ -11,8 +11,8 @@ function Navigation() {
 
       {
         user?
-        <div>
-          <li>
+        <div className="navigation_headers_user">
+          <li id="navigation_user_home">
             <NavLink to="/">Home</NavLink>
           </li>
           <li>

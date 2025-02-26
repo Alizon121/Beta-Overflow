@@ -2,6 +2,15 @@
   position: absolute;
 }
 
+.navigation_headers_user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation_headers_user li {
+  list-style: none;
+}
+
 .navigation_headers_no_user {
   display: flex;
   justify-content: space-between;
