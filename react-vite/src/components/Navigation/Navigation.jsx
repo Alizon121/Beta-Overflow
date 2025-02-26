@@ -7,7 +7,7 @@ function Navigation() {
   const user = useSelector(state => state.session.user)
 
   return (
-    <div>
+    <div className="navigation_container">
 
       {
         user?
