@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from app.models import db
 from app.models.question import Question
 from app.models.comments import Comment
+from app.models.user import User
 from ..forms.question_form import QuestionForm
 from ..forms.comment_form import CommentForm
 
@@ -17,12 +18,47 @@ def all_questions(page):
 
     per_page = 5
     questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
-
+    all_questions = Question.query.all()
     # If there are no questions, then send a response
+    # Use this response in the thunk action to indicate "disable"
     if len([question for question in questions]) < 1:
         return jsonify({"Message": "There are currently no questions. Post a question now!"}), 404
     
-    return {'questions': [question.to_dict() for question in questions.items]}
+    return {
+        'questions': [question.to_dict() for question in questions.items],
+        'allQuestions': len(all_questions)
+        }
+
+@question_routes.route("/users/<int:page>")
+@login_required
+def get_user_questions( page):
+    PER_PAGE=3
+    user_questions = Question.query.filter_by(user_id=current_user.id).order_by(Question.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
+    user_all_questions = User.query.get(current_user.id).question
+
+    # Check if user does not have questions
+    if len(user_questions.items) < 1:
+        return jsonify({"Message": "User currently does not have any questions.",
+                        "questions": [question.to_dict() for question in user_questions.items]
+                        })
+    
+    return jsonify({
+        "questions": [question.to_dict() for question in user_questions.items],
+        "allUserQuestions": len(user_all_questions)
+    })
+
+@question_routes.route('/title', methods=["GET"])
+@login_required
+def all_question_titles():
+    '''
+        Query for all question titles needed for comments
+    '''
+
+    questions= Question.query.all()
+    return jsonify({
+        'questionTitles': [{'id': q.id, 'title': q.title} for q in questions]
+    })
+
 
 @question_routes.route("/", methods=["GET","POST"])
 @login_required
@@ -39,11 +75,16 @@ def add_question():
 
     # Validation for min char length
     # WHY DOESN'T THE VALIDATION FROM THE FORM WORK?
+
+    if len(form.data["title"]) < 5:
+        return jsonify({"Error": "Title must be at least 5 characters long"})
+
     if len(form.data["question_text"]) < 25:
         return jsonify({"Error": "Question must be a minimum of 25 characters"})
 
     if form.validate_on_submit():
         new_question = Question(
+            title = form.data["title"],
             question_text = form.data["question_text"],
             user_id = current_user.id,
             created_at=datetime.now(timezone.utc)
@@ -99,6 +140,12 @@ def update_question(id):
         # Get data from the json request
         data = request.get_json()
 
+        if "title" in data:
+            title=data["title"].strip()
+
+            if not title:
+                return jsonify({"Error": "Please provide a title"})
+
         if "question_text" in data:
             question_text=data["question_text"].strip()
 
@@ -106,6 +153,7 @@ def update_question(id):
                 return jsonify({"Error": "Please provide a question"})
 
             # Set the updated question on the original question
+            question.title=data["title"]
             question.question_text=data["question_text"]
 
         # Commit change to db
@@ -121,6 +169,7 @@ def update_question(id):
 ##############################Comments#########################
 # We need a route that gets all comments for a question
 @question_routes.route("/<int:id>/comments", methods=["GET", "POST"])
+@login_required
 def handle_comments(id):
     if request.method == "GET":
         '''
@@ -135,6 +184,9 @@ def handle_comments(id):
         
         # Locate comments
         comments = Question.query.get(id).comment
+
+        # Query for all the users
+        users = User.query.all()
         
         # Check if there are any comments
         if not comments:
@@ -144,8 +196,9 @@ def handle_comments(id):
             })
         
         return jsonify({
-            "question": question.to_dict(),
-            "comments": [comment.to_dict() for comment in comments]
+            "userQuestion": question.to_dict(),
+            "comments": [comment.to_dict() for comment in comments],
+            "users": [user.to_dict() for user in users]
         })
     
     elif request.method == "POST":
@@ -168,7 +221,7 @@ def handle_comments(id):
             return jsonify({"Error": "User is not authorized"}), 401
         
         if len(form.data["comment_text"]) < 15:
-            return jsonify({"Error": "Comment must be a minimum of 15 characters."}), 400
+            return jsonify({"Error": "Comment must be a minimum of 15 characters"}), 400
 
         if form.validate_on_submit():
             new_comment= Comment(
