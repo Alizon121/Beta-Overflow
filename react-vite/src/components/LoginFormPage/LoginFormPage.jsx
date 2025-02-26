@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { thunkLogin } from "../../redux/session";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import "./LoginForm.css";
 
 function LoginFormPage() {
@@ -45,37 +45,40 @@ function LoginFormPage() {
   };
 
   return (
-    <>
-      <h1>Log In</h1>
+    <div className="login_page_container">
       {errors.length > 0 &&
         errors.map((message) => <p key={message}>{message}</p>)}
       <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
-       <div>
+        <div className="login_email_password_container">
+          <div className="login_email_container">
+            <label>Email</label>
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            {errors.email && <p>{errors.email}</p>}
+          </div>
+          <div className="login_password_container">
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            {errors.password && <p>{errors.password}</p>}
+          </div>
+
+        </div>
+       <div className="login_button_container">
           <button type="submit">Log In</button>
-          <button type="button" onClick={handleDemoUser}>Demo</button>
-       </div>
+          <button id="login_demo" type="button" onClick={handleDemoUser}>Demo</button>
+       </div >
+       <p id="login_signup_message">Dont have an account? <NavLink to={"/signup"}>Sign up</NavLink> </p>
       </form>
-    </>
+    </div>
   );
 }
 

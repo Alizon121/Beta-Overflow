@@ -9,9 +9,9 @@ function NavigationLoginPage () {
                 <li id="navigation_login_home">
                     <NavLink to="/">Home</NavLink>
                 </li>
-                <div className="navigation_login_signup">
+                {/* <div className="navigation_login_signup">
                     <NavLink to={"/signup"}>Signup</NavLink>
-                </div>
+                </div> */}
             </div>
         </div>
     )   

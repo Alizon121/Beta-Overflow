@@ -26,8 +26,9 @@ export default function Layout() {
     <>
       <ModalProvider>
         <div>
-          {location.pathname === "/login" && 
-            <NavigationLoginPage />
+          {location.pathname === "/login"?
+            <NavigationLoginPage />:
+            <Navigation/>
           }
         </div>
        <div className="layout_container">
