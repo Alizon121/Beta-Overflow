@@ -57,9 +57,13 @@ h1 {
 .pagination_controls button{
     border: none;
     background-color: #fff;
+    width: 75px;
+    height: 25px;
     border-radius: 5px;
+    padding: 3px;
 }
 
 .pagination_controls button:hover {
     background-color: #ebebeb;
+    padding: 3px;
 }

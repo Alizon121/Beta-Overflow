@@ -63,15 +63,12 @@ const updateQuestion = (question) => ({
 /**************************Thunk Actions *******************/ 
 
 export const thunkLoadAllQuestions = (page) => async dispatch => {
-    if (!page) page=1
-    const response = await fetch(`/api/questions/${page}`)
-    if (response.ok) {
-        const data = await response.json()
+    const response1 = await fetch(`/api/questions/${page}`)
+    if (response1.ok) {
+        const data = await response1.json()
         dispatch(loadAllQuestions(data))
         return data
-    } else {
-        console.log(response)
-    }
+    } 
 }
 
 export const thunkLoadSelectionQuestion = (id) => async dispatch => {

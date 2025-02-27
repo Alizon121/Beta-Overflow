@@ -20,12 +20,17 @@ useEffect(() => {
 }, [dispatch, page])
 
 useEffect(() => {
-    if (questions?.length < 5) {
-        setDisabled(true)
-    } else {
-        setDisabled(false)
-    }
-}, [questions])
+    const fetchData = async () => {        
+        const response = await fetch(`/api/questions/${page+1}`)        
+        if (response.status !== 404) {
+            await dispatch(thunkLoadAllQuestions(page));
+        } else {
+            setDisabled(true);
+        }
+    };
+    fetchData();
+}, [dispatch, page]);
+
 
 const handleAskQuestion = () => {
     if (!user) navigate("/login")
@@ -38,6 +43,7 @@ const handleNextPage = () => {
 
 const handlePrevPage = () => {
     setPage(prevPage => Math.max(prevPage - 1, 1));
+    setDisabled(false)
 };
 
 return (

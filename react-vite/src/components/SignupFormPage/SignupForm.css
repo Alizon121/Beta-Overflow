@@ -13,12 +13,6 @@
     text-align: center;
 }
 
-.signup_container form {
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
-}
-
 .signup_content_container {
     display: flex;
     flex-direction: column;

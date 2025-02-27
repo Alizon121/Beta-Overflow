@@ -204,7 +204,7 @@ def handle_comments(id):
         '''
             Create a comment for a question
         '''
-        
+
         question = Question.query.get(id)
         # comments = Question.query.get(id).comment
 
