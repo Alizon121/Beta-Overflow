@@ -6,6 +6,7 @@ import { thunkAuthenticate } from "../redux/session";
 import Navigation from "../components/Navigation/Navigation";
 import SideBarMenu from "../components/SideBarMenu/SideBarMenu";
 import NavigationLoginPage from "../components/Navigation/NavigationLoginPage";
+import NavigationSignup from "../components/Navigation/NavigationSignup";
 import "./LayoutStyle.css"
 
 export default function Layout() {
@@ -28,6 +29,8 @@ export default function Layout() {
         <div>
           {location.pathname === "/login"?
             <NavigationLoginPage />:
+            location.pathname === "/signup" ?
+            <NavigationSignup/> :
             <Navigation/>
           }
         </div>

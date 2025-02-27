@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate, useLocation, NavLink } from "react-router-dom"
 import { thunkLoadAllQuestions } from "../../redux/question"
+import "./AllQuestions.css"
 
 function AllQuestionsPage(){ 
 const user = useSelector(state => state.session.user)
@@ -40,17 +41,17 @@ const handlePrevPage = () => {
 };
 
 return (
-    <div>
+    <div className="all_questions_container">
         <div className="home_page_subheaders">
             <h1>Newest Questions</h1>
-            <div>
+            <div className="all_questions_counter_ask_container">
                 <p>{allQuestions} questions</p>
                 <button onClick={handleAskQuestion}>Ask Question</button>
             </div>
         </div>
 
         
-        <div>
+        <div className="question_content">
             {questions?.map((question, index) => 
                 <div className="all_questions_question_container"  key={index}>
                     <div className="question_container">
@@ -60,8 +61,6 @@ return (
                 </div>
             )}
         </div>
-
-
         <div className="pagination_controls">
                 <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
                 <button onClick={handleNextPage} disabled={disabled}>Next</button>
