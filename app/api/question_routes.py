@@ -190,7 +190,7 @@ def handle_comments(id):
         # Check if there are any comments
         if not comments:
             return jsonify({
-                "question": question.to_dict(),
+                "userQuestion": question.to_dict(),
                 "comments": "No comments found"
             })
         

@@ -9,13 +9,13 @@ function SelectedQuestionPage () {
     const [count, setCount] = useState()
     const hasRunEffect = useRef(false)
     const dispatch = useDispatch()
-    const question = useSelector(state => state.questions.userQuestion)
-    const comments = useSelector(state => state.questions.comments)
-    const users = useSelector(state => state.questions.users)
+    const question = useSelector(state => state?.questions?.userQuestion)
+    const comments = useSelector(state => state?.questions?.comments)
+    const users = useSelector(state => state?.questions?.users)
 
 
     useEffect(() => {
-        dispatch(thunkLoadSelectionQuestion(id))
+        dispatch(thunkLoadSelectionQuestion(Number(id)))
     }, [dispatch, id])
 
     useEffect(() => {
@@ -31,7 +31,7 @@ function SelectedQuestionPage () {
 
     // Function for re-rendering the thunk
     const onCreate = () => {
-        dispatch(thunkLoadSelectionQuestion(id))
+        dispatch(thunkLoadSelectionQuestion(Number(id)))
     }
 
 
@@ -47,7 +47,7 @@ function SelectedQuestionPage () {
                 </div>
 
                 <div>
-                    <div>{comments?.length >0 ? 
+                    <div>{(typeof comments !== "string") ? 
                         comments?.map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
