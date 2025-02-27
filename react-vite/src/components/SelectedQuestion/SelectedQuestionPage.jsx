@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkLoadSelectionQuestion } from "../../redux/question";
 import CreateCommentSection from "../CreateCommentSection";
+import "./SelectedQuestion.css"
 
 function SelectedQuestionPage () {
     const {id} = useParams()
@@ -36,28 +37,31 @@ function SelectedQuestionPage () {
 
 
     return (
-        <div>
+        <div className="selected_quesiton_page_container">
             <h2>{question?.title}</h2>
             <div>
-                <li>Asked on {question?.created_at}</li>
-                <li>Viewed {count} times</li>
-                <div>
-                    <h3>{question?.title}</h3>
-                    <div>{question?.question_text}</div>
+                <div className="selected_question_subheaders">
+                    <li>Asked on {question?.created_at}</li>
+                    <li>Viewed {count} times</li>
+                </div>
+                <div className="selected_question_question_content_container">
+                    <div id="selected_question_question">{question?.question_text}</div>
                 </div>
 
-                <div>
-                    <div>{(typeof comments !== "string") ? 
+                <div className="selected_question_comment_container">
+                    <h3>Responses</h3>
+                    <div className="selected_question_comment_content_container">
+                        {(typeof comments !== "string") ? 
                         comments?.map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
                                 <div key={comment?.id}>
-                                    <div>{comment?.comment_text}</div>
-                                    <div>
+                                    <div id="selected_question_comment_text">{comment?.comment_text}</div>
+                                    <div className="selected_question_comment_">
                                         {selectedUserInfo && 
-                                            <div>
-                                                <div>Posted by: {selectedUserInfo?.username}</div>
-                                                <div>Created on: {comment?.created_at}</div>
+                                            <div className="selected_question_comment_username_date">
+                                                <p>Posted by: {selectedUserInfo?.username}</p>
+                                                <p>Created on: {comment?.created_at}</p>
                                             </div>
                                         }
                                     </div>
