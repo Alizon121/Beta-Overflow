@@ -5,6 +5,7 @@ import { thunkLoadAllQuestionTitles } from "../../redux/question"
 import DeleteCommentModal from "../DeleteCommentModal"
 import UpdateCommentModal from "../UpdateCommentModal/UpdateCommentModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import { csrfFetch } from "../../redux/csrf"
 
 function UserCommentsPage() {
     const user = useSelector(state => state.session.user)
@@ -14,21 +15,20 @@ function UserCommentsPage() {
     const [disabled, setDisabled] = useState(false)
     const dispatch = useDispatch()
 
-    console.log("PAGEPPAGEPAGEPAGE", page)
-
 
     useEffect(() => {
         dispatch(thunkLoadUserComments(page))
         dispatch(thunkLoadAllQuestionTitles())
-    }, [dispatch])
+    }, [dispatch, page])
 
-    useEffect(() => {
-        if (comments?.length < 3) {
-            setDisabled(true)
-        } else {
-            setDisabled(false)
-        }
-   }, [comments])
+useEffect(() => {
+    if (comments?.length < 3) {
+        setDisabled(true)
+    } else {
+        setDisabled(false)
+    }
+}, [comments])
+
 
     // Make helper function to render component when comment deleted
     const onDelete = () => {
@@ -46,6 +46,7 @@ function UserCommentsPage() {
     
     const handlePrevPage = () => {
         setPage(prevPage => Math.max(prevPage - 1, 1));
+        setDisabled(false)
     };
 
     return (

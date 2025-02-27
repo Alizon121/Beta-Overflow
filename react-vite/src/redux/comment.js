@@ -9,7 +9,7 @@ const UPDATE_COMMENT = "comments/updateComment"
 
 /*************** Action Creators ******************/
 
-const loadUserQuestions = (comment) => ({
+const loadUserComments = (comment) => ({
     type: LOAD_USER_COMMENTS,
     payload: comment
 })
@@ -31,7 +31,7 @@ export const thunkLoadUserComments= (page) => async dispatch => {
 
     if (response.ok) {
         const data = await response.json()
-        dispatch(loadUserQuestions(data))
+        dispatch(loadUserComments(data))
         return data
     }
 }

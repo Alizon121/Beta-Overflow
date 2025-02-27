@@ -16,8 +16,8 @@ def all_questions(page):
         Query for all questions when a user is NOT logged-in or logged-in
     '''
 
-    per_page = 5
-    questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    PER_PAGE = 5
+    questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
     all_questions = Question.query.all()
     # If there are no questions, then send a response
     # Use this response in the thunk action to indicate "disable"
