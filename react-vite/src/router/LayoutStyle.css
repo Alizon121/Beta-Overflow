@@ -22,8 +22,10 @@ body {
 
 .main_content{
     /* flex-grow: 1; */
-    padding: 30px;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
     width: 100%;
-    height: 60%;
+    height: 100%;
 }
 
