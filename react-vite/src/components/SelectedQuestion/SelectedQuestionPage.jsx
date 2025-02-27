@@ -52,7 +52,7 @@ function SelectedQuestionPage () {
                     <h3>Responses</h3>
                     <div className="selected_question_comment_content_container">
                         {(typeof comments !== "string") ? 
-                        comments?.map(comment => {
+                        comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
                                 <div key={comment?.id}>

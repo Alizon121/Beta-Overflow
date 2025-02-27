@@ -183,7 +183,7 @@ def handle_comments(id):
         
         # Locate comments
         comments = Question.query.get(id).comment
-
+        # comcomcomc = Comment.query.order_by(Comment.created_at.desc()).filter_by(id=Comment.question_id).all()
         # Query for all the users
         users = User.query.all()
         

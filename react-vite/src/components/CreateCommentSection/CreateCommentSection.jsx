@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { thunkAddAnswer } from "../../redux/question"
+import "./CreateComment.css"
 
 function CreateCommentSection({onCreate, questionId}) {
     const dispatch = useDispatch()
@@ -35,7 +36,7 @@ function CreateCommentSection({onCreate, questionId}) {
     }
 
     return (
-        <div>
+        <div className="create_comment_container">
             <form onSubmit={handleSubmit}>
                 <h2>Your Answer</h2>
                 <textarea

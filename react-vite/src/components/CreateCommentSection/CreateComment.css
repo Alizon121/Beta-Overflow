@@ -1,0 +1,14 @@
+.create_comment_container textarea {
+    width: 500px;
+    height: 150px;
+    border-radius: 5px;
+}
+
+.create_comment_container button {
+    background-color: #2089ca;
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 20px;
+}
