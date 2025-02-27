@@ -1,0 +1,32 @@
+.user_questions_container h2 {
+    margin-bottom: 0px;
+}
+
+.user_questions_header {
+    display: flex;
+    list-style: none;
+    border-bottom: 1px solid rgb(201, 201, 201);
+}
+
+.user_questions_content_container {
+    border-bottom: 1px solid rgb(201, 201, 201);
+}
+
+.user_question_button_containers {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    margin-bottom: 15px;
+}
+
+.user_question_button_containers button {
+    border: none;
+    border-radius: 5px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+#user_question_update_button {
+    background-color: #2089ca;
+    color: #fff;
+}

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import DeleteQuestionModal from "../DeleteQuestionModal"
 import UpdateUserQuestionModal from "../UpdateUserQuestion/UpdateUserQuestionModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import "./UserQuestions.css"
 
 function UserQuestionsPage () {
     const dispatch = useDispatch()
@@ -45,32 +46,34 @@ function UserQuestionsPage () {
     };
 
     return (
-        <div>
+        <div className="user_questions_container">
             <h2>{user?.username}'s Questions</h2>
-            <li>{allUserQuestions ?
-                <p>{allUserQuestions} questions</p>    
-                :
-                <p>0 questions</p>
-        }
-        </li>
+            <div className="user_questions_header">
+                <li>{allUserQuestions ?
+                    <p>{allUserQuestions} questions</p>    
+                    :
+                    <p>0 questions</p>
+                }
+                </li>
+            </div>
             {userQuestions?.length > 0 ?
             userQuestions?.map(question => 
-                <div>
+                <div className="user_questions_content_container">
                     <div key={question.id}>
                         <h4>{question.title}</h4>
                         <p>{question.question_text}</p>
                     </div>
-                    <div>
-                        <button>
+                    <div className="user_question_button_containers">
+                        <button id="user_question_update_button">
                             <OpenModalMenuItem
-                                itemText={"Delete"}
-                                modalComponent={<DeleteQuestionModal onDelete={()=> onDelete(page)} id={question.id}/>}
+                                itemText={"Update"}
+                                modalComponent={<UpdateUserQuestionModal onUpdate={() => onUpdate(page)} id={question.id}/>}
                             />
                         </button>
                         <button>
                             <OpenModalMenuItem
-                                itemText={"Update"}
-                                modalComponent={<UpdateUserQuestionModal onUpdate={() => onUpdate(page)} id={question.id}/>}
+                                itemText={"Delete"}
+                                modalComponent={<DeleteQuestionModal onDelete={()=> onDelete(page)} id={question.id}/>}
                             />
                         </button>
                     </div>
