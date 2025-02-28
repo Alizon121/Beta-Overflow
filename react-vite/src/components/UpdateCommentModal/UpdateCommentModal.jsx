@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { useModal } from "../../context/Modal"
 import { thunkUpdateComment } from "../../redux/comment"
+import "./UpdateComment.css"
 
 
 function UpdateCommentModal({onUpdate, id}) {
@@ -35,16 +36,16 @@ function UpdateCommentModal({onUpdate, id}) {
     }
 
     return (
-        <div>
+        <div className="update_comment_container">
             <h2>Update Comment</h2>
             <textarea
                 value={comment}
                 onChange={(e)=> setComment(e.target.value)}
             ></textarea>
             {errors.comment && <p className="error">{errors.comment}</p>}
-            <div>
-                <button type="submit" onClick={handleSubmit}>Update</button>
-                <button type="button" onClick={closeModal}>Cancel</button>
+            <div className="update_comments_button_container">
+                <button id="update_comments_update" type="submit" onClick={handleSubmit}>Update</button>
+                <button id="update_comment_cancel" type="button" onClick={closeModal}>Cancel</button>
             </div>
         </div>
     )

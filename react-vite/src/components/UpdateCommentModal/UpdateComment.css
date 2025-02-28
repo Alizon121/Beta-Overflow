@@ -1,0 +1,43 @@
+.update_comment_container {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 300px;
+    padding: 20px;
+}
+
+.update_comment_container textarea {
+    height: 200px;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 15px;
+    background-color: #E8F0FE;
+}
+
+.update_comments_button_container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.update_comments_button_container button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    width: 75px;
+    cursor: pointer;
+}
+
+.update_comments_button_container #update_comments_update:hover {
+    background-color: #1a75ad;
+}
+
+#update_comments_update {
+    background-color: #2089ca;
+    color: #fff;
+}
+
+.update_comments_button_container #update_comment_cancel:hover {
+    background-color: #bebebe;
+}

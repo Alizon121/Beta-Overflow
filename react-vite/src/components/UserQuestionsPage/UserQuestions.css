@@ -1,3 +1,10 @@
+.user_questions_container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    flex-grow: 1;
+}
+
 .user_questions_container h2 {
     margin-bottom: 0px;
 }

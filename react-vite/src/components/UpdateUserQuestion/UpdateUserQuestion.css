@@ -1,6 +1,7 @@
 #modal-content{
     border-radius: 5px;
     background-color: #f5f5f5;
+    border: 2px solid rgb(201, 201, 201);
 }
 
 .update_user_question_container form {
@@ -34,7 +35,7 @@
     background-color: #E8F0FE;
     border: 1px solid rgb(201, 201, 201);
     border: 3px;
-    padding: 5px;
+    padding: 10px;
 }
 
 .update_user_question_content_container {
@@ -73,6 +74,7 @@
     border: none;
     border-radius: 3px;
     padding: 5px;
+    cursor: pointer;
 }
 
 #update_user_question_submit {
