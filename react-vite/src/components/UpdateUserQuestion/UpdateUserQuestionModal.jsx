@@ -67,7 +67,7 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
                 </div>
                 <div className="update_user_question_buttons_container">
                     <button type="submit" id="update_user_question_submit">Submit</button>
-                    <button type="button" onClick={closeModal}>Cancel</button>
+                    <button id="update_user_question_cancel" type="button" onClick={closeModal}>Cancel</button>
                 </div>
             </form>
         </div>

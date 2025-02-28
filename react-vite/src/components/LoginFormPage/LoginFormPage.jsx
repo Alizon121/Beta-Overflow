@@ -73,7 +73,7 @@ function LoginFormPage() {
 
         </div>
        <div className="login_button_container">
-          <button type="submit">Log In</button>
+          <button id="login_form_login_button" type="submit">Log In</button>
           <button id="login_demo" type="button" onClick={handleDemoUser}>Demo</button>
        </div >
        <p id="login_signup_message">Dont have an account? <NavLink to={"/signup"}>Sign up</NavLink> </p>

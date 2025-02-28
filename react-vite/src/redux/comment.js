@@ -7,6 +7,8 @@ const DELETE_COMMENT = "comments/deleteComment"
 
 const UPDATE_COMMENT = "comments/updateComment"
 
+const CLEAR_COMMENTS = "comments/clearComment"
+
 /*************** Action Creators ******************/
 
 const loadUserComments = (comment) => ({
@@ -23,6 +25,10 @@ const updateComment = (comment) => ({
     type: UPDATE_COMMENT,
     payload: comment
 })
+
+export const clearComments = () => ({
+    type: CLEAR_COMMENTS
+  })
 
 /******************* Thunk Actions ****************/
 
@@ -76,7 +82,10 @@ function commentReducer(state = {}, action) {
                 ...state,
                 comments: [...state.comments]
             }
-
+        case CLEAR_COMMENTS:
+            return {
+                comments: []
+            }
                 default:
             return state
     }
