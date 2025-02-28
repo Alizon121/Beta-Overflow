@@ -46,8 +46,10 @@ function LoginFormPage() {
 
   return (
     <div className="login_page_container">
-      {errors.length > 0 &&
-        errors.map((message) => <p key={message}>{message}</p>)}
+      <div className="login_error_container">
+        {errors.password && <p className="error">{errors.password}</p>}
+        {errors.email && <p className="error">{errors.email}</p>}
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="login_email_password_container">
           <div className="login_email_container">
@@ -58,7 +60,6 @@ function LoginFormPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-            {errors.email && <p>{errors.email}</p>}
           </div>
           <div className="login_password_container">
               <label>Password</label>
@@ -68,7 +69,6 @@ function LoginFormPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-            {errors.password && <p>{errors.password}</p>}
           </div>
 
         </div>
