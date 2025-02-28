@@ -1,16 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
+// import { FaUserCircle } from 'react-icons/fa';
+import { GiHamburgerMenu } from "react-icons/gi";
 import { thunkLogout } from "../../redux/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
+import "./ProfileButtonStyles.css"
 
 function ProfileButton() {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const user = useSelector((store) => store.session.user);
   const ulRef = useRef();
+  const navigate = useNavigate()
 
   const toggleMenu = (e) => {
     e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
@@ -37,12 +41,18 @@ function ProfileButton() {
     e.preventDefault();
     dispatch(thunkLogout());
     closeMenu();
+    navigate("/")
   };
+
+  // const handleUserQuestionNav = (e) => {
+  //   e.preventDefault()
+  //   navigate("/userQuestions")
+  // }
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle />
+      <button id="hamburger_button" onClick={toggleMenu}>
+        <GiHamburgerMenu />
       </button>
       {showMenu && (
         <ul className={"profile-dropdown"} ref={ulRef}>
@@ -50,7 +60,10 @@ function ProfileButton() {
             <>
               <li>{user.username}</li>
               <li>{user.email}</li>
-              <li>
+              {/* <li>
+                <button onClick={handleUserQuestionNav}>User Questions</button>
+              </li> */}
+              <li id="profile_button_logout">
                 <button onClick={logout}>Log Out</button>
               </li>
             </>

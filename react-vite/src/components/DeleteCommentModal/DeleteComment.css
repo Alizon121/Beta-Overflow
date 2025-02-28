@@ -1,0 +1,54 @@
+.delete_comment_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f5f5f5;
+    width: 380px;
+    height: 210px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.delete_comment_container h2 {
+    margin-bottom: 0px;
+}
+
+.delete_questions_header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delete_questions_header p {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.delete_comment_buttons_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    height: 80vh;
+}
+
+.delete_comment_buttons_container button {
+    width: 75px;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#delete_comment_delete{
+    background-color: #FF5A5F;
+    color: #fff;
+}
+
+#delete_comment_delete:hover{
+    background-color: #fb2b32;
+}
+
+.delete_comment_buttons_container #delete_comment_cancel:hover {
+    background-color: #aaaaaa;
+}
