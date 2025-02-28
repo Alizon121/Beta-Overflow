@@ -70,7 +70,7 @@ function UserQuestionsPage () {
                                 modalComponent={<UpdateUserQuestionModal onUpdate={() => onUpdate(page)} id={question.id}/>}
                             />
                         </button>
-                        <button>
+                        <button id="user_question_delete_button">
                             <OpenModalMenuItem
                                 itemText={"Delete"}
                                 modalComponent={<DeleteQuestionModal onDelete={()=> onDelete(page)} id={question.id}/>}

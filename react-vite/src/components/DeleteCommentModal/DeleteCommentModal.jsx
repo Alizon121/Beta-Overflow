@@ -21,8 +21,8 @@ function DeleteCommentModal({onDelete, id}) {
                 <p>Question cannot be recovered once deleted</p>
             </div>
             <div className="delete_comment_buttons_container">
-                <button type="submit" onClick={handleDelete}>Delete</button>
-                <button type="button" onClick={closeModal}>Cancel</button>
+                <button id="delete_comment_delete" type="submit" onClick={handleDelete}>Delete</button>
+                <button id="delete_comment_cancel" type="button" onClick={closeModal}>Cancel</button>
             </div>
         </div>
     )

@@ -4,7 +4,7 @@
     align-items: center;
     width: 350px;
     border: 1px solid rgb(201, 201, 201);
-    height: 50%;
+    height: 65%;
     border-radius: 8px;
 }
 
@@ -32,6 +32,18 @@
 }
 
 .signup_email_container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+.signup_first_name_container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+.signup_last_name_container{
     display: flex;
     flex-direction: column;
     margin-left: 30px;
@@ -71,4 +83,11 @@
 
 .signup_button_container button {
     padding: 3px;
+    height: 25px;
+    border: none;
+}
+
+.signup_button_container button:hover {
+    background-color: #2079b1;
+    cursor: pointer;
 }

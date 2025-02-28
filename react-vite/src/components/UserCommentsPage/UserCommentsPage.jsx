@@ -70,7 +70,7 @@ useEffect(() => {
                                     modalComponent={<UpdateCommentModal onUpdate={onUpdate} id={comment.id} page={page}/>}
                                 />
                             </button>
-                            <button>
+                            <button id="user_comments_delete_button">
                                 <OpenModalMenuItem
                                     itemText={"Delete"}
                                     modalComponent={<DeleteCommentModal onDelete={onDelete} id={comment?.id} page={page}/>}

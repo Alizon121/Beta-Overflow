@@ -23,7 +23,7 @@ const handleDelete = async (e) => {
                 <p>Question cannot be recovered once deleted</p>
             </div>
             <div className="delete_question_modal_buttons_container">
-                <button onClick={handleDelete}>Delete</button>
+                <button id="delete_question_delete_button" onClick={handleDelete}>Delete</button>
                 <button onClick={closeModal}>Cancel</button>
             </div>
         </div>

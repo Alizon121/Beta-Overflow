@@ -34,6 +34,10 @@
     width: 55px;
 }
 
+#delete_question_delete_button {
+    background-color: #FF5A5F;
+}
+
 .delete_question_modal_buttons_container button:hover {
     cursor: pointer;
     background-color: #bcbcbc;

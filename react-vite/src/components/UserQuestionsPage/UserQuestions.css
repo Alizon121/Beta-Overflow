@@ -31,9 +31,19 @@
     border-radius: 5px;
     padding: 3px;
     cursor: pointer;
+    width: 75px;
+    height: 25px;
 }
 
 #user_question_update_button {
     background-color: #2089ca;
     color: #fff;
+}
+
+#user_question_update_button:hover {
+    background-color: #2079b1;
+}
+
+#user_question_delete_button:hover {
+    background-color: #aaaaaa;
 }

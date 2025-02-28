@@ -61,6 +61,7 @@ h1 {
     height: 25px;
     border-radius: 5px;
     padding: 3px;
+    cursor: pointer;
 }
 
 .pagination_controls button:hover {

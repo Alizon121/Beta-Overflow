@@ -63,7 +63,7 @@ function ProfileButton() {
               {/* <li>
                 <button onClick={handleUserQuestionNav}>User Questions</button>
               </li> */}
-              <li>
+              <li id="profile_button_logout">
                 <button onClick={logout}>Log Out</button>
               </li>
             </>

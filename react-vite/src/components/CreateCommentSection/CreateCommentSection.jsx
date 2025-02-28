@@ -45,7 +45,7 @@ function CreateCommentSection({onCreate, questionId}) {
                 ></textarea>
                 {errors.commentText && <p className="error">{errors.commentText}</p>}
                 {errors.user && <p className="error">{errors.user}</p>}
-                <div>
+                <div id="create_comment_post_container">
                     <button type="submit">Post Answer</button>
                 </div>
             </form>

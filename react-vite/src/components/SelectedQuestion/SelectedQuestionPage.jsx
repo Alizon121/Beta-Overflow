@@ -37,7 +37,7 @@ function SelectedQuestionPage () {
 
 
     return (
-        <div className="selected_quesiton_page_container">
+        <div className="selected_question_page_container">
             <h2>{question?.title}</h2>
             <div>
                 <div className="selected_question_subheaders">

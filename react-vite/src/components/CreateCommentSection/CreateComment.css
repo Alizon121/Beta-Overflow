@@ -12,3 +12,8 @@
     padding: 5px;
     margin-bottom: 20px;
 }
+
+#create_comment_post_container button:hover{
+    background-color: #2079b1;
+    cursor: pointer;
+}

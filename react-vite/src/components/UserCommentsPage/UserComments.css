@@ -1,6 +1,7 @@
 .user_comments_page_container {
     margin-left: 10px;
-    width:100vh
+    width:100%;
+    justify-content: start;
 }
 
 .user_comments_title_comment_buttons {
@@ -27,4 +28,12 @@
 #user_comments_update_button {
     background-color: #2089ca;
     color: #fff;
+}
+
+#user_comments_update_button:hover {
+    background-color: #2079b1;
+}
+
+#user_comments_delete_button:hover{
+    background-color: #aaaaaa;
 }
