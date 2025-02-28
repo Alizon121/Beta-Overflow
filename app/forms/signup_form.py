@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, Email, ValidationError
-from email_validator import validate_email, EmailNotValidError
 from app.models import User
 
 
@@ -19,14 +18,6 @@ def username_exists(form, field):
     user = User.query.filter(User.username == username).first()
     if user:
         raise ValidationError('Username is already in use.')
-
-# def check_valid_email(form, field):
-#     email = field.data
-#     try:
-#         validate_email(email, check_deliverability=False)
-#     except EmailNotValidError:
-#         raise ValidationError("Email is invalid")
-    
 
 class SignUpForm(FlaskForm):
     username = StringField(
