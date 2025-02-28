@@ -24,6 +24,7 @@ function UpdateCommentModal({onUpdate, id}) {
 
         if (Object.values(newErrors).length > 0) {
             setErrors(newErrors)
+            return
         }
 
         const payload = {
