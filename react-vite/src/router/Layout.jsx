@@ -5,6 +5,8 @@ import { ModalProvider, Modal } from "../context/Modal";
 import { thunkAuthenticate } from "../redux/session";
 import Navigation from "../components/Navigation/Navigation";
 import SideBarMenu from "../components/SideBarMenu/SideBarMenu";
+import NavigationLoginPage from "../components/Navigation/NavigationLoginPage";
+import NavigationSignup from "../components/Navigation/NavigationSignup";
 import "./LayoutStyle.css"
 
 export default function Layout() {
@@ -24,16 +26,21 @@ export default function Layout() {
   return (
     <>
       <ModalProvider>
+        <div>
+          {location.pathname === "/login"?
+            <NavigationLoginPage />:
+            location.pathname === "/signup" ?
+            <NavigationSignup/> :
+            <Navigation/>
+          }
+        </div>
        <div className="layout_container">
         <div className="main_content">
-          <Navigation />
             {isLoaded && <Outlet />}
         </div>
-          <div>
+          <div id="side_bar_menu_container">
             {location.pathname !== "/login" && location.pathname !== "/signup" && (
-              <div id="side_bar_menu_container">
                 <SideBarMenu />
-              </div>
             )}
           </div>
 

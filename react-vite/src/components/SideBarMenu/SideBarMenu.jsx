@@ -9,7 +9,7 @@ function SideBarMenu() {
 
     return (
         <div className="side_bar_menu_container">
-            <ul>
+            <div>
                 <li>
                     <button onClick={()=>navigate("/")}>
                         Home
@@ -38,7 +38,7 @@ function SideBarMenu() {
                         </li> */}
                     </div>
                 }
-            </ul>
+            </div>
         </div>
     )
 }

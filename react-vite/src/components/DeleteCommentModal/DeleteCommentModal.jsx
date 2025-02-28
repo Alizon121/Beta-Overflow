@@ -1,12 +1,11 @@
 import { useModal } from "../../context/Modal";
 import { useDispatch } from "react-redux";
 import { thunkDeleteComment } from "../../redux/comment";
+import "./DeleteComment.css"
 
 function DeleteCommentModal({onDelete, id}) {
     const dispatch = useDispatch()
     const {closeModal} = useModal()
-
-    console.log("gfgfgfgfgf", id)
 
     const handleDelete = async (e) => {
         e.preventDefault()
@@ -16,12 +15,14 @@ function DeleteCommentModal({onDelete, id}) {
     }
 
     return (
-        <div>
-            <h2>Delete Comment</h2>
-            <p>Question cannot be recovered once deleted</p>
-            <div>
-                <button type="submit" onClick={handleDelete}>Delete</button>
-                <button type="button" onClick={closeModal}>Cancel</button>
+        <div className="delete_comment_container">
+            <div className="delete_questions_header">
+                <h2>Delete Comment</h2>
+                <p>Question cannot be recovered once deleted</p>
+            </div>
+            <div className="delete_comment_buttons_container">
+                <button id="delete_comment_delete" type="submit" onClick={handleDelete}>Delete</button>
+                <button id="delete_comment_cancel" type="button" onClick={closeModal}>Cancel</button>
             </div>
         </div>
     )

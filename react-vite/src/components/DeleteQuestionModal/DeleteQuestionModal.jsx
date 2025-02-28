@@ -1,6 +1,7 @@
 import { useModal } from "../../context/Modal"
 import { thunkDeleteQuestion } from "../../redux/question"
 import { useDispatch } from "react-redux"
+import "./DeleteQuestion.css"
 
 
 function DeleteQuestionModal({onDelete, id}) {
@@ -16,11 +17,13 @@ const handleDelete = async (e) => {
 }
 
     return (
-        <div>
-            <h2>Delete Question</h2>
-            <p>Question cannot be recovered once deleted</p>
-            <div>
-                <button onClick={handleDelete}>Delete</button>
+        <div className="delete_question_modal_container">
+            <div className="delete_question_headers">
+                <h2>Delete Question?</h2>
+                <p>Question cannot be recovered once deleted</p>
+            </div>
+            <div className="delete_question_modal_buttons_container">
+                <button id="delete_question_delete_button" onClick={handleDelete}>Delete</button>
                 <button onClick={closeModal}>Cancel</button>
             </div>
         </div>

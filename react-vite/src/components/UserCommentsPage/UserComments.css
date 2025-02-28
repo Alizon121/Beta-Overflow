@@ -1,0 +1,39 @@
+.user_comments_page_container {
+    margin-left: 10px;
+    width:100%;
+    justify-content: start;
+}
+
+.user_comments_title_comment_buttons {
+    margin-top: 10px;
+    border-bottom: 1px solid rgb(201, 201, 201);
+}
+
+.user_comments_buttons_container {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.user_comments_buttons_container button {
+    list-style: none;
+    padding: 5px;
+    border: none;
+    width: 75px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#user_comments_update_button {
+    background-color: #2089ca;
+    color: #fff;
+}
+
+#user_comments_update_button:hover {
+    background-color: #2079b1;
+}
+
+#user_comments_delete_button:hover{
+    background-color: #aaaaaa;
+}

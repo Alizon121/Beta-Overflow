@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { updateQuestionThunk } from "../../redux/question"
 import { useModal } from "../../context/Modal"
+import "./UpdateUserQuestion.css"
 
 function UpdateUserQuestionModal ({onUpdate, id}) {
     // We want to render the original title and question, and be able to update these inputs.
@@ -20,7 +21,7 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
         // Set validations here
         if (title.length < 5) newErrors.title = "Title must be at least 5 characters long"
         if (title.length > 50) newErrors.title = "Title must be less than 50 characters"
-        if (userQuestion.legnth < 25) newErrors.question = "Question must be at least 25 characters long"
+        if (userQuestion.length < 25) newErrors.question = "Question must be at least 25 characters long"
 
         if (Object.values(newErrors).length > 0) {
             setErrors(newErrors)
@@ -42,22 +43,31 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
     }
 
     return (
-        <div key={id}>
+        <div key={id} className="update_user_question_container">
             <form onSubmit={handleUpdate}>
                 <h2>Update Question</h2>
-                <input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                {errors.title && <p className="error">{errors.title}</p>}
-                <textarea
-                    value={userQuestion}
-                    onChange={(e) => setUserQuestion(e.target.value)}
-                />
-                {errors.question && <p className="error">{errors.question}</p>}
-                <div>
-                    <button type="submit">Submit</button>
-                    <button type="button" onClick={closeModal}>Cancel</button>
+                        {errors.title && <p className="error">{errors.title}</p>}
+                        {errors.question && <p className="error">{errors.question}</p>}
+                <div className="update_user_question_content_container">
+                    <div className="update_user_question_title_container">
+                        <label>Title</label>
+                        <input
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+                    <div className="update_user_question_question_container">
+                        <label>Question</label>
+                        <textarea
+                            value={userQuestion}
+                            onChange={(e) => setUserQuestion(e.target.value)}
+                        />
+
+                    </div>
+                </div>
+                <div className="update_user_question_buttons_container">
+                    <button type="submit" id="update_user_question_submit">Submit</button>
+                    <button id="update_user_question_cancel" type="button" onClick={closeModal}>Cancel</button>
                 </div>
             </form>
         </div>

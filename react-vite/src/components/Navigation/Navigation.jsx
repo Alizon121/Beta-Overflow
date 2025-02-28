@@ -7,12 +7,13 @@ function Navigation() {
   const user = useSelector(state => state.session.user)
 
   return (
-    <div>
+    <div className="navigation_container">
 
       {
         user?
-        <div>
-          <li>
+        <div className="navigation_headers_user">
+          {/* REPLACE HOME WITH SEARCH BAR */}
+          <li id="navigation_user_home">
             <NavLink to="/">Home</NavLink>
           </li>
           <li>

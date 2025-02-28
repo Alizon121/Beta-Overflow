@@ -1,10 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Karma:wght@300;400;500;600;700&display=swap');
+
 .profile-dropdown {
   position: absolute;
+}
+
+.navigation_container a {
+  color: black;
+  font-weight: 500;
+  font-family: karma;
+}
+
+.navigation_headers_user {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border: 1px solid rgb(201, 201, 201);
+}
+
+.navigation_headers_user li {
+  list-style: none;
+}
+
+.navigation_headers_user a {
+  text-decoration: none;
 }
 
 .navigation_headers_no_user {
   display: flex;
   justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border: 1px solid rgb(201, 201, 201);
 }
 
 .navigation_login_signup_container{

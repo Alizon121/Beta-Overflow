@@ -3,19 +3,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkLoadSelectionQuestion } from "../../redux/question";
 import CreateCommentSection from "../CreateCommentSection";
+import "./SelectedQuestion.css"
 
 function SelectedQuestionPage () {
     const {id} = useParams()
     const [count, setCount] = useState()
     const hasRunEffect = useRef(false)
     const dispatch = useDispatch()
-    const question = useSelector(state => state.questions.userQuestion)
-    const comments = useSelector(state => state.questions.comments)
-    const users = useSelector(state => state.questions.users)
+    const question = useSelector(state => state?.questions?.userQuestion)
+    const comments = useSelector(state => state?.questions?.comments)
+    const users = useSelector(state => state?.questions?.users)
 
 
     useEffect(() => {
-        dispatch(thunkLoadSelectionQuestion(id))
+        dispatch(thunkLoadSelectionQuestion(Number(id)))
     }, [dispatch, id])
 
     useEffect(() => {
@@ -31,33 +32,36 @@ function SelectedQuestionPage () {
 
     // Function for re-rendering the thunk
     const onCreate = () => {
-        dispatch(thunkLoadSelectionQuestion(id))
+        dispatch(thunkLoadSelectionQuestion(Number(id)))
     }
 
 
     return (
-        <div>
+        <div className="selected_question_page_container">
             <h2>{question?.title}</h2>
             <div>
-                <li>Asked on {question?.created_at}</li>
-                <li>Viewed {count} times</li>
-                <div>
-                    <h3>{question?.title}</h3>
-                    <div>{question?.question_text}</div>
+                <div className="selected_question_subheaders">
+                    <li>Asked on {question?.created_at}</li>
+                    <li>Viewed {count} times</li>
+                </div>
+                <div className="selected_question_question_content_container">
+                    <div id="selected_question_question">{question?.question_text}</div>
                 </div>
 
-                <div>
-                    <div>{comments?.length >0 ? 
-                        comments?.map(comment => {
+                <div className="selected_question_comment_container">
+                    <h3>Responses</h3>
+                    <div className="selected_question_comment_content_container">
+                        {(typeof comments !== "string") ? 
+                        comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
                                 <div key={comment?.id}>
-                                    <div>{comment?.comment_text}</div>
-                                    <div>
+                                    <div id="selected_question_comment_text">{comment?.comment_text}</div>
+                                    <div className="selected_question_comment_">
                                         {selectedUserInfo && 
-                                            <div>
-                                                <div>Posted by: {selectedUserInfo?.username}</div>
-                                                <div>Created on: {comment?.created_at}</div>
+                                            <div className="selected_question_comment_username_date">
+                                                <p>Posted by: {selectedUserInfo?.username}</p>
+                                                <p>Created on: {comment?.created_at}</p>
                                             </div>
                                         }
                                     </div>

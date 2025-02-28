@@ -5,6 +5,7 @@ import { thunkLoadAllQuestionTitles } from "../../redux/question"
 import DeleteCommentModal from "../DeleteCommentModal"
 import UpdateCommentModal from "../UpdateCommentModal/UpdateCommentModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import "./UserComments.css"
 
 function UserCommentsPage() {
     const user = useSelector(state => state.session.user)
@@ -14,21 +15,20 @@ function UserCommentsPage() {
     const [disabled, setDisabled] = useState(false)
     const dispatch = useDispatch()
 
-    console.log("PAGEPPAGEPAGEPAGE", page)
-
 
     useEffect(() => {
         dispatch(thunkLoadUserComments(page))
         dispatch(thunkLoadAllQuestionTitles())
-    }, [dispatch])
+    }, [dispatch, page])
 
-    useEffect(() => {
-        if (comments?.length < 3) {
-            setDisabled(true)
-        } else {
-            setDisabled(false)
-        }
-   }, [comments])
+useEffect(() => {
+    if (comments?.length < 3) {
+        setDisabled(true)
+    } else {
+        setDisabled(false)
+    }
+}, [comments])
+
 
     // Make helper function to render component when comment deleted
     const onDelete = () => {
@@ -46,32 +46,34 @@ function UserCommentsPage() {
     
     const handlePrevPage = () => {
         setPage(prevPage => Math.max(prevPage - 1, 1));
+        setDisabled(false)
     };
 
     return (
-        <div>
+        <div className="user_comments_page_container">
             <h2>{user?.username}'s Comments</h2>
-            <div>{comments?.length > 0 ? comments?.map(comment => {
+            <div className="user_commments_content_container">
+                {comments?.length > 0 ? comments?.map(comment => {
                 const question = questions?.find(question => question.id === comment.question_id)
                 return (
-                    <div key={comment.id}>
+                    <div className="user_comments_title_comment_buttons" key={comment.id}>
                          {question && (
-                            <div>
-                                <div>{question.title}</div>
+                            <div className="user_comments_question_header">
+                                <h4>{question.title}</h4>
                             </div>
                         )}
                         <div>{comment?.comment_text}</div>
-                        <div>
-                            <button>
-                                <OpenModalMenuItem
-                                    itemText={"Delete"}
-                                    modalComponent={<DeleteCommentModal onDelete={onDelete} id={comment?.id} page={page}/>}
-                                />
-                            </button>
-                            <button>
+                        <div className="user_comments_buttons_container">
+                            <button id="user_comments_update_button">
                                 <OpenModalMenuItem
                                     itemText={"Update"}
                                     modalComponent={<UpdateCommentModal onUpdate={onUpdate} id={comment.id} page={page}/>}
+                                />
+                            </button>
+                            <button id="user_comments_delete_button">
+                                <OpenModalMenuItem
+                                    itemText={"Delete"}
+                                    modalComponent={<DeleteCommentModal onDelete={onDelete} id={comment?.id} page={page}/>}
                                 />
                             </button>
                         </div>
