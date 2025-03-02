@@ -22,12 +22,19 @@
 
 .question_form_container input {
     width: 300px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #E8F0FE;
 }
 
 .question_form_container textarea {
-    width: 300px;
-    height: 100px;
+    width: 350px;
+    height: 150px;
     margin-bottom: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #E8F0FE;
+    border: 2px solid black;
 }
 
 .create_question_buttons {
@@ -40,6 +47,7 @@
     border: none;
     padding: 3px;
     width: 75px;
+    height: 25px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -49,8 +57,16 @@
     color: #fff;
 }
 
+#create_question_submit_button:hover {
+    background-color: #1a75ad;
+}
+
 #create_question_discard_button {
     background-color: #f5f5f5;
     color: black;
+}
+
+#create_question_dicard_button:hover {
+    background-color: #aaaaaa;
 }
 
