@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import DeleteQuestionModal from "../DeleteQuestionModal"
 import UpdateUserQuestionModal from "../UpdateUserQuestion/UpdateUserQuestionModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import parse from 'html-react-parser'
 import "./UserQuestions.css"
 
 function UserQuestionsPage () {
@@ -61,7 +62,7 @@ function UserQuestionsPage () {
                 <div className="user_questions_content_container">
                     <div key={question.id}>
                         <h4>{question.title}</h4>
-                        <p>{question.question_text}</p>
+                        <p>{parse(question.question_text)}</p>
                     </div>
                     <div className="user_question_button_containers">
                         <button id="user_question_update_button">

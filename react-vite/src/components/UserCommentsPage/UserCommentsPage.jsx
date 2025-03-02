@@ -5,6 +5,7 @@ import { thunkLoadAllQuestionTitles } from "../../redux/question"
 import DeleteCommentModal from "../DeleteCommentModal"
 import UpdateCommentModal from "../UpdateCommentModal/UpdateCommentModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import parse from 'html-react-parser'
 import "./UserComments.css"
 
 function UserCommentsPage() {
@@ -49,6 +50,8 @@ useEffect(() => {
         setDisabled(false)
     };
 
+    // comments.map(comment => console.log(typeof parse(comment.comment_text)))
+
     return (
         <div className="user_comments_page_container">
             <h2>{user?.username}'s Comments</h2>
@@ -62,7 +65,7 @@ useEffect(() => {
                                 <h4>{question.title}</h4>
                             </div>
                         )}
-                        <div>{comment?.comment_text}</div>
+                        <div>{parse(comment?.comment_text)}</div>
                         <div className="user_comments_buttons_container">
                             <button id="user_comments_update_button">
                                 <OpenModalMenuItem
