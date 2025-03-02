@@ -3,6 +3,8 @@ import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { useModal } from "../../context/Modal"
 import { thunkUpdateComment } from "../../redux/comment"
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css';
 import "./UpdateComment.css"
 
 
@@ -14,13 +16,13 @@ function UpdateCommentModal({onUpdate, id}) {
     const dispatch = useDispatch()
     const {closeModal} = useModal()
 
-
+    console.log(comment.length)
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         // Add validations
         const newErrors={}
-        if (comment.length < 15) newErrors.comment = "Comment must be a minimum of 15 characters"
+        if (comment.length < 22) newErrors.comment = "Comment must be a minimum of 15 characters"
 
         if (Object.values(newErrors).length > 0) {
             setErrors(newErrors)
@@ -38,12 +40,15 @@ function UpdateCommentModal({onUpdate, id}) {
 
     return (
         <div className="update_comment_container">
-            <h2>Update Comment</h2>
-            <textarea
-                value={comment}
-                onChange={(e)=> setComment(e.target.value)}
-            ></textarea>
-            {errors.comment && <p className="error">{errors.comment}</p>}
+            <div>
+                {errors.comment && <p className="error">{errors.comment}</p>}
+                <h2>Update Comment</h2>
+                <ReactQuill
+                    theme="snow"
+                    value={comment}
+                    onChange={setComment}
+                />
+            </div>
             <div className="update_comments_button_container">
                 <button id="update_comments_update" type="submit" onClick={handleSubmit}>Update</button>
                 <button id="update_comment_cancel" type="button" onClick={closeModal}>Cancel</button>
