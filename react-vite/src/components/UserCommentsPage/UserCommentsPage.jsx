@@ -6,6 +6,7 @@ import DeleteCommentModal from "../DeleteCommentModal"
 import UpdateCommentModal from "../UpdateCommentModal/UpdateCommentModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import parse from 'html-react-parser'
+import { csrfFetch } from "../../redux/csrf"
 import "./UserComments.css"
 
 function UserCommentsPage() {
@@ -22,13 +23,23 @@ function UserCommentsPage() {
         dispatch(thunkLoadAllQuestionTitles())
     }, [dispatch, page])
 
-useEffect(() => {
-    if (comments?.length < 3) {
-        setDisabled(true)
-    } else {
-        setDisabled(false)
-    }
-}, [comments])
+    useEffect(() => {
+        const commentData = async () => {
+            try {
+                const res = await csrfFetch(`/api/comments/${page+1}`)
+                if(res.status === 200) {
+                    await dispatch(thunkLoadUserComments(page))
+                    await dispatch(thunkLoadAllQuestionTitles())
+                } else {
+                    setDisabled(true)
+                }
+            } catch(error){
+                console.error("ERROR", error)
+                setDisabled(true)
+            }
+        }
+        commentData()
+    }, [dispatch, page])
 
 
     // Make helper function to render component when comment deleted

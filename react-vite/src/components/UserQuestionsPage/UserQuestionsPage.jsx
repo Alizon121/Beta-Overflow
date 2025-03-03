@@ -5,6 +5,7 @@ import DeleteQuestionModal from "../DeleteQuestionModal"
 import UpdateUserQuestionModal from "../UpdateUserQuestion/UpdateUserQuestionModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import parse from 'html-react-parser'
+import { csrfFetch } from "../../redux/csrf"
 import "./UserQuestions.css"
 
 function UserQuestionsPage () {
@@ -19,13 +20,33 @@ function UserQuestionsPage () {
         dispatch(thunkLoadUserQuestions(page))
     }, [dispatch, page])
 
-   useEffect(() => {
-        if (userQuestions?.length < 3) {
-            setDisabled(true)
-        } else {
-            setDisabled(false)
+
+    // Make a useEffect hook to disable the next button
+    useEffect(() => {
+        const questionData = async () => {
+            try{
+                const res = await csrfFetch(`/api/questions/users/${page+1}`)
+                console.log("RERERE", res)
+                if (res.status === 200) {
+                    await dispatch(thunkLoadUserQuestions(page))
+                } else {
+                    setDisabled(true)
+                }
+            } catch(error) {
+                console.error(error)
+                setDisabled(true)
+            }
         }
-   }, [userQuestions])
+        questionData()
+    }, [dispatch, page])
+
+//    useEffect(() => {
+//         if (userQuestions?.length < 3) {
+//             setDisabled(true)
+//         } else {
+//             setDisabled(false)
+//         }
+//    }, [userQuestions])
 
 //    Helper function for re-rendering upon deletion
    const onDelete = (page) => {
