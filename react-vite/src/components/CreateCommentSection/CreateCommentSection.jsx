@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { thunkAddAnswer } from "../../redux/question"
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css';
 import "./CreateComment.css"
 
 function CreateCommentSection({onCreate, questionId}) {
@@ -8,6 +10,14 @@ function CreateCommentSection({onCreate, questionId}) {
     const [commentText, setCommentText] = useState("")
     const [errors, setErrors] = useState({})
     const user = useSelector(state => state.session.user)
+
+    // Helper function to remove the p tags from the text editor
+    const removePTags = (html) => {
+        if (html.startsWith('<p>') && html.endsWith('</p>')) {
+          html = html.slice(3, -4);
+        }
+        return html;
+      };
 
 
     const handleSubmit = async (e) => {
@@ -23,12 +33,13 @@ function CreateCommentSection({onCreate, questionId}) {
         }
 
         const payload = {
-            comment_text: commentText
+            comment_text: removePTags(commentText)
         }
 
         try{
             await dispatch(thunkAddAnswer(questionId, payload))
             setCommentText("")
+            setErrors({})
             onCreate()
         } catch(error) {
             console.error(error)
@@ -38,11 +49,12 @@ function CreateCommentSection({onCreate, questionId}) {
     return (
         <div className="create_comment_container">
             <form onSubmit={handleSubmit}>
-                <h2>Your Answer</h2>
-                <textarea
-                    value={commentText}
-                    onChange={(e)=> setCommentText(e.target.value)}
-                ></textarea>
+                <div>
+                    <h2>Your Answer</h2>
+                    <div className="creat_comment_rq_container">
+                        <ReactQuill theme="snow"  value={commentText} onChange={setCommentText}/>                  
+                    </div>
+                </div>
                 {errors.commentText && <p className="error">{errors.commentText}</p>}
                 {errors.user && <p className="error">{errors.user}</p>}
                 <div id="create_comment_post_container">

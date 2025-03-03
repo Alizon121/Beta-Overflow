@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkLoadSelectionQuestion } from "../../redux/question";
 import CreateCommentSection from "../CreateCommentSection";
+import parse from 'html-react-parser'
 import "./SelectedQuestion.css"
 
 function SelectedQuestionPage () {
@@ -45,7 +46,9 @@ function SelectedQuestionPage () {
                     <li>Viewed {count} times</li>
                 </div>
                 <div className="selected_question_question_content_container">
-                    <div id="selected_question_question">{question?.question_text}</div>
+                    <div id="selected_question_question">
+                        {question?.question_text ? parse(question.question_text) : ''}
+                    </div>
                 </div>
 
                 <div className="selected_question_comment_container">
@@ -56,7 +59,9 @@ function SelectedQuestionPage () {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
                                 <div key={comment?.id}>
-                                    <div id="selected_question_comment_text">{comment?.comment_text}</div>
+                                    <div id="selected_question_comment_text">
+                                        {comment?.comment_text ? parse(comment?.comment_text): ''}
+                                        </div>
                                     <div className="selected_question_comment_">
                                         {selectedUserInfo && 
                                             <div className="selected_question_comment_username_date">

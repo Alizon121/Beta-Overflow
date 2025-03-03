@@ -40,7 +40,7 @@ def get_user_questions( page):
     if len(user_questions.items) < 1:
         return jsonify({"Message": "User currently does not have any questions.",
                         "questions": [question.to_dict() for question in user_questions.items]
-                        })
+                        }), 404
     
     return jsonify({
         "questions": [question.to_dict() for question in user_questions.items],
@@ -58,6 +58,16 @@ def all_question_titles():
     return jsonify({
         'questionTitles': [{'id': q.id, 'title': q.title} for q in questions]
     })
+
+@question_routes.route('/all', methods=["GET"])
+def all_question_content():
+    '''
+        Query for all question content
+    '''
+    questions = Question.query.all()
+    return jsonify({
+        "question":[question.to_dict() for question in questions]
+        })
 
 
 @question_routes.route("/", methods=["GET","POST"])

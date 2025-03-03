@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import DeleteQuestionModal from "../DeleteQuestionModal"
 import UpdateUserQuestionModal from "../UpdateUserQuestion/UpdateUserQuestionModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import parse from 'html-react-parser'
+import { csrfFetch } from "../../redux/csrf"
 import "./UserQuestions.css"
 
 function UserQuestionsPage () {
@@ -18,13 +20,33 @@ function UserQuestionsPage () {
         dispatch(thunkLoadUserQuestions(page))
     }, [dispatch, page])
 
-   useEffect(() => {
-        if (userQuestions?.length < 3) {
-            setDisabled(true)
-        } else {
-            setDisabled(false)
+
+    // Make a useEffect hook to disable the next button
+    useEffect(() => {
+        const questionData = async () => {
+            try{
+                const res = await csrfFetch(`/api/questions/users/${page+1}`)
+                console.log("RERERE", res)
+                if (res.status === 200) {
+                    await dispatch(thunkLoadUserQuestions(page))
+                } else {
+                    setDisabled(true)
+                }
+            } catch(error) {
+                console.error(error)
+                setDisabled(true)
+            }
         }
-   }, [userQuestions])
+        questionData()
+    }, [dispatch, page])
+
+//    useEffect(() => {
+//         if (userQuestions?.length < 3) {
+//             setDisabled(true)
+//         } else {
+//             setDisabled(false)
+//         }
+//    }, [userQuestions])
 
 //    Helper function for re-rendering upon deletion
    const onDelete = (page) => {
@@ -61,7 +83,7 @@ function UserQuestionsPage () {
                 <div className="user_questions_content_container">
                     <div key={question.id}>
                         <h4>{question.title}</h4>
-                        <p>{question.question_text}</p>
+                        <p>{parse(question.question_text)}</p>
                     </div>
                     <div className="user_question_button_containers">
                         <button id="user_question_update_button">

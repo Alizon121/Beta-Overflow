@@ -5,6 +5,8 @@ import { thunkLoadAllQuestionTitles } from "../../redux/question"
 import DeleteCommentModal from "../DeleteCommentModal"
 import UpdateCommentModal from "../UpdateCommentModal/UpdateCommentModal"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import parse from 'html-react-parser'
+import { csrfFetch } from "../../redux/csrf"
 import "./UserComments.css"
 
 function UserCommentsPage() {
@@ -21,13 +23,23 @@ function UserCommentsPage() {
         dispatch(thunkLoadAllQuestionTitles())
     }, [dispatch, page])
 
-useEffect(() => {
-    if (comments?.length < 3) {
-        setDisabled(true)
-    } else {
-        setDisabled(false)
-    }
-}, [comments])
+    useEffect(() => {
+        const commentData = async () => {
+            try {
+                const res = await csrfFetch(`/api/comments/${page+1}`)
+                if(res.status === 200) {
+                    await dispatch(thunkLoadUserComments(page))
+                    await dispatch(thunkLoadAllQuestionTitles())
+                } else {
+                    setDisabled(true)
+                }
+            } catch(error){
+                console.error("ERROR", error)
+                setDisabled(true)
+            }
+        }
+        commentData()
+    }, [dispatch, page])
 
 
     // Make helper function to render component when comment deleted
@@ -49,6 +61,8 @@ useEffect(() => {
         setDisabled(false)
     };
 
+    // comments.map(comment => console.log(typeof parse(comment.comment_text)))
+
     return (
         <div className="user_comments_page_container">
             <h2>{user?.username}'s Comments</h2>
@@ -62,7 +76,7 @@ useEffect(() => {
                                 <h4>{question.title}</h4>
                             </div>
                         )}
-                        <div>{comment?.comment_text}</div>
+                        <div>{parse(comment?.comment_text)}</div>
                         <div className="user_comments_buttons_container">
                             <button id="user_comments_update_button">
                                 <OpenModalMenuItem

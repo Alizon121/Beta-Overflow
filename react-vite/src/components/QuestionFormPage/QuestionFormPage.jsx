@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { thunkCreateQuestion, thunkLoadAllQuestions } from "../../redux/question"
+import ReactQuill from "react-quill"
+import 'react-quill/dist/quill.snow.css';
 import "./QuestionForm.css"
 
 function QuestionFormPage() {
@@ -11,9 +13,12 @@ function QuestionFormPage() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    // useEffect(() => {
-    //     dispatch(thunkLoadAllQuestions())
-    // }, [dispatch])
+   // Helper function to remove the p tags from the text editor
+//    const stripHtmlTags = (html) => {
+//     const tempDiv = document.createElement('div');
+//     tempDiv.innerHTML = html;
+//     return tempDiv.textContent || tempDiv.innerText || '';
+//   };
 
     // Helper function for discarding question
     const handleDiscard = async() => {
@@ -44,6 +49,7 @@ function QuestionFormPage() {
 
         try{
             await dispatch(thunkCreateQuestion(question))
+            setErrors({})
             navigate("/")
         } catch(error) {
             console.error(error)
@@ -53,24 +59,32 @@ function QuestionFormPage() {
 
     return (
         <div className="question_form_container">
-            <h2>Create a Question</h2>
             <form onSubmit={handleSubmit}>
-                <div className="question_form_content_container">
-                    <input
-                        type="text"
-                        placeholder="Title"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
-                    />
-                    {errors.title && <p className="error">{errors.title}</p>}
-                    <textarea
-                        type="text"
-                        placeholder="Add Question!"
+            <div>
+                <h2>Create a Question</h2>
+                    <div className="question_form_content_container">
+                        <input
+                            type="text"
+                            placeholder="Title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        {errors.title && <p className="error">{errors.title}</p>}
+                        {/* <textarea
+                            type="text"
+                            placeholder="Add Question!"
+                            value={questionText}
+                            onChange={e => setQuestionText(e.target.value)}
+                        /> */}
+
+                        <ReactQuill
+                        theme="snow"
                         value={questionText}
-                        onChange={e => setQuestionText(e.target.value)}
-                    />
-                    {errors.question && <p className="error">{errors.question}</p>}
-                </div>
+                        onChange={setQuestionText}
+                        />
+                        {errors.question && <p className="error">{errors.question}</p>}
+                    </div>
+            </div>
                 <div className="create_question_buttons">
                     <button id="create_question_submit_button" type="submit">Submit</button>
                     <button id="create_question_dicard_button" type="button" onClick={handleDiscard}>Discard</button>

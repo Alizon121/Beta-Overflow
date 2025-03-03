@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 import { useSelector } from "react-redux";
+import SearchBar from "./SearchBar";
 import "./Navigation.css";
 
 function Navigation() {
@@ -14,7 +15,8 @@ function Navigation() {
         <div className="navigation_headers_user">
           {/* REPLACE HOME WITH SEARCH BAR */}
           <li id="navigation_user_home">
-            <NavLink to="/">Home</NavLink>
+            {/* <NavLink to="/">Home</NavLink> */}
+            <SearchBar/>
           </li>
           <li>
             <ProfileButton />
@@ -23,7 +25,8 @@ function Navigation() {
         :
       <div className="navigation_headers_no_user">
         <li id="navigation_no_user_home">
-          <NavLink to="/">Home</NavLink>
+          {/* <NavLink to="/">Home</NavLink> */}
+          <SearchBar/>
         </li>
         <div className="navigation_login_signup_container">
           <NavLink to={"/login"}>Login</NavLink>
