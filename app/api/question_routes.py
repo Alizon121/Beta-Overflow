@@ -59,6 +59,16 @@ def all_question_titles():
         'questionTitles': [{'id': q.id, 'title': q.title} for q in questions]
     })
 
+@question_routes.route('/all', methods=["GET"])
+def all_question_content():
+    '''
+        Query for all question content
+    '''
+    questions = Question.query.all()
+    return jsonify({
+        "question":[question.to_dict() for question in questions]
+        })
+
 
 @question_routes.route("/", methods=["GET","POST"])
 @login_required

@@ -6,6 +6,7 @@ import QuestionFormPage from '../components/QuestionFormPage';
 import UserQuestionsPage from '../components/UserQuestionsPage';
 import UserCommentsPage from '../components/UserCommentsPage/UserCommentsPage';
 import SelectedQuestionPage from '../components/SelectedQuestion';
+import QuestionsListPage from '../components/QuestionsList';
 import Layout from './Layout';
 
 export const router = createBrowserRouter([
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: "/question/:id",
         element: <SelectedQuestionPage/>
+      },
+      {
+        path: "/question-list",
+        element: <QuestionsListPage/>
       }
     ],
   },

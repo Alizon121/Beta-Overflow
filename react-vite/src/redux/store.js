@@ -8,11 +8,13 @@ import thunk from "redux-thunk";
 import sessionReducer from "./session";
 import questionReducer from "./question";
 import commentReducer from "./comment";
+import queryReducer from "./query";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   questions: questionReducer,
-  comments: commentReducer
+  comments: commentReducer,
+  query: queryReducer
 });
 
 let enhancer;
