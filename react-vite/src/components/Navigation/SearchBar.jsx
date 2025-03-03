@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { setQuery } from "../../redux/query"
+import { IoMdSearch } from "react-icons/io";
 import "./SearchBarStyles.css"
 
 
@@ -27,12 +28,12 @@ const handleSubmit = async (e) => {
 return (
     <div className="search_bar_container">
         <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="Search..."
-                value={search}
-                onChange={handleChange}
-            />
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={handleChange}
+                    />
         </form>
     </div>
 )
