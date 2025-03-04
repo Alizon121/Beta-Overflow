@@ -14,22 +14,16 @@
     height: 350px;
 }
 
+.create_comment_container .error{
+    margin: 0px
+}
+
 .creat_comment_rq_container{
     margin-bottom: 1rem;
 }
 
-form .quill {
+.quill .ql-container{
     height: 150px;
-}
-
-/* .quill{
-    width: 500px;
-    height: 100px;
-    border-radius: 5px;
-} */
-
-#create_comment_post_container {
-    margin-top: 1rem;
 }
 
 .create_comment_container button {

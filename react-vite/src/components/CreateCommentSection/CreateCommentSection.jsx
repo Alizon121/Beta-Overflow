@@ -49,14 +49,14 @@ function CreateCommentSection({onCreate, questionId}) {
     return (
         <div className="create_comment_container">
             <form onSubmit={handleSubmit}>
+                {errors.commentText && <p className="error">{errors.commentText}</p>}
+                {errors.user && <p className="error">{errors.user}</p>}
                 <div>
                     <h2>Your Answer</h2>
                     <div className="creat_comment_rq_container">
                         <ReactQuill theme="snow"  value={commentText} onChange={setCommentText}/>                  
                     </div>
                 </div>
-                {errors.commentText && <p className="error">{errors.commentText}</p>}
-                {errors.user && <p className="error">{errors.user}</p>}
                 <div id="create_comment_post_container">
                     <button type="submit">Post Answer</button>
                 </div>
