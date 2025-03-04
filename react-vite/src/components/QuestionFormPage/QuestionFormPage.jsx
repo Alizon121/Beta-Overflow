@@ -62,6 +62,8 @@ function QuestionFormPage() {
             <form onSubmit={handleSubmit}>
             <div>
                 <h2>Create a Question</h2>
+                    {errors.title && <p className="error">{errors.title}</p>}
+                    {errors.question && <p className="error">{errors.question}</p>}
                     <div className="question_form_content_container">
                         <input
                             type="text"
@@ -69,7 +71,6 @@ function QuestionFormPage() {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
-                        {errors.title && <p className="error">{errors.title}</p>}
                         {/* <textarea
                             type="text"
                             placeholder="Add Question!"
@@ -82,7 +83,6 @@ function QuestionFormPage() {
                         value={questionText}
                         onChange={setQuestionText}
                         />
-                        {errors.question && <p className="error">{errors.question}</p>}
                     </div>
             </div>
                 <div className="create_question_buttons">
