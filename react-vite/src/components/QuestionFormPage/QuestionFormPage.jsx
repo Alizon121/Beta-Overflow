@@ -13,13 +13,6 @@ function QuestionFormPage() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-   // Helper function to remove the p tags from the text editor
-//    const stripHtmlTags = (html) => {
-//     const tempDiv = document.createElement('div');
-//     tempDiv.innerHTML = html;
-//     return tempDiv.textContent || tempDiv.innerText || '';
-//   };
-
     // Helper function for discarding question
     const handleDiscard = async() => {
         setTitle("")

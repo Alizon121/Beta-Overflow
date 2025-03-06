@@ -61,7 +61,7 @@ function SelectedQuestionPage () {
                 }
 
                 <div className="selected_question_comment_container">
-                    <h3>Responses</h3>
+                    <h2>Responses</h2>
                     <div className="selected_question_comment_content_container">
                         {(typeof comments !== "string") ? 
                         comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => {
