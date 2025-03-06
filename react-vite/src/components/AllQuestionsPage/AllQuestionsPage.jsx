@@ -2,14 +2,14 @@ import "./AllQuestions.css"
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate, NavLink } from "react-router-dom"
-import { thunkLoadAllQuestions, thunkLoadAllQuestionTitles } from "../../redux/question"
+import { thunkLoadAllQuestions } from "../../redux/question"
 import parse from 'html-react-parser'
 import "./AllQuestions.css"
 
 function AllQuestionsPage(){ 
-const user = useSelector(state => state.session.user)
-const questions = useSelector(state => state.questions.questions)
-const allQuestions = useSelector(state => state.questions.allQuestions)
+const user = useSelector(state => state?.session?.user)
+const questions = useSelector(state => state?.questions?.questions)
+const allQuestions = useSelector(state => state?.questions?.allQuestions)
 // const questionTitles = useSelector(state => state.questions.questionTitles)
 // const query = useSelector(state => state.query.query)
 const dispatch = useDispatch()
@@ -25,7 +25,6 @@ const [disabled, setDisabled] = useState(false)
 
 useEffect(() => {
     dispatch(thunkLoadAllQuestions(page))
-    // dispatch(thunkLoadAllQuestionTitles())
 }, [dispatch, page])
 
 useEffect(() => {
@@ -56,30 +55,34 @@ const handlePrevPage = () => {
 };
 
 return (
-    <div className="all_questions_container">
-        <div className="home_page_subheaders">
-            <h1>Newest Questions</h1>
-            <div className="all_questions_counter_ask_container">
-                <p>{allQuestions} questions</p>
-                <button onClick={handleAskQuestion}>Ask Question</button>
+    <div>
+        {allQuestions ? 
+        <div className="all_questions_container">
+            <div className="home_page_subheaders">
+                <h1>Newest Questions</h1>
+                <div className="all_questions_counter_ask_container">
+                    <p>{allQuestions} questions</p>
+                    <button onClick={handleAskQuestion}>Ask Question</button>
+                </div>
+            </div>
+            <div className="question_content">
+                {questions?.map((question, index) => 
+                    <div className="all_questions_question_container"  key={index}>
+                        <div className="question_container">
+                            <h4><NavLink to={`/question/${question?.id}`}>{question?.title}</NavLink></h4>
+                            <p>{question?.question_text ? parse(question?.question_text): <h4>Loading question...</h4>}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className="pagination_controls">
+                    <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
+                    <button onClick={handleNextPage} disabled={disabled}>Next</button>
             </div>
         </div>
-
-        
-        <div className="question_content">
-            {questions?.map((question, index) => 
-                <div className="all_questions_question_container"  key={index}>
-                    <div className="question_container">
-                        <h4><NavLink to={`/question/${question.id}`}>{question.title}</NavLink></h4>
-                        <p>{parse(question.question_text)}</p>
-                    </div>
-                </div>
-            )}
-        </div>
-        <div className="pagination_controls">
-                <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
-                <button onClick={handleNextPage} disabled={disabled}>Next</button>
-        </div>
+        :
+        <h2>Loading....</h2>
+        }
     </div>          
 )}
 export default AllQuestionsPage
