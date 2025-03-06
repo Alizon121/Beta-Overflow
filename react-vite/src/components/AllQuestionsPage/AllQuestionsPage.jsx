@@ -61,7 +61,7 @@ return (
             <div className="home_page_subheaders">
                 <h1>Newest Questions</h1>
                 <div className="all_questions_counter_ask_container">
-                    <p>{allQuestions} questions</p>
+                    <p id="question_counter">{allQuestions} questions</p>
                     <button onClick={handleAskQuestion}>Ask Question</button>
                 </div>
             </div>

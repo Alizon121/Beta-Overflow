@@ -94,7 +94,7 @@ function UserCommentsPage() {
                     </div>
                 );
             }) : (
-                <p>No comments yet!</p>
+                <p>Loading...</p>
             )}</div>
         
             <div className="pagination_controls">

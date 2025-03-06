@@ -39,20 +39,29 @@ function SelectedQuestionPage () {
 
     return (
         <div className="selected_question_page_container">
-            <h2>{question?.title}</h2>
+            {question?
+            <h2>{question?.title}</h2>:
+            <h2>Loading Question Title...</h2>
+            }
             <div>
-                <div className="selected_question_subheaders">
-                    <li>Asked on {question?.created_at}</li>
-                    <li>Viewed {count} times</li>
-                </div>
-                <div className="selected_question_question_content_container">
-                    <div id="selected_question_question">
-                        {question?.question_text ? parse(question.question_text) : ''}
-                    </div>
-                </div>
+                {
+                    question ? 
+                    <div>
+                        <div className="selected_question_subheaders">
+                            <li>Asked on {question?.created_at}</li>
+                            <li>Viewed {count} times</li>
+                        </div>
+                        <div className="selected_question_question_content_container">
+                            <div id="selected_question_question">
+                                {question?.question_text ? parse(question.question_text) : ''}
+                            </div>
+                        </div>
+                    </div>:
+                    <h3>Loading Question...</h3>
+                }
 
                 <div className="selected_question_comment_container">
-                    <h3>Responses</h3>
+                    <h2>Responses</h2>
                     <div className="selected_question_comment_content_container">
                         {(typeof comments !== "string") ? 
                         comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => {

@@ -1,6 +1,7 @@
 .selected_question_page_container{
     width:100%;
-    margin-left: 20px
+    margin-left: 20px;
+    overflow: scroll;
 }
 
 .selected_question_subheaders {
@@ -13,7 +14,7 @@
 
 .selected_question_question_content_container {
     /* border-top: 1px solid rgb(201, 201, 201); */
-    border-bottom: 1px solid rgb(201, 201, 201);
+    border-bottom: 2px solid rgb(201, 201, 201);
 }
 
 #selected_question_question {

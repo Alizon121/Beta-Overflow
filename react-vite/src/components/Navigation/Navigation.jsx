@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 import { useSelector } from "react-redux";
 import SearchBar from "./SearchBar";
+import { LiaMountainSolid } from "react-icons/lia";
 import "./Navigation.css";
 
 function Navigation() {
@@ -14,6 +15,11 @@ function Navigation() {
         user?
         <div className="navigation_headers_user">
           {/* REPLACE HOME WITH SEARCH BAR */}
+            <div id="mountain_home_button">
+            <NavLink to={"/"}>
+              <LiaMountainSolid/>
+            </NavLink>
+            </div>
           <li id="navigation_user_home">
             {/* <NavLink to="/">Home</NavLink> */}
             <SearchBar/>
@@ -24,6 +30,11 @@ function Navigation() {
         </div>
         :
       <div className="navigation_headers_no_user">
+             <div id="mountain_home_button">
+            <NavLink to={"/"}>
+              <LiaMountainSolid/>
+            </NavLink>
+            </div>
         <li id="navigation_no_user_home">
           {/* <NavLink to="/">Home</NavLink> */}
           <SearchBar/>
