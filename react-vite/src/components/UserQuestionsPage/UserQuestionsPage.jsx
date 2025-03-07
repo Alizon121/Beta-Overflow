@@ -40,14 +40,6 @@ function UserQuestionsPage () {
         questionData()
     }, [dispatch, page])
 
-//    useEffect(() => {
-//         if (userQuestions?.length < 3) {
-//             setDisabled(true)
-//         } else {
-//             setDisabled(false)
-//         }
-//    }, [userQuestions])
-
 //    Helper function for re-rendering upon deletion
    const onDelete = (page) => {
         dispatch(thunkLoadUserQuestions(page))
@@ -71,14 +63,15 @@ function UserQuestionsPage () {
         <div className="user_questions_container">
             <h2>{user?.username}'s Questions</h2>
             <div className="user_questions_header">
-                <li>{allUserQuestions ?
-                    <p>{allUserQuestions} questions</p>    
+                <li>{allUserQuestions === 1 ?
+                    <p>{allUserQuestions} question</p>    
                     :
-                    <p>0 questions</p>
+                    <p>{allUserQuestions} questions</p>
                 }
                 </li>
             </div>
-            {userQuestions?.length > 0 ?
+            {userQuestions ? (
+            userQuestions?.length > 0 ?
             userQuestions?.map(question => 
                 <div className="user_questions_content_container">
                     <div key={question.id}>
@@ -100,10 +93,14 @@ function UserQuestionsPage () {
                         </button>
                     </div>
                 </div>
-             ):
+             ): (
                 <div>
                     <p>There are currently no questions here!</p>
                 </div>
+             )
+            ): (
+                <h2>Loading...</h2>
+            )
              }
             <div className="pagination_controls">
                 <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
