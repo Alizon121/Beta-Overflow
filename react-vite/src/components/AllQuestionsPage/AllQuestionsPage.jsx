@@ -61,7 +61,11 @@ return (
             <div className="home_page_subheaders">
                 <h1>Newest Questions</h1>
                 <div className="all_questions_counter_ask_container">
-                    <p id="question_counter">{allQuestions} questions</p>
+                    {
+                        allQuestions === 1 ? 
+                        <p id="question_counter">{allQuestions} question</p> :
+                        <p id="question_counter">{allQuestions} questions</p>
+                    }
                     <button onClick={handleAskQuestion}>Ask Question</button>
                 </div>
             </div>
