@@ -9,7 +9,7 @@ import "./UpdateUserQuestion.css"
 function UpdateUserQuestionModal ({onUpdate, id}) {
     // We want to render the original title and question, and be able to update these inputs.
     const dispatch = useDispatch()
-    const questions = useSelector(state => state.questions.questions)
+    const questions = useSelector(state => state.questions.userQuestions)
     const question = questions.find(question => question.id === id)
     const [title, setTitle] = useState(question.title)
     const [userQuestion , setUserQuestion] = useState(question.question_text)

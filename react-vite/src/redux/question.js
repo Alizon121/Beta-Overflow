@@ -221,12 +221,12 @@ function questionReducer(state = {}, action) {
             return {
                 ...state,
                 allUserQuestions: state.allUserQuestions -1,
-                questions: state?.questions?.filter(question => question.id !== action.payload)
+                userQuestions: state?.questions?.filter(question => question.id !== action.payload)
             }
         case UPDATE_QUESTION:
             return {
                 ...state,
-                questions: [...state.questions]
+                questions: [...state.userQuestions]
             }
         default:
             return state
