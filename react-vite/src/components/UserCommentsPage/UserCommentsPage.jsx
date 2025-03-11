@@ -99,7 +99,7 @@ function UserCommentsPage() {
                     <p>No comments here! Post one now!! </p>
                 )
             ) : (
-                <h2>Loading...</h2>
+                <h4>No comments here! Post one now!</h4>
             )}
             </div>
         

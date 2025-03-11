@@ -11,7 +11,7 @@ import "./UserQuestions.css"
 function UserQuestionsPage () {
     const dispatch = useDispatch()
     const user = useSelector(state => state.session.user)
-    const userQuestions = useSelector(state =>state.questions.questions)
+    const userQuestions = useSelector(state =>state.questions.userQuestions)
     const allUserQuestions = useSelector(state => state.questions.allUserQuestions)
     const [page, setPage] = useState(1)
     const [disabled, setDisabled] = useState(false)
@@ -66,7 +66,7 @@ function UserQuestionsPage () {
                 <div>{!allUserQuestions ?
                     <div>0 questions</div> 
                     :
-                    allUserQuestions?.length === 1 ?
+                    allUserQuestions === 1 ?
                     <div>{allUserQuestions} question</div>    
                     :
                     <div>{allUserQuestions} questions</div>
