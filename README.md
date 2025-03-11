@@ -1,132 +1,44 @@
-# Flask React Project
+# BetaOverflow
+***
 
-This is the starter for the Flask React project.
+Here is a live version of BetaOverflow: https://beta-overflow.onrender.com
 
-## Getting started
+BetaOverflow is a replica of the StackOverflow application that is intended to be used to post questions/responses for everything rock climbing. The backend of the application is built on Python3 and Flask with a PostgreSQL database. The frontend is structured on React/Redux for creating a normalized, global state.
 
-1. Clone this repository (only this branch).
+## Features & Implementation
+***
 
-2. Install dependencies.
+### Single-Page App
 
-   ```bash
-   pipenv install -r requirements.txt
-   ```
+#### React Router and Components
 
-3. Create a __.env__ file based on the example with proper settings for your
-   development environment.
+* BetaOverflow is a single page app with each page rendered at "/". The React router ensures that the applications components are reached by adding paths to the root route.
 
-4. Make sure the SQLite3 database connection URL is in the __.env__ file.
+#### Frontend and Backend Interaction
 
-5. This starter organizes all tables inside the `flask_schema` schema, defined
-   by the `SCHEMA` environment variable.  Replace the value for
-   `SCHEMA` with a unique name, **making sure you use the snake_case
-   convention.**
+* The data from the backend is retrieved by reaching an api endpoint. The data retrieved from the backend path is then hydrated in the Redux state, which is accessible from the frontend framework. The information passed from backend to frontend allows for secure, normalized, and efficient rendering.
 
-6. Get into your pipenv, migrate your database, seed your database, and run your
-   Flask app:
+### Authentication
 
-   ```bash
-   pipenv shell
-   ```
 
-   ```bash
-   flask db upgrade
-   ```
+* Users are required to signup or login to be authenticated. The application uses Flask built-in methods to inject a csrf-token into cookies and ensure that the user is authenticated before navigating to pages requiring authentication.
 
-   ```bash
-   flask seed all
-   ```
+#### All Questions Page/Landing Page
 
-   ```bash
-   flask run
-   ```
+* The All Questions page displays every question in a paginated format and is limited to 10 questions per page. We leverage the questions slice of state to render all questions and utilize the "all_questions" route handler to paginate and hydrate data to the state variable. When a user is logged-in a side bar menu will give options for the user to view their own questions/comments.
 
-7. The React frontend has no styling applied. Copy the __.css__ files from your
-   Authenticate Me project into the corresponding locations in the
-   __react-vite__ folder to give your project a unique look.
+#### User Questions Page
+* The User Questions page displays a current user's questions in a paginated format and is limited to 5 questions per page. We implement the questions state variable to render a user's question and utilize the "get_user_questions" route handler to paginate and hydrate data to the state variable.
 
-8. To run the React frontend in development, `cd` into the __react-vite__
-   directory and run `npm i` to install dependencies. Next, run `npm run build`
-   to create the `dist` folder. The starter has modified the `npm run build`
-   command to include the `--watch` flag. This flag will rebuild the __dist__
-   folder whenever you change your code, keeping the production version up to
-   date.
+* A user is able to edit and delete a question by clicking on the "update" or "delete" buttons, respectively. The update button leverages the "update_question" route handler to query a question and allow a user to update their question using a rich text editor. The delete button uses the "delete_question" route handler to query and delete a specified question.
 
-## Deployment through Render.com
+#### User Comments Page
+* The User Comments Page displays a current user's comments in a paginated format and is limited to 5 comments per page. We implement the comments state variable to render a user's comments and utilize the "get_user_comments" route handler to paginate and hydrate data to the state variable.
 
-First, recall that Vite is a development dependency, so it will not be used in
-production. This means that you must already have the __dist__ folder located in
-the root of your __react-vite__ folder when you push to GitHub. This __dist__
-folder contains your React code and all necessary dependencies minified and
-bundled into a smaller footprint, ready to be served from your Python API.
+* A user is able to edit and delete a comment by clicking on the "update" or "delete" buttons, respectively. The update button leverages the "update_comment" route handler to query a comment and allows a user to update their comment using a rich text editor. The delete button uses the "delete_comment" route handler to query and delete a specified comment.
 
-Begin deployment by running `npm run build` in your __react-vite__ folder and
-pushing any changes to GitHub.
+#### Selected Question Page
+* When a user selects a question, the user will be able to view all comments associated with a question. A logged-in user will be able to create a comment on the selected question using a rich text editor that creates HTML tags for styling markdown. The "parse" library is then used to properly render the html elements in an easily readable format.
 
-Refer to your Render.com deployment articles for more detailed instructions
-about getting started with [Render.com], creating a production database, and
-deployment debugging tips.
-
-From the Render [Dashboard], click on the "New +" button in the navigation bar,
-and click on "Web Service" to create the application that will be deployed.
-
-Select that you want to "Build and deploy from a Git repository" and click
-"Next". On the next page, find the name of the application repo you want to
-deploy and click the "Connect" button to the right of the name.
-
-Now you need to fill out the form to configure your app. Most of the setup will
-be handled by the __Dockerfile__, but you do need to fill in a few fields.
-
-Start by giving your application a name.
-
-Make sure the Region is set to the location closest to you, the Branch is set to
-"main", and Runtime is set to "Docker". You can leave the Root Directory field
-blank. (By default, Render will run commands from the root directory.)
-
-Select "Free" as your Instance Type.
-
-### Add environment variables
-
-In the development environment, you have been securing your environment
-variables in a __.env__ file, which has been removed from source control (i.e.,
-the file is gitignored). In this step, you will need to input the keys and
-values for the environment variables you need for production into the Render
-GUI.
-
-Add the following keys and values in the Render GUI form:
-
-- SECRET_KEY (click "Generate" to generate a secure secret for production)
-- FLASK_ENV production
-- FLASK_APP app
-- SCHEMA (your unique schema name, in snake_case)
-
-In a new tab, navigate to your dashboard and click on your Postgres database
-instance.
-
-Add the following keys and values:
-
-- DATABASE_URL (copy value from the **External Database URL** field)
-
-**Note:** Add any other keys and values that may be present in your local
-__.env__ file. As you work to further develop your project, you may need to add
-more environment variables to your local __.env__ file. Make sure you add these
-environment variables to the Render GUI as well for the next deployment.
-
-### Deploy
-
-Now you are finally ready to deploy! Click "Create Web Service" to deploy your
-project. The deployment process will likely take about 10-15 minutes if
-everything works as expected. You can monitor the logs to see your Dockerfile
-commands being executed and any errors that occur.
-
-When deployment is complete, open your deployed site and check to see that you
-have successfully deployed your Flask application to Render! You can find the
-URL for your site just below the name of the Web Service at the top of the page.
-
-**Note:** By default, Render will set Auto-Deploy for your project to true. This
-setting will cause Render to re-deploy your application every time you push to
-main, always keeping it up to date.
-
-[Render.com]: https://render.com/
-[Dashboard]: https://dashboard.render.com/
-# Beta-Overflow
+#### Question List Page
+* A user is able to query for question titles using the search tool located in the navigation header. When a user submits a query, they are redirected to the Question List Page, which will display all results that match the query. The search functionality involves filtering the "questions" state variable using the "query" slice of state, which will then return matched results. There is a limit to 5 results per page, and further results are paginated to boost user experience.

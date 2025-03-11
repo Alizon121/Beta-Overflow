@@ -1,7 +1,7 @@
 .selected_question_page_container{
     width:100%;
     margin-left: 20px;
-    overflow: scroll;
+    /* overflow: scroll; */
 }
 
 .selected_question_subheaders {

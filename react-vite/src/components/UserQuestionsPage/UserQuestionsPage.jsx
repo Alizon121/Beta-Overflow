@@ -11,7 +11,7 @@ import "./UserQuestions.css"
 function UserQuestionsPage () {
     const dispatch = useDispatch()
     const user = useSelector(state => state.session.user)
-    const userQuestions = useSelector(state =>state.questions.questions)
+    const userQuestions = useSelector(state =>state.questions.userQuestions)
     const allUserQuestions = useSelector(state => state.questions.allUserQuestions)
     const [page, setPage] = useState(1)
     const [disabled, setDisabled] = useState(false)
@@ -26,7 +26,7 @@ function UserQuestionsPage () {
         const questionData = async () => {
             try{
                 const res = await csrfFetch(`/api/questions/users/${page+1}`)
-                console.log("RERERE", res)
+                // console.log("RERERE", res)
                 if (res.status === 200) {
                     await dispatch(thunkLoadUserQuestions(page))
                 } else {
@@ -63,12 +63,15 @@ function UserQuestionsPage () {
         <div className="user_questions_container">
             <h2>{user?.username}'s Questions</h2>
             <div className="user_questions_header">
-                <li>{allUserQuestions === 1 ?
-                    <p>{allUserQuestions} question</p>    
+                <div>{!allUserQuestions ?
+                    <div>0 questions</div> 
                     :
-                    <p>{allUserQuestions} questions</p>
-                }
-                </li>
+                    allUserQuestions === 1 ?
+                    <div>{allUserQuestions} question</div>    
+                    :
+                    <div>{allUserQuestions} questions</div>
+                    }
+                </div>
             </div>
             {userQuestions ? (
             userQuestions?.length > 0 ?
@@ -76,7 +79,7 @@ function UserQuestionsPage () {
                 <div className="user_questions_content_container">
                     <div key={question.id}>
                         <h4>{question.title}</h4>
-                        <p>{parse(question.question_text)}</p>
+                        <div>{parse(question.question_text)}</div>
                     </div>
                     <div className="user_question_button_containers">
                         <button id="user_question_update_button">
@@ -99,7 +102,7 @@ function UserQuestionsPage () {
                 </div>
              )
             ): (
-                <h2>Loading...</h2>
+                <h4>There are currently no questions here!</h4>
             )
              }
             <div className="pagination_controls">

@@ -38,12 +38,14 @@ def get_user_questions( page):
 
     # Check if user does not have questions
     if len(user_questions.items) < 1:
-        return jsonify({"Message": "User currently does not have any questions.",
-                        "questions": [question.to_dict() for question in user_questions.items]
+        return jsonify({"Message": "Unable to obtain user's questions.",
+                        "userQuestions": [question.to_dict() for question in user_questions.items]
                         }), 404
     
     return jsonify({
-        "questions": [question.to_dict() for question in user_questions.items],
+        # Make JSON for current user's questions
+        "userQuestions": [question.to_dict() for question in user_questions.items],
+        # Make JSON for count of user's questions to display a counter
         "allUserQuestions": len(user_all_questions)
     })
 

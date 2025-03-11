@@ -3,7 +3,7 @@
     flex-direction: column;
     min-height: 100vh;
     flex-grow: 1;
-    overflow: scroll;
+    /* overflow: scroll; */
 }
 
 .user_questions_container h2 {
