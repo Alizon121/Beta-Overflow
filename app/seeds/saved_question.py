@@ -57,6 +57,8 @@ def seed_saved_questions():
     db.session.add(saved_question_nine)
     db.session.add(saved_question_ten)
 
+    db.session.commit()
+
 def undo_saved_questions():
     if environment == "production":
         db.session.execute(f"Truncate table {SCHEMA}.saved_questions RESTART IDENTITY CASCADE;")
