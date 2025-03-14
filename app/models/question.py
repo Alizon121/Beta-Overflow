@@ -27,3 +27,12 @@ class Question(db.Model):
     # Add relationships here:
     user = db.relationship("User", back_populates="question")
     comment = db.relationship("Comment", back_populates="question", cascade="all, delete-orphan")
+
+    # Join Table Relationship
+    # user = db.relationship(
+    #     "User", 
+    #     secondary = "saved_questions",
+    #     back_populates="saved_question",
+    #     cascade="all, delete"
+    #     )
+    saved_questions = db.relationship("SavedQuestion", back_populates="question")
