@@ -59,7 +59,10 @@ return (
         {allQuestions ? 
         <div className="all_questions_container">
             <div className="home_page_subheaders">
-                <h1>Newest Questions</h1>
+                {!user ? <h1>Welcome!</h1>: <h1>Welcome, {user.first_name}!</h1>}
+                <strong>
+                    <i>Find answers to your climbing questions, and help others answer theirs.</i>
+                    </strong>
                 <div className="all_questions_counter_ask_container">
                     {
                         allQuestions === 1 ? 
