@@ -2,6 +2,7 @@ import { json } from "react-router-dom"
 import { csrfFetch } from "./csrf"
 
 /*Actions */
+// LOAD_ALL_QUESTIONS loads all questions in a paginated format
 const LOAD_ALL_QUESTIONS = "questions/loadAllQuestions"
 
 const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
@@ -68,7 +69,7 @@ const updateQuestion = (question) => ({
 })
 
 /**************************Thunk Actions *******************/ 
-
+// This thunk aciton only loads all questions in a paginated format
 export const thunkLoadAllQuestions = (page) => async dispatch => {
     const response = await fetch(`/api/questions/${page}`)
     if (response.ok) {
