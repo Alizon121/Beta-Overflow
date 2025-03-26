@@ -58,9 +58,10 @@ def add_saved_question(id):
     ).first()
 
     if existing_question:
-        return jsonify({"Error": "Question already exists"}), 400
+        return jsonify({"Error": "Question already saved"}), 400
     
     saved_question = SavedQuestion(
+        bookmarked = True,
         user_id = current_user.id,
         question_id = id
     )
@@ -73,6 +74,8 @@ def add_saved_question(id):
         return jsonify({"savedQuestion": saved_question.to_dict()}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+    
 @saved_question_routes.route("/<int:id>", methods=["DELETE"])
 @login_required
 def delete_saved_question(id):

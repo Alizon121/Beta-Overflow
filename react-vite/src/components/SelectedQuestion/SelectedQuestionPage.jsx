@@ -20,13 +20,12 @@ function SelectedQuestionPage () {
     const users = useSelector(state => state?.questions?.users)
     const userSavedQuestions = useSelector(state => state?.savedQuestions?.allSavedQuestions)
 
-
-
     useEffect(() => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
         dispatch(thunkLoadAllSavedQuestions())
     }, [dispatch, id])
 
+    // Use for counting visits
     useEffect(() => {
         if (!hasRunEffect.current){
             hasRunEffect.current=true
@@ -38,36 +37,34 @@ function SelectedQuestionPage () {
         }
     }, [id])
 
+    useEffect(() => {
+        if (userSavedQuestions && id) {
+            checkBookMarked()
+        }
+    }, [userSavedQuestions, id])
+
+    // Function for getting the bookmarked value form the state variable
+    const checkBookMarked = () => {
+        const savedQuestion = userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === id) 
+        if (savedQuestion?.bookMarked === true) setBookMarked(true)
+        else setBookMarked(false)
+    }
+
     // Function for re-rendering the thunk
     const onCreate = () => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
     }
 
-    // Function for creating a bookmark
-        // userSavedQuestions?.map(q => 
-        //  {if (q.bookmarked) setBookMarked(true)}
-        // )
-
     // Function for changing bookmarking
         const toggleBookMark = () => {
             setBookMarked(!bookMarked)
 
-            if (!bookMarked) {
-                dispatch(thunkAddSavedQuestion(id));
-            } else {
-                dispatch(thunkDeleteSavedQuestion(id));
-            }
+            // if (!bookMarked) {
+            //     dispatch(thunkAddSavedQuestion(id));
+            // } else {
+            //     dispatch(thunkDeleteSavedQuestion(id));
+            // }
         }
-
-    // Function for handling adding a savedQuestion to the global variable
-    // useEffect(() => {
-    //     if (bookMarked) {
-    //         dispatch(thunkAddSavedQuestion(id))
-    //     }
-    //     if (!bookMarked) {
-    //         dispatch(thunkDeleteSavedQuestion(id))
-    //     }
-    // }, [dispatch, id, bookMarked])
 
     return (
         <div className="selected_question_page_container">
@@ -76,7 +73,7 @@ function SelectedQuestionPage () {
                     {question?.title}
                     <div id="selected_question_bookmark" onClick={toggleBookMark}>
                         {
-                            userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === id)?.bookmarked
+                            (!bookMarked)
                                 ? <FaRegBookmark size={18} />
                                 : <FaBookmark size={18} />
                         }
