@@ -45,8 +45,8 @@ function SelectedQuestionPage () {
 
     // Function for getting the bookmarked value form the state variable
     const checkBookMarked = () => {
-        const savedQuestion = userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === id) 
-        if (savedQuestion?.bookMarked === true) setBookMarked(true)
+        const savedQuestion = userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === Number(id))
+        if (savedQuestion?.bookmarked === true) setBookMarked(true)
         else setBookMarked(false)
     }
 
@@ -59,11 +59,11 @@ function SelectedQuestionPage () {
         const toggleBookMark = () => {
             setBookMarked(!bookMarked)
 
-            // if (!bookMarked) {
-            //     dispatch(thunkAddSavedQuestion(id));
-            // } else {
-            //     dispatch(thunkDeleteSavedQuestion(id));
-            // }
+            if (!bookMarked) {
+                dispatch(thunkAddSavedQuestion(id));
+            } else {
+                dispatch(thunkDeleteSavedQuestion(id));
+            }
         }
 
     return (

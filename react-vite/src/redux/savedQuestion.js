@@ -90,7 +90,7 @@ function savedQuestionReducer(state = {}, action) {
             }
         case ADD_SAVED_QUESTION:
             return{
-                ...state.allSavedQuestions,
+                ...state,
                 ...action.payload
             }
         default:
