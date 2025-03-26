@@ -46,6 +46,7 @@ function SavedQuestionsPage() {
                 {savedQuestions?.map(savedQuestion => (
                     question?.filter(q => q.id === savedQuestion.question_id).map(filteredQuestion => (
                         <div key={filteredQuestion.id}>
+                            {/* Add the save button icon here */}
                             <h3>{filteredQuestion.title}</h3>
                             <p>{filteredQuestion.question_text}</p>
                         </div>

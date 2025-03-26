@@ -3,21 +3,28 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkLoadSelectionQuestion } from "../../redux/question";
 import CreateCommentSection from "../CreateCommentSection";
+import { FaRegBookmark } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa6";
 import parse from 'html-react-parser'
 import "./SelectedQuestion.css"
+import { thunkAddSavedQuestion, thunkDeleteSavedQuestion, thunkLoadAllSavedQuestions } from "../../redux/savedQuestion";
 
 function SelectedQuestionPage () {
     const {id} = useParams()
     const [count, setCount] = useState()
+    const [bookMarked, setBookMarked] = useState(false);
     const hasRunEffect = useRef(false)
     const dispatch = useDispatch()
     const question = useSelector(state => state?.questions?.userQuestion)
     const comments = useSelector(state => state?.questions?.comments)
     const users = useSelector(state => state?.questions?.users)
+    const userSavedQuestions = useSelector(state => state?.savedQuestions?.allSavedQuestions)
+
 
 
     useEffect(() => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
+        dispatch(thunkLoadAllSavedQuestions())
     }, [dispatch, id])
 
     useEffect(() => {
@@ -36,13 +43,48 @@ function SelectedQuestionPage () {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
     }
 
+    // Function for creating a bookmark
+        // userSavedQuestions?.map(q => 
+        //  {if (q.bookmarked) setBookMarked(true)}
+        // )
+
+    // Function for changing bookmarking
+        const toggleBookMark = () => {
+            setBookMarked(!bookMarked)
+
+            if (!bookMarked) {
+                dispatch(thunkAddSavedQuestion(id));
+            } else {
+                dispatch(thunkDeleteSavedQuestion(id));
+            }
+        }
+
+    // Function for handling adding a savedQuestion to the global variable
+    // useEffect(() => {
+    //     if (bookMarked) {
+    //         dispatch(thunkAddSavedQuestion(id))
+    //     }
+    //     if (!bookMarked) {
+    //         dispatch(thunkDeleteSavedQuestion(id))
+    //     }
+    // }, [dispatch, id, bookMarked])
 
     return (
         <div className="selected_question_page_container">
-            {question?
-            <h2>{question?.title}</h2>:
-            <h2>Loading Question Title...</h2>
-            }
+            {question ? (
+                <h2 className="selected_question_title">
+                    {question?.title}
+                    <div id="selected_question_bookmark" onClick={toggleBookMark}>
+                        {
+                            userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === id)?.bookmarked
+                                ? <FaRegBookmark size={18} />
+                                : <FaBookmark size={18} />
+                        }
+                    </div>
+                </h2>
+            ) : (
+                <h2>Loading Question Title...</h2>
+            )}
             <div>
                 {
                     question ? 
@@ -53,7 +95,7 @@ function SelectedQuestionPage () {
                         </div>
                         <div className="selected_question_question_content_container">
                             <div id="selected_question_question">
-                                {question?.question_text ? parse(question.question_text) : ''}
+                                {question?.question_text ? parse(question.question_text): ''}
                             </div>
                         </div>
                     </div>:

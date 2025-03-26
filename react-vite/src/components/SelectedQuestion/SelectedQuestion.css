@@ -43,3 +43,13 @@
     font-size: 14px;
     border-bottom: 1px solid rgb(201, 201, 201);
 }
+
+.selected_question_title{
+    display: flex;
+    align-items: center;
+    gap:10px
+}
+
+.selected_question_title #selected_question_bookmark{
+    cursor: pointer;
+}

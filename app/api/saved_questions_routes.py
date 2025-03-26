@@ -12,7 +12,7 @@ saved_question_routes = Blueprint('saved_questions', __name__)
 @saved_question_routes.route('/<int:page>', methods=["GET"])
 def user_saved_questions(page):
     '''
-        Query for all a users saved questions
+        Query for all a users saved questions in a paginated format
     '''
 
     PER_PAGE=5
@@ -28,25 +28,33 @@ def user_saved_questions(page):
         }), 404
 
     return jsonify({
-        "savedQuestions": [question.to_dict() for question in saved_questions.items]
+        "savedQuestionsPaginated": [question.to_dict() for question in saved_questions.items]
     })
 
-@saved_question_routes.route("/add", methods=["POST"])
+@saved_question_routes.route("/all")
 @login_required
-def add_saved_question():
+def all_saved_questions():
+
+    saved_questions = SavedQuestion.query.filter_by(user_id=current_user.id).all()
+
+    return ({"allSavedQuestions": [saved_question.to_dict() for saved_question in saved_questions]})
+
+@saved_question_routes.route("/<int:id>", methods=["POST"])
+@login_required
+def add_saved_question(id):
     '''
         Add a saved question to list of saved questions
     '''
 
-    data = request.get_json()
-    question_id = data.get("question_id")
+    # data = request.get_json()
+    # question_id = data.get("question_id")
 
-    if not question_id:
-        return jsonify({"Error": "Question ID required"}), 400
+    if not id:
+        return jsonify({"Error": "Valid question ID required"}), 400
     
     existing_question = SavedQuestion.query.filter_by(
         user_id = current_user.id,
-        question_id = question_id
+        question_id = id
     ).first()
 
     if existing_question:
@@ -54,7 +62,7 @@ def add_saved_question():
     
     saved_question = SavedQuestion(
         user_id = current_user.id,
-        question_id = question_id
+        question_id = id
     )
 
 
@@ -62,7 +70,7 @@ def add_saved_question():
 
         db.session.add(saved_question)
         db.session.commit()
-        return jsonify({"Message": "Question successfully saved"}), 201
+        return jsonify({"savedQuestion": saved_question.to_dict()}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 @saved_question_routes.route("/<int:id>", methods=["DELETE"])

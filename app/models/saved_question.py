@@ -14,6 +14,7 @@ class SavedQuestion(db.Model):
       
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False, primary_key=True)
     question_id=db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("questions.id")), nullable=False, primary_key=True)
+    bookmarked = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)        
         
@@ -21,6 +22,7 @@ class SavedQuestion(db.Model):
             return {
                 'user_id': self.user_id,
                 'question_id': self.question_id,
+                'bookmarked': self.bookmarked,
                 'created_at': self.created_at
             }
         

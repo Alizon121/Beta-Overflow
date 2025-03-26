@@ -140,7 +140,6 @@ export const thunkAddAnswer = (id, answer) => async dispatch => {
 
     if (response.ok) {
         const data = await response.json()
-        console.log("DATATATAT", data)
         dispatch(addAnswer(data.comment))
     }
 }

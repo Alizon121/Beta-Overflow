@@ -6,43 +6,53 @@ from sqlalchemy.sql import text
 def seed_saved_questions():
     saved_question_one = SavedQuestion(
         user_id = 4,
-        question_id = 10
+        question_id = 10,
+        bookmarked = True
     )
     saved_question_two = SavedQuestion(
         user_id = 4,
-        question_id = 5
+        question_id = 5,
+        bookmarked = True
     )
     saved_question_three = SavedQuestion(
         user_id = 2,
-        question_id = 3
+        question_id = 3,
+        bookmarked = True
     )
     saved_question_four = SavedQuestion(
         user_id = 2,
-        question_id = 10
+        question_id = 10,
+        bookmarked = True
     )
     saved_question_five = SavedQuestion(
         user_id = 2,
-        question_id = 6
+        question_id = 6,
+        bookmarked = True
     )
     saved_question_six = SavedQuestion(
         user_id = 10,
-        question_id = 1
+        question_id = 1,
+        bookmarked = True
     )
     saved_question_seven = SavedQuestion(
         user_id = 8,
-        question_id = 1
+        question_id = 1,
+        bookmarked = True
     )
     saved_question_eight = SavedQuestion(
         user_id = 9,
-        question_id = 3
+        question_id = 3,
+        bookmarked = True
     )
     saved_question_nine = SavedQuestion(
         user_id = 7,
-        question_id = 1
+        question_id = 1,
+        bookmarked = True
     )
     saved_question_ten = SavedQuestion(
         user_id = 1,
-        question_id = 3
+        question_id = 3,
+        bookmarked = True
     )
     
 
