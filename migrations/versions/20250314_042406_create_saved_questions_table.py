@@ -24,7 +24,7 @@ def upgrade():
     op.create_table('saved_questions',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('question_id', sa.Integer(), nullable=False),
-    sa.Column('bookmarked', sa.Boolean(), nullable=False),
+    sa.Column('bookmarked', sa.Boolean(), default=False, server_default=sa.text('false'), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
@@ -33,7 +33,7 @@ def upgrade():
     )
 
 if environment == "production":
-        op.execute(f"ALTER TABLE saved_questions SET SCHEMA {SCHEMA};")
+        op.execute(f"ALTER TABLE {SCHEMA}.saved_questions SET SCHEMA {SCHEMA};")
 
 # End alembic commands
 
