@@ -14,14 +14,13 @@ function Navigation() {
       {
         user?
         <div className="navigation_headers_user">
-          {/* REPLACE HOME WITH SEARCH BAR */}
-            <div id="mountain_home_button">
-            <NavLink to={"/"}>
+            <div class="mountain_home_button">
+            <NavLink to={"/"} class="home_link">
               <LiaMountainSolid/>
+              <div>BetaOverflow</div>
             </NavLink>
             </div>
           <li id="navigation_user_home">
-            {/* <NavLink to="/">Home</NavLink> */}
             <SearchBar/>
           </li>
           <li>
@@ -30,9 +29,10 @@ function Navigation() {
         </div>
         :
       <div className="navigation_headers_no_user">
-             <div id="mountain_home_button">
-            <NavLink to={"/"}>
+             <div class="mountain_home_button">
+            <NavLink to={"/"} class="home_link">
               <LiaMountainSolid/>
+              <div>BetaOverflow</div>
             </NavLink>
             </div>
         <li id="navigation_no_user_home">

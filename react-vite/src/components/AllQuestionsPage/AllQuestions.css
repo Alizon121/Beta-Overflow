@@ -44,8 +44,18 @@ h1 {
 
 .all_questions_question_container {
     margin-left: 10px;
-    border-top: 1px solid rgb(201, 201, 201);
-    border-bottom: 1px solid rgb(201, 201, 201);
+    /* border-top: 1px solid rgb(201, 201, 201); */
+    border: 1px solid rgb(201, 201, 201);
+    border-radius: 8px;
+    margin-bottom: 5px;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Initial shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+}
+
+.all_questions_question_container:hover {
+    transform: scale(1.0); /* Slight zoom */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .all_questions_question_container a {

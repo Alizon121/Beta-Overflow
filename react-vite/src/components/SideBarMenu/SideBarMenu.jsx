@@ -29,6 +29,11 @@ function SideBarMenu() {
                             Comments
                         </button>
                     </li>
+                    <li>
+                    <button onClick={()=> navigate("/saved-questions")}>
+                            Saved Questions
+                        </button>
+                    </li>
                 </div> :
                     <div>
                          {/* <li>

@@ -57,3 +57,24 @@
 .navigation_login_signup_container a {
   text-decoration: none;
 }
+
+.mountain_home_button {
+  display: flex;
+  gap:10px;
+}
+
+.mountain_home_button div {
+  align-items: start;
+  font-size: 18px;
+}
+
+.mountain_home_button svg {
+  font-size: 20px;
+}
+
+.mountain_home_button a{
+  display: flex;
+  gap: 10px;
+  text-decoration: none;
+  margin-bottom: 10px;
+}

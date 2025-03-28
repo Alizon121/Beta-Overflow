@@ -72,25 +72,28 @@ function UserCommentsPage() {
                     const question = questions?.find(question => question.id === comment.question_id)
                     return (
                         <div className="user_comments_title_comment_buttons" key={comment.id}>
-                            {question && (
-                                <div className="user_comments_question_header">
-                                    <h4>{question.title}</h4>
+                            <div className="user_comments_content">
+                                {question && (
+                                    <div className="user_comments_question_header">
+                                        <h4>{question.title}</h4>
+                                    </div>
+                                )}
+                                <div>{parse(comment?.comment_text)}</div>
+                                <div className="user_comments_buttons_container">
+                                    <button id="user_comments_update_button">
+                                        <OpenModalMenuItem
+                                            itemText={"Update"}
+                                            modalComponent={<UpdateCommentModal onUpdate={onUpdate} id={comment.id} page={page}/>}
+                                        />
+                                    </button>
+                                    <button id="user_comments_delete_button">
+                                        <OpenModalMenuItem
+                                            itemText={"Delete"}
+                                            modalComponent={<DeleteCommentModal onDelete={onDelete} id={comment?.id} page={page}/>}
+                                        />
+                                    </button>
                                 </div>
-                            )}
-                            <div>{parse(comment?.comment_text)}</div>
-                            <div className="user_comments_buttons_container">
-                                <button id="user_comments_update_button">
-                                    <OpenModalMenuItem
-                                        itemText={"Update"}
-                                        modalComponent={<UpdateCommentModal onUpdate={onUpdate} id={comment.id} page={page}/>}
-                                    />
-                                </button>
-                                <button id="user_comments_delete_button">
-                                    <OpenModalMenuItem
-                                        itemText={"Delete"}
-                                        modalComponent={<DeleteCommentModal onDelete={onDelete} id={comment?.id} page={page}/>}
-                                    />
-                                </button>
+
                             </div>
                         </div>
                     );

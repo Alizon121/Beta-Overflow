@@ -61,16 +61,18 @@ function UserQuestionsPage () {
 
     return (
         <div className="user_questions_container">
-            <h2>{user?.username}'s Questions</h2>
-            <div className="user_questions_header">
-                <div>{!allUserQuestions ?
-                    <div>0 questions</div> 
-                    :
-                    allUserQuestions === 1 ?
-                    <div>{allUserQuestions} question</div>    
-                    :
-                    <div>{allUserQuestions} questions</div>
-                    }
+            <div className="user_questions_title_count">
+                <h2>{user?.username}'s Questions</h2>
+                <div className="user_questions_header">
+                    <div>{!allUserQuestions ?
+                        <div>0 questions</div> 
+                        :
+                        allUserQuestions === 1 ?
+                        <div>{allUserQuestions} question</div>    
+                        :
+                        <div>{allUserQuestions} questions</div>
+                        }
+                    </div>
                 </div>
             </div>
             {userQuestions ? (
