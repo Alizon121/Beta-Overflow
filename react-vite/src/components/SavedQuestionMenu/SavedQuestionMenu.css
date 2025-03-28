@@ -1,0 +1,22 @@
+.saved_question_menu_container {
+    position: relative;
+}
+
+.saved_question_dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid;
+    border-color: black; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding: 10px;
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.saved_question_dropdown li {
+    list-style: none;
+}
