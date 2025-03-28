@@ -33,7 +33,7 @@ def upgrade():
     )
 
 if environment == "production":
-        op.execute(f"ALTER TABLE {SCHEMA}.saved_questions SET SCHEMA {SCHEMA};")
+        op.execute(f"ALTER TABLE saved_questions SET SCHEMA {SCHEMA};")
 
 # End alembic commands
 
