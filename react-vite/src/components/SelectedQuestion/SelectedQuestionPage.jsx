@@ -68,37 +68,39 @@ function SelectedQuestionPage () {
 
     return (
         <div className="selected_question_page_container">
-            {question ? (
-                <h2 className="selected_question_title">
-                    {question?.title}
-                    <div id="selected_question_bookmark" onClick={toggleBookMark}>
-                        {
-                            (!bookMarked)
-                                ? <FaRegBookmark size={18} />
-                                : <FaBookmark size={18} />
-                        }
-                    </div>
-                </h2>
-            ) : (
-                <h2>Loading Question Title...</h2>
-            )}
-            <div>
-                {
-                    question ? 
-                    <div>
-                        <div className="selected_question_subheaders">
-                            <li>Asked on {question?.created_at}</li>
-                            <li>Viewed {count} times</li>
+            <div className="selected_question_content_container">
+                {question ? (
+                    <h2 className="selected_question_title">
+                        {question?.title}
+                        <div id="selected_question_bookmark" onClick={toggleBookMark}>
+                            {
+                                (!bookMarked)
+                                    ? <FaRegBookmark size={18} />
+                                    : <FaBookmark size={18} />
+                            }
                         </div>
-                        <div className="selected_question_question_content_container">
-                            <div id="selected_question_question">
-                                {question?.question_text ? parse(question.question_text): ''}
+                    </h2>
+                ) : (
+                    <h2>Loading Question Title...</h2>
+                )}
+                    {
+                        question ? 
+                        <div>
+                            <div className="selected_question_subheaders">
+                                <li>Asked on {question?.created_at}</li>
+                                <li>Viewed {count} times</li>
                             </div>
-                        </div>
-                    </div>:
-                    <h3>Loading Question...</h3>
-                }
+                            <div className="selected_question_question_content_container">
+                                <div id="selected_question_question">
+                                    {question?.question_text ? parse(question.question_text): ''}
+                                </div>
+                            </div>
+                        </div>:
+                        <h3>Loading Question...</h3>
+                    }
+            </div>
 
+            <div>
                 <div className="selected_question_comment_container">
                     <h2>Responses</h2>
                     <div className="selected_question_comment_content_container">
@@ -106,7 +108,7 @@ function SelectedQuestionPage () {
                         comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
-                                <div key={comment?.id}>
+                                <div key={comment?.id} className="selected_q_response_container">
                                     <div id="selected_question_comment_text">
                                         {comment?.comment_text ? parse(comment?.comment_text): ''}
                                         </div>

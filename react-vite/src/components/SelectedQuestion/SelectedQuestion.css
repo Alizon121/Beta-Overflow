@@ -4,44 +4,12 @@
     /* overflow: scroll; */
 }
 
-.selected_question_subheaders {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    list-style: none;
-    margin-bottom: 15px;
-}
-
-.selected_question_question_content_container {
-    /* border-top: 1px solid rgb(201, 201, 201); */
-    border-bottom: 2px solid rgb(201, 201, 201);
-}
-
-#selected_question_question {
-    font-size: 18px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-#selected_question_comment_text {
-    margin-top: 15px;
-}
-
-.selected_question_comment_container {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    /* border-bottom: 1px solid rgb(201, 201, 201); */
-}
-
-.selected_question_comment_content_container {
-    margin-bottom: 10px;
-}
-
-.selected_question_comment_username_date {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    border-bottom: 1px solid rgb(201, 201, 201);
+.selected_question_content_container {
+    border: 1px solid rgb(201,201,201);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Initial shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
 }
 
 .selected_question_title{
@@ -52,4 +20,47 @@
 
 .selected_question_title #selected_question_bookmark{
     cursor: pointer;
+}
+
+.selected_question_subheaders {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    list-style: none;
+    margin-bottom: 15px;
+}
+
+#selected_question_question {
+    font-size: 18px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+.selected_q_response_container {
+    border: 1px solid rgb(201,201,201);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.selected_question_comment_container {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+#selected_question_comment_text {
+    margin-top: 15px;
+}
+
+
+.selected_question_comment_content_container {
+    margin-bottom: 10px;
+}
+
+.selected_question_comment_username_date {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
 }

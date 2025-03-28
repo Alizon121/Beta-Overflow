@@ -17,7 +17,18 @@
 }
 
 .user_questions_content_container {
-    border-bottom: 1px solid rgb(201, 201, 201);
+    /* border-bottom: 1px solid rgb(201, 201, 201); */
+    border: 1px solid rgb(201,201,201);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Initial shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+}
+
+.user_questions_content_container:hover {
+    transform: scale(1); /* Slight zoom */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+
 }
 
 .user_question_button_containers {

@@ -8,15 +8,15 @@
     border: 1px solid rgb(201, 201, 201);
     margin-bottom: 5px;
     margin-left: 15px;
-    padding: 5px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 8px;
     list-style: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Initial shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
 }
 
 .saved_question:hover {
-    transform: scale(1.02); /* Slight zoom */
+    transform: scale(1); /* Slight zoom */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
 }
 
