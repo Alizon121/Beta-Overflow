@@ -42,6 +42,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.add_column(sa.Column('first_name', sa.String(length=100), nullable=False))
         batch_op.add_column(sa.Column('last_name', sa.String(length=100), nullable=False))
