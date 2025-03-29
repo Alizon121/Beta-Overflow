@@ -19,7 +19,7 @@ down_revision = '4caa1507cdd1'
 depends_on=("ffdc0a98111c", "4caa1507cdd1")
 
 branch_labels = None
-depends_on = None
+# depends_on = None
 
 
 def upgrade():
