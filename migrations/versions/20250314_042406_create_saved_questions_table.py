@@ -7,6 +7,7 @@ Create Date: 2025-03-14 04:24:06.452167
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import func
 
 import os
 environment = os.getenv("FLASK_ENV")
@@ -25,11 +26,11 @@ def upgrade():
     op.create_table('saved_questions',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('question_id', sa.Integer(), nullable=False),
-    sa.Column('bookmarked', sa.Boolean(), default=False, server_default=sa.text('false'), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
+    sa.Column('bookmarked', sa.Boolean(), default=False, nullable=False),
+    sa.Column('created_at', sa.DateTime(), default=func.now(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), default=func.now(), nullable=False, onupdate=func.now()),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete="CASCADE"),
+    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ondelete="CASCADE"),
     sa.PrimaryKeyConstraint('user_id', 'question_id')
     )
 
