@@ -46,6 +46,17 @@
     margin-bottom: 10px;
 }
 
+.selected_comment_main_container {
+    border: 1px solid  rgb(201,201,201);
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    height: 115%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
 .selected_question_comment_container {
     margin-top: 10px;
     margin-bottom: 15px;
