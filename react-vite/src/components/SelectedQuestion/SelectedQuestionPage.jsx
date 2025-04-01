@@ -15,6 +15,7 @@ function SelectedQuestionPage () {
     const [bookMarked, setBookMarked] = useState(false);
     const hasRunEffect = useRef(false)
     const dispatch = useDispatch()
+    const user = useSelector(state => state?.session?.user)
     const question = useSelector(state => state?.questions?.userQuestion)
     const comments = useSelector(state => state?.questions?.comments)
     const users = useSelector(state => state?.questions?.users)
@@ -73,10 +74,11 @@ function SelectedQuestionPage () {
                     <h2 className="selected_question_title">
                         {question?.title}
                         <div id="selected_question_bookmark" onClick={toggleBookMark}>
-                            {
+                            {user ? 
                                 (!bookMarked)
                                     ? <FaRegBookmark size={18} />
                                     : <FaBookmark size={18} />
+                                : <div></div>
                             }
                         </div>
                     </h2>
@@ -100,7 +102,7 @@ function SelectedQuestionPage () {
                     }
             </div>
 
-            <div>
+            <div className="selected_comment_main_container">
                 <div className="selected_question_comment_container">
                     <h2>Responses</h2>
                     <div className="selected_question_comment_content_container">
