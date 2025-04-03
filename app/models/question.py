@@ -1,5 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime, timezone
+from .tag import question_tags
 
 class Question(db.Model):
     __tablename__ = 'questions'
@@ -25,14 +26,15 @@ class Question(db.Model):
         }
     
     # Add relationships here:
-    user = db.relationship("User", back_populates="question")
+    user = db.relationship("User", back_populates="questions")
     comment = db.relationship("Comment", back_populates="question", cascade="all, delete-orphan")
 
-    # Join Table Relationship
-    # user = db.relationship(
-    #     "User", 
-    #     secondary = "saved_questions",
-    #     back_populates="saved_question",
-    #     cascade="all, delete"
-    #     )
     saved_questions = db.relationship("SavedQuestion", back_populates="question")
+  
+    # Add relationship for JOIN table
+    tags = db.relationship(
+        "Tag",
+        secondary = question_tags,
+        back_populates = "tag_questions",
+        cascade = "all, delete"
+    )

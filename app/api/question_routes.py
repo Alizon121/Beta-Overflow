@@ -16,6 +16,8 @@ def all_questions(page):
         Query for all questions when a user is NOT logged-in or logged-in
     '''
 
+    # We need to formulate a query that will also include tags using relatinoships
+
     PER_PAGE = 5
     questions = Question.query.order_by(Question.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
     all_questions = Question.query.all()

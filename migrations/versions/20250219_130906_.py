@@ -53,6 +53,22 @@ def upgrade():
     sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ondelete="CASCADE"),
     sa.PrimaryKeyConstraint('user_id', 'question_id')
     )
+    op.create_table('tags',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('tag_name', sa.Text(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), default=func.now(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), default=func.now(), nullable=False, onupdate=func.now()),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete="CASCADE"),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('question_tags',
+    sa.Column('tag_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['tag_id'], ['tagss.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('tag_id', 'user_id')
+    )
 
 
     with op.batch_alter_table('users', schema=None) as batch_op:
@@ -66,6 +82,8 @@ def upgrade():
        op.execute(f"ALTER TABLE comments SET SCHEMA {SCHEMA};")
        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
        op.execute(f"ALTER TABLE saved_questions SET SCHEMA {SCHEMA};")
+       op.execute(f"ALTER TABLE tags SET SCHEMA {SCHEMA};")
+       op.execute(f"ALTER TABLE question_tags SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 
@@ -79,4 +97,6 @@ def downgrade():
     op.drop_table('comments')
     op.drop_table('questions')
     op.drop_table('saved_questions')
+    op.drop_table('tags')
+    op.drop_table('question_tags')
     # ### end Alembic commands ###
