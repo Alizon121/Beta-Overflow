@@ -5,6 +5,7 @@ from app.models import db
 from app.models.question import Question
 from app.models.comments import Comment
 from app.models.user import User
+from app.models.tag import Tag
 from ..forms.question_form import QuestionForm
 from ..forms.comment_form import CommentForm
 
@@ -252,3 +253,96 @@ def handle_comments(id):
         return jsonify({"Error": "Unable to create comment"})
 
 
+##########################Tags############################
+@question_routes.route("/<int:question_id>/tags/<int:tag_id>", methods=["POST"])
+@login_required
+def add_tag_to_question(question_id, tag_id):
+    '''
+        Add a tag to a question.
+    '''
+
+    # Query for the question
+    question = Question.query.get(question_id)
+
+    if not question:
+        return jsonify({"Error": "Question not found"})
+    # Validate user
+    if question.user_id != current_user.id:
+        return jsonify({"Error": "User is unauthorized"}), 401
+
+    # Locate the tag
+    tag = Tag.query.get(tag_id)
+
+    # Validation for Tag 
+    if not tag:
+        return jsonify({"Error": "Tag not found"})
+    
+    # Avoid duplicates
+    if tag in question.tags:
+        return jsonify({"message": "Tag already added"}), 200
+
+
+    # Add the data to the tags array
+    question.tags.append(tag)
+    db.session.commit()
+
+    return jsonify({
+        "Message": "Tag successfully added",
+        "tags": [t.to_dict() for t in question.tags]
+        })
+
+@question_routes.route("/<int:question_id>/tags/<int:tag_id>", methods=["DELETE"])
+@login_required
+def delete_tag_from_question(question_id, tag_id):
+    '''
+        Delete a specific tag from a question
+    '''
+    # Query for a question
+    question = Question.query.get(question_id)
+
+    if current_user.id != question.user_id:
+        return jsonify({"Error": "User is not authorized"})
+    
+    # Validation for question
+    if not question:
+        return jsonify({"Error": "Question not found"})
+    
+    # Query for all a question's tag
+    question_tag = question.tags
+
+    if not question_tag:
+        return jsonify({"Error": "Tag(s) not found"})
+
+    tag = Tag.query.get(tag_id)
+
+    # Validate if tag exists
+    if not tag:
+        return jsonify({"Error": "Tag not found"})
+
+    # Validate if a tag exists on a question
+    if tag in question_tag:
+        try:
+            for tag in question_tag:
+                if tag.id == tag_id:
+                    question_tag.remove(tag)
+
+            db.session.commit()
+
+            return jsonify({"Message": "Message successfully removed"})
+        except:
+            return jsonify({"Error": "Unable to remove tag"})
+    
+@question_routes.route("/<int:id>/tags", methods=["GET"])
+@login_required
+def get_questions_tags(id):
+    '''
+        Allows a user to view all the tags for a questions
+    '''
+
+    question_tags = Question.query.get(id).tags
+
+    if not question_tags:
+        return jsonify({"Error": "This question does not currently have tags"})
+
+    if question_tags:
+        return jsonify({"tags": [tag.to_dict() for tag in question_tags]})
