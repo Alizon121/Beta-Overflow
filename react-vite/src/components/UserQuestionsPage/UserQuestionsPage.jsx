@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { thunkLoadUserQuestions } from "../../redux/question"
+import { thunkLoadQuestionTags } from "../../redux/tag"
 import { useDispatch, useSelector } from "react-redux"
 import DeleteQuestionModal from "../DeleteQuestionModal"
 import UpdateUserQuestionModal from "../UpdateUserQuestion/UpdateUserQuestionModal"
@@ -13,6 +14,7 @@ function UserQuestionsPage () {
     const user = useSelector(state => state.session.user)
     const userQuestions = useSelector(state =>state.questions.userQuestions)
     const allUserQuestions = useSelector(state => state.questions.allUserQuestions)
+    const tagsByQuestionId = useSelector(state => state?.tags?.tagsByQuestionId)
     const [page, setPage] = useState(1)
     const [disabled, setDisabled] = useState(false)
 
@@ -20,6 +22,15 @@ function UserQuestionsPage () {
         dispatch(thunkLoadUserQuestions(page))
     }, [dispatch, page])
 
+
+    // Render tags
+    useEffect(() => {
+        if (userQuestions?.length > 0) {
+            userQuestions?.forEach(question => {
+                dispatch(thunkLoadQuestionTags(question.id))
+            })
+        }
+    }, [userQuestions, dispatch])
 
     // Make a useEffect hook to disable the next button
     useEffect(() => {
@@ -82,6 +93,11 @@ function UserQuestionsPage () {
                     <div key={question.id}>
                         <h4>{question.title}</h4>
                         <div>{parse(question.question_text)}</div>
+                    </div>
+                    <div>
+                        {tagsByQuestionId[Number(question.id)]?.map(tag => (
+                        <span id="all_questions_tag" key={tag.id}>{tag.tag_name}</span>
+                        ))}
                     </div>
                     <div className="user_question_button_containers">
                         <button id="user_question_update_button">

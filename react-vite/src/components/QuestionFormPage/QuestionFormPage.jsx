@@ -1,17 +1,28 @@
 import { useState, useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { thunkCreateQuestion, thunkLoadAllQuestions } from "../../redux/question"
+import { thunkCreateQuestion } from "../../redux/question"
+import { thunkLoadTags } from "../../redux/tag"
 import ReactQuill from "react-quill"
+import Select from "react-select"
 import 'react-quill/dist/quill.snow.css';
 import "./QuestionForm.css"
 
 function QuestionFormPage() {
     const [title, setTitle] = useState("")
     const [ questionText, setQuestionText] = useState("")
+    const [selectedTags, setSelectedTags] = useState([])
     const [errors, setErrors] = useState({})
+    const tags = useSelector(state => Object.values(state.tags))
+    const tagOptions = tags.map(tag => ({ value: tag.id, label: tag.tag_name }));
+    // console.log("tATATAT", Object.values(tags).map(tag => tag.tag_name))
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    // Hook for dispatching all tags
+    useEffect(() => {
+        dispatch(thunkLoadTags())
+    }, [dispatch])
 
     // Helper function for discarding question
     const handleDiscard = async() => {
@@ -37,7 +48,8 @@ function QuestionFormPage() {
 
         const question = {
             title,
-            question_text: questionText
+            question_text: questionText,
+            tags: selectedTags.map(tag => tag.value)
         }
 
         try{
@@ -64,17 +76,19 @@ function QuestionFormPage() {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
-                        {/* <textarea
-                            type="text"
-                            placeholder="Add Question!"
-                            value={questionText}
-                            onChange={e => setQuestionText(e.target.value)}
-                        /> */}
-
                         <ReactQuill
                         theme="snow"
                         value={questionText}
                         onChange={setQuestionText}
+                        />
+                    </div>
+                    <div className="create_question_select_tags">
+                        <h3>Select Tags</h3>
+                        <Select
+                            isMulti
+                            options={tagOptions}
+                            value={selectedTags}
+                            onChange={setSelectedTags}
                         />
                     </div>
             </div>

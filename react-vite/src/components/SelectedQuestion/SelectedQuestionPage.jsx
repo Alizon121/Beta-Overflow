@@ -8,6 +8,7 @@ import { FaBookmark } from "react-icons/fa6";
 import parse from 'html-react-parser'
 import "./SelectedQuestion.css"
 import { thunkAddSavedQuestion, thunkDeleteSavedQuestion, thunkLoadAllSavedQuestions } from "../../redux/savedQuestion";
+import { thunkLoadQuestionTags } from "../../redux/tag";
 
 function SelectedQuestionPage () {
     const {id} = useParams()
@@ -17,14 +18,23 @@ function SelectedQuestionPage () {
     const dispatch = useDispatch()
     const user = useSelector(state => state?.session?.user)
     const question = useSelector(state => state?.questions?.userQuestion)
+    const tagsByQuestionId = useSelector(state => state?.tags?.tagsByQuestionId)
     const comments = useSelector(state => state?.questions?.comments)
     const users = useSelector(state => state?.questions?.users)
     const userSavedQuestions = useSelector(state => state?.savedQuestions?.allSavedQuestions)
+
 
     useEffect(() => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
         dispatch(thunkLoadAllSavedQuestions())
     }, [dispatch, id])
+
+    // Render the tags
+    useEffect(() => {
+        if (question) {
+            dispatch(thunkLoadQuestionTags(question?.id))
+        }   
+    },[question, dispatch])
 
     // Use for counting visits
     useEffect(() => {
@@ -96,6 +106,11 @@ function SelectedQuestionPage () {
                                 <div id="selected_question_question">
                                     {question?.question_text ? parse(question.question_text): ''}
                                 </div>
+                            </div>
+                            <div>
+                                {tagsByQuestionId[question?.id]?.map(tag => (
+                                    <span id="all_questions_tag" key={tag.id}>{tag.tag_name}</span>
+                                ))}
                             </div>
                         </div>:
                         <h3>Loading Question...</h3>

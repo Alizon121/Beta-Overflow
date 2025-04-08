@@ -37,7 +37,7 @@ def all_questions(page):
 def get_user_questions( page):
     PER_PAGE=3
     user_questions = Question.query.filter_by(user_id=current_user.id).order_by(Question.created_at.desc()).paginate(page=page, per_page=PER_PAGE, error_out=False)
-    user_all_questions = User.query.get(current_user.id).question
+    user_all_questions = User.query.get(current_user.id).questions
 
     # Check if user does not have questions
     if len(user_questions.items) < 1:
@@ -85,8 +85,11 @@ def add_question():
 
     form = QuestionForm()
 
-     # Manually obtain the csrf-token from cookies
+    # Manually obtain the csrf-token from cookies
     form['csrf_token'].data = request.cookies['csrf_token']
+
+    # Set choices from QuestionForm
+    form.tags.choices = [(tag.id, tag.tag_name) for tag in Tag.query.all()]
 
     # Validation for min char length
     # WHY DOESN'T THE VALIDATION FROM THE FORM WORK?
@@ -98,6 +101,9 @@ def add_question():
         return jsonify({"Error": "Question must be a minimum of 25 characters"})
 
     if form.validate_on_submit():
+
+        tag_ids = form.data["tags"]
+
         new_question = Question(
             title = form.data["title"],
             question_text = form.data["question_text"],
@@ -106,6 +112,13 @@ def add_question():
         )
 
         db.session.add(new_question)
+        db.session.flush()
+
+        # Add relationship
+        if tag_ids:
+            tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+            new_question.tags.extend(tags)
+
         db.session.commit()
 
         return jsonify({"question": new_question.to_dict()}), 201
@@ -341,8 +354,9 @@ def get_questions_tags(id):
 
     question_tags = Question.query.get(id).tags
 
-    if not question_tags:
-        return jsonify({"Error": "This question does not currently have tags"})
-
+        
     if question_tags:
         return jsonify({"tags": [tag.to_dict() for tag in question_tags]})
+    
+    if not question_tags:
+        return jsonify({"Message": "No tags found"})

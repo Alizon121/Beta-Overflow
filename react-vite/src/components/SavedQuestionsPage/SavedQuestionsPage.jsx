@@ -4,11 +4,13 @@ import { thunkLoadSavedQuestions } from "../../redux/savedQuestion";
 import { thunkLoadQuestionsWithContent } from "../../redux/question";
 import SavedQuestionMenu from "../SavedQuestionMenu/SavedQuestionMenu";
 import "./SavedQuestions.css"
+import { thunkLoadQuestionTags } from "../../redux/tag";
 
 function SavedQuestionsPage() {
     const user = useSelector(state => state?.session?.user)
     const savedQuestions = useSelector(state => state?.savedQuestions?.savedQuestionsPaginated)
     const question = useSelector(state => state?.questions?.question)
+    const tagsByQuestionId = useSelector(state => state?.tags?.tagsByQuestionId)
     const [page, setPage] = useState(1)
     const [disabled, setDisabled] = useState(false)
     const dispatch = useDispatch()
@@ -17,6 +19,16 @@ function SavedQuestionsPage() {
         dispatch(thunkLoadSavedQuestions(page))
         dispatch(thunkLoadQuestionsWithContent())
     }, [dispatch, page])
+    
+    // Render tags
+    // console.log("SASASA", savedQuestions.map(q => q.question_id))
+    useEffect(() => {
+        if (savedQuestions?.length > 0) {
+            savedQuestions?.forEach(question => {
+                dispatch(thunkLoadQuestionTags(question.question_id))
+            })
+        }
+    }, [dispatch])
 
     useEffect(() => {
         const fetchData = async () => {        
@@ -29,6 +41,7 @@ function SavedQuestionsPage() {
         };
         fetchData();
     }, [dispatch, page]);
+
 
     const onDelete = () => {
         dispatch(thunkLoadSavedQuestions(page))
@@ -60,6 +73,11 @@ function SavedQuestionsPage() {
                                 </li>
                             </div>
                             <li>{filteredQuestion.question_text}</li>
+                            <div>
+                                {tagsByQuestionId[Number(filteredQuestion.id)]?.map(tag => (
+                                <span id="all_questions_tag" key={tag.id}>{tag.tag_name}</span>
+                                ))}
+                            </div>
                         </div>
                     ))
                 ))}
