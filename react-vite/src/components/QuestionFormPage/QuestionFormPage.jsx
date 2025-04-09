@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { thunkCreateQuestion } from "../../redux/question"
 import { thunkLoadAllQuestions } from "../../redux/question"
 import { thunkLoadTags } from "../../redux/tag"
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import AddTagModal from "../AddTagModal/AddTagModal"
 import ReactQuill from "react-quill"
 import Select from "react-select"
 import 'react-quill/dist/quill.snow.css';
@@ -16,7 +18,9 @@ function QuestionFormPage() {
     const [errors, setErrors] = useState({})
     const [isSubmitting, setIsSubmitting] = useState(false);//avoid double submission
     const tags = useSelector(state => Object.values(state?.tags?.tags))
-    const tagOptions = tags.map(tag => ({ value: tag.id, label: tag.tag_name }));
+    const tagOptions = useMemo(()=>{
+        return tags.map(tag => ({ value: tag.id, label: tag.tag_name }));
+    }, [tags])
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -31,6 +35,13 @@ function QuestionFormPage() {
         setQuestionText("")
         // return
     }
+
+    // Helper function for re-rendering the page when a new tag is added
+    const onAddTag = async () => {
+        await dispatch(thunkLoadTags())
+    }
+
+
     // Submit function
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -94,6 +105,17 @@ function QuestionFormPage() {
                             value={selectedTags}
                             onChange={setSelectedTags}
                         />
+                    </div>
+                    <div>
+                        <p>Not seeing a tag that you would like to use? Make one by clicking here: 
+                            <button>
+                                <OpenModalMenuItem
+                                    itemText={"Add a Tag"}
+                                    modalComponent={<AddTagModal onAddTag={onAddTag}/>}
+                                />
+                            
+                            </button>
+                        </p>
                     </div>
             </div>
                 <div className="create_question_buttons">

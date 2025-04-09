@@ -35,6 +35,8 @@ def create_tag():
 
     form = TagForm()
 
+    print("KAKAKAKAKAK", form.data)
+
     # Manually obtain the csrf-token from cookies
     form["csrf_token"].data = request.cookies["csrf_token"]
 

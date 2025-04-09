@@ -55,6 +55,7 @@
 .create_question_select_tags{
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .create_question_select_tags h3 {
@@ -62,7 +63,7 @@
     margin-bottom: 2px;
 }
 
-.css-13cymwt-control {
+.create_question_select_tags .css-13cymwt-control {
     margin-bottom: 5px;
 }
 

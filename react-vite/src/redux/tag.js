@@ -7,6 +7,8 @@ const LOAD_TAGS = "tags/loadTags"
 
 const LOAD_QUESTION_TAGS = "tags/loadQuestionTags"
 
+const CREATE_TAG = "tags/createTag"
+
 /**********Action Creator **********/
 const loadTags = (tag) => ({
     type: LOAD_TAGS,
@@ -15,6 +17,11 @@ const loadTags = (tag) => ({
 
 const loadQuestionTags = (tag) => ({
     type: LOAD_QUESTION_TAGS,
+    payload: tag
+})
+
+const createTag = (tag) => ({
+    type: CREATE_TAG,
     payload: tag
 })
 
@@ -36,6 +43,18 @@ export const thunkLoadQuestionTags = (id) => async dispatch => {
     if (response.ok) {
         const data = await response.json()
         dispatch(loadQuestionTags({questionId: id, tags: data.tags}))
+        return data
+    }
+}
+
+export const thunkCreateTag = (tag) => async dispatch => {
+    const response = await csrfFetch(`/api/tags/`, {
+        method: "POST",
+        body: JSON.stringify(tag)
+    })
+    if (response.ok) {
+        const data = await response.json()
+        dispatch(createTag(data))
         return data
     }
 }
@@ -70,7 +89,15 @@ function tagReducer(state = {tags:{}, tagsByQuestionId:{}}, action) {
                     [questionId]: tags
                 }
             }
-
+        case CREATE_TAG:
+            const newTag = action.payload
+            return {
+                ...state,
+                tags: {
+                    ...state.tags,
+                    [newTag.id]: newTag
+                }
+            }
         default:
             return state
     }
