@@ -67,6 +67,19 @@
     margin-bottom: 5px;
 }
 
+.create_question_add_tag_question {
+    width: 490px;
+}
+
+#question_form_add{
+    background-color: none;
+    background: none;
+    list-style: none;
+    cursor: pointer;
+    color:#2089ca;
+    border: none
+}
+
 .create_question_buttons {
     display: flex;
     justify-content: center;

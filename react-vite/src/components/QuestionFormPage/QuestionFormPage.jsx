@@ -16,7 +16,7 @@ function QuestionFormPage() {
     const [ questionText, setQuestionText] = useState("")
     const [selectedTags, setSelectedTags] = useState([])
     const [errors, setErrors] = useState({})
-    const [isSubmitting, setIsSubmitting] = useState(false);//avoid double submission
+    // const [isSubmitting, setIsSubmitting] = useState(false);//avoid double submission
     const tags = useSelector(state => Object.values(state?.tags?.tags))
     const tagOptions = useMemo(()=>{
         return tags.map(tag => ({ value: tag.id, label: tag.tag_name }));
@@ -45,7 +45,7 @@ function QuestionFormPage() {
     // Submit function
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setIsSubmitting(true);
+        // setIsSubmitting(true);
         
         // Add Validations here:
         const newErrors = {}
@@ -71,9 +71,10 @@ function QuestionFormPage() {
             navigate("/")
         } catch(error) {
             console.error(error)
-        } finally {
-            setIsSubmitting(false);
         }
+        //  finally {
+        //     setIsSubmitting(false);
+        // }
     }
 
 
@@ -107,19 +108,18 @@ function QuestionFormPage() {
                         />
                     </div>
                     <div>
-                        <p>Not seeing a tag that you would like to use? Make one by clicking here: 
-                            <button>
+                        <div className="create_question_add_tag_question">Not seeing a tag that you like? Make one here: 
+                            <button type="button" id="question_form_add">
                                 <OpenModalMenuItem
                                     itemText={"Add a Tag"}
                                     modalComponent={<AddTagModal onAddTag={onAddTag}/>}
                                 />
-                            
                             </button>
-                        </p>
+                        </div>
                     </div>
             </div>
                 <div className="create_question_buttons">
-                    <button id="create_question_submit_button" type="submit" disabled={isSubmitting}>Submit</button>
+                    <button id="create_question_submit_button" type="submit" >Submit</button>
                     <button id="create_question_dicard_button" type="button" onClick={handleDiscard}>Discard</button>
                 </div>
             </form>

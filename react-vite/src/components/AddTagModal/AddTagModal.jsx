@@ -2,6 +2,7 @@ import { useModal } from "../../context/Modal";
 import { thunkCreateTag } from "../../redux/tag";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import "./AddTag.css"
 
 function AddTagModal({onAddTag}) {
     const {closeModal} = useModal()
@@ -37,8 +38,8 @@ function AddTagModal({onAddTag}) {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className="add_tag_modal_container">
+            <form className="add_tag_form_content" onSubmit={handleSubmit}>
                 <h3>Add a Tag</h3>
                 {errors.tag && <p className="error">{errors.tag}</p>}
                 <div>
@@ -49,9 +50,9 @@ function AddTagModal({onAddTag}) {
                     onChange={(e) => setTag(e.target.value)}
                     />
                 </div>
-                <div>
-                    <button type="submit">Submit</button>
-                    <button type="button" onClick={closeModal}>Cancel</button>
+                <div className="add_tag_modal_buttons_container">
+                    <button id="add_tag_modal_submit_button" type="submit">Submit</button>
+                    <button id="add_tag_modal_cancel_button" type="button" onClick={closeModal}>Cancel</button>
                 </div>
             </form>             
         </div>
