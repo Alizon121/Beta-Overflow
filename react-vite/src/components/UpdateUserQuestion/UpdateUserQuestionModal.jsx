@@ -64,7 +64,8 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
 
         const payload = {
             title,
-            question_text: userQuestion
+            question_text: userQuestion,
+            tags: userQuestionTags?.map(tag => tag.value)
         }
 
         try{
@@ -75,6 +76,15 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
             console.error(error)
         }
     }
+
+    // Styles for the Select dropdown menu
+    const customStyles = {
+        menuList: (provided) => ({
+          ...provided,
+          maxHeight: '200px',
+          overflowY: 'auto',
+        }),
+      };
 
     return (
         <div key={id} className="update_user_question_container">
@@ -105,6 +115,8 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
                             options={tagOptions}
                             value={userQuestionTags}
                             onChange={setUserQuestionTags}
+                            menuPlacement="bottom"
+                            styles={customStyles}
                         />
                     </div>
                 </div>

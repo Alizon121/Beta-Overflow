@@ -184,6 +184,15 @@ def update_question(id):
             question.title=data["title"]
             question.question_text=data["question_text"]
 
+        if "tags" in data:
+            tag_ids = data["tags"]
+
+            if not isinstance(tag_ids, list):
+                return jsonify({"Error": "Tags must be a list of IDs"}), 400
+            
+            new_tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+
+            question.tags=new_tags
         # Commit change to db
         db.session.commit()
 
@@ -346,7 +355,6 @@ def delete_tag_from_question(question_id, tag_id):
             return jsonify({"Error": "Unable to remove tag"})
     
 @question_routes.route("/<int:id>/tags", methods=["GET"])
-@login_required
 def get_questions_tags(id):
     '''
         Allows a user to view all the tags for a questions
