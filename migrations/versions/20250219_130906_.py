@@ -66,8 +66,8 @@ def upgrade():
     op.create_table('question_tags',
     sa.Column('tag_id', sa.Integer(), nullable=False),
     sa.Column('question_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['tag_id'], ['tags.id'], ),
-    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ),
+    sa.ForeignKeyConstraint(['tag_id'], ['tags.id'], ondelete="CASCADE"),
+    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ondelete="CASCADE"),
     sa.PrimaryKeyConstraint('tag_id', 'question_id')
     )
 

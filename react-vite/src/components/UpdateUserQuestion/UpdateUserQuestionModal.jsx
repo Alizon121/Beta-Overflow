@@ -1,20 +1,52 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { updateQuestionThunk } from "../../redux/question"
+import { thunkLoadTags, thunkLoadQuestionTags } from "../../redux/tag"
 import { useModal } from "../../context/Modal"
 import ReactQuill from "react-quill"
+import Select from "react-select"
 import 'react-quill/dist/quill.snow.css';
 import "./UpdateUserQuestion.css"
 
 function UpdateUserQuestionModal ({onUpdate, id}) {
     // We want to render the original title and question, and be able to update these inputs.
     const dispatch = useDispatch()
-    const questions = useSelector(state => state.questions.userQuestions)
+    const questions = useSelector(state => state?.questions?.userQuestions)
     const question = questions.find(question => question.id === id)
+    
+    const tagsById = useSelector(state => state?.tags?.tagsByQuestionId)
+    const tags = useSelector(state => Object.values(state.tags.tags))
+    const tagOptions = tags.map(tag => ({ value: tag.id, label: tag.tag_name }));
+    const [userQuestionTags, setUserQuestionTags] = useState(() =>{
+        if (!tagsById || !tagsById?.[question.id]) return []
+
+        return tagsById[question.id].map(tag => ({
+            value: tag.id,
+            label: tag.tag_name
+        }))
+    });
+    
+    
     const [title, setTitle] = useState(question.title)
     const [userQuestion , setUserQuestion] = useState(question.question_text)
     const [errors, setErrors] = useState({})
     const {closeModal} = useModal()
+
+    // // Hook for dispatching all tags
+    useEffect(() => {
+        dispatch(thunkLoadTags())
+    }, [dispatch])
+
+    // The useEffect for dispatching the thunkByQuestionId variable
+    useEffect(() => {
+        if (question?.length > 0) {
+                dispatch(thunkLoadQuestionTags(Number(question.id)))
+        }
+    }, [question, dispatch])
+
+    // WE NEED TO CREATE LOGIC IN THE UPDATE A QUESTION HANDLER
+    // WE NEED TO REFACTOR THE HANDLEUPDATE FUNCTION
+    // WE NEED TO MAKE SURE THE LIST IS SHOWING!
 
     const handleUpdate = async (e) => {
         e.preventDefault()
@@ -66,6 +98,15 @@ function UpdateUserQuestionModal ({onUpdate, id}) {
                                 onChange={setUserQuestion}
                             />
                         </div>
+                        <div className="create_question_select_tags">
+                        <h3>Select Tags</h3>
+                        <Select
+                            isMulti
+                            options={tagOptions}
+                            value={userQuestionTags}
+                            onChange={setUserQuestionTags}
+                        />
+                    </div>
                 </div>
                 <div className="update_user_question_buttons_container">
                     <button type="submit" id="update_user_question_submit">Submit</button>

@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 question_tags = db.Table(
      "question_tags",
      db.Model.metadata,
-     db.Column("tag_id", db.Integer, db.ForeignKey(add_prefix_for_prod("tags.id")), primary_key=True),
-     db.Column("question_id", db.Integer, db.ForeignKey(add_prefix_for_prod("questions.id")), primary_key=True)
+     db.Column("tag_id", db.Integer, db.ForeignKey(add_prefix_for_prod("tags.id"), ondelete="CASCADE"), primary_key=True),
+     db.Column("question_id", db.Integer, db.ForeignKey(add_prefix_for_prod("questions.id"), ondelete="CASCADE"), primary_key=True)
 )
 
 if environment == "production":

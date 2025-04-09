@@ -80,9 +80,9 @@ return (
                             <h4><NavLink to={`/question/${question?.id}`}>{question?.title}</NavLink></h4>
                             <p>{question?.question_text ? parse(question?.question_text): <h4>Loading question...</h4>}</p>
                             <div>
-                                {tagsByQuestionId[Number(question.id)]?.map(tag => (
+                                {tagsByQuestionId?.[Number(question?.id)]?.map(tag => (
                                     <span id="all_questions_tag" key={tag.id}>{tag.tag_name}</span>
-                                ))}
+                                ))} 
                             </div>
                         </div>
                     </div>

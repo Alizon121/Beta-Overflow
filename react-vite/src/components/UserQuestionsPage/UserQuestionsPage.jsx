@@ -95,7 +95,7 @@ function UserQuestionsPage () {
                         <div>{parse(question.question_text)}</div>
                     </div>
                     <div>
-                        {tagsByQuestionId[Number(question.id)]?.map(tag => (
+                        {tagsByQuestionId?.[Number(question.id)]?.map(tag => (
                         <span id="all_questions_tag" key={tag.id}>{tag.tag_name}</span>
                         ))}
                     </div>

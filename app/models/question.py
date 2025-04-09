@@ -29,12 +29,12 @@ class Question(db.Model):
     user = db.relationship("User", back_populates="questions")
     comment = db.relationship("Comment", back_populates="question", cascade="all, delete-orphan")
 
-    saved_questions = db.relationship("SavedQuestion", back_populates="question")
+    saved_questions = db.relationship("SavedQuestion", back_populates="question", cascade="all, delete-orphan", passive_deletes=True)
   
     # Add relationship for JOIN table
     tags = db.relationship(
         "Tag",
         secondary = question_tags,
         back_populates = "tag_questions",
-        cascade = "all, delete"
+        cascade= "save-update"
     )
