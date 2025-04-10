@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useNavigate, NavLink } from "react-router-dom"
 import { thunkLoadAllQuestions } from "../../redux/question"
 import { thunkLoadQuestionTags } from "../../redux/tag"
+import { useSearchParams } from "react-router-dom";
 import parse from 'html-react-parser'
 import "./AllQuestions.css"
 
@@ -14,8 +15,12 @@ const allQuestions = useSelector(state => state?.questions?.allQuestions)
 const tagsByQuestionId = useSelector(state => state?.tags?.tagsByQuestionId)
 const dispatch = useDispatch()
 const navigate = useNavigate()
-const [page, setPage] = useState(1);
+// const [page, setPage] = useState(1);
 const [disabled, setDisabled] = useState(false)
+const [searchParams] = useSearchParams();
+const page = parseInt(searchParams.get("page")) || 1;
+
+console.log("PAPPAPAPA", page)
 
 useEffect(() => {
     if (questions?.length > 0) {
@@ -29,16 +34,16 @@ useEffect(() => {
 }, [dispatch, page])
 
 useEffect(() => {
-    const fetchData = async () => {        
-        const response = await fetch(`/api/questions/${page+1}`)        
-        if (response.status !== 404) {
-            await dispatch(thunkLoadAllQuestions(page));
-        } else {
-            setDisabled(true);
-        }
+    const checkNextPage = async () => {
+      const response = await fetch(`/api/questions/${page + 1}`);
+      if (response.status !== 404) {
+        setDisabled(false);
+      } else {
+        setDisabled(true);
+      }
     };
-    fetchData();
-}, [dispatch, page]);
+    checkNextPage();
+  }, [page]);
 
 
 const handleAskQuestion = () => {
@@ -46,14 +51,22 @@ const handleAskQuestion = () => {
     else navigate("/question-form")
 }
 
-const handleNextPage = () => {
-    setPage(prevPage => prevPage + 1);
-};
+// const handleNextPage = () => {
+//     setPage(prevPage => prevPage + 1);
+// };
 
-const handlePrevPage = () => {
-    setPage(prevPage => Math.max(prevPage - 1, 1));
-    setDisabled(false)
-};
+// const handlePrevPage = () => {
+//     setPage(prevPage => Math.max(prevPage - 1, 1));
+//     setDisabled(false)
+// };
+
+const handleNextPage = () => {
+    navigate(`/?page=${page + 1}`);
+  };
+  
+  const handlePrevPage = () => {
+    if (page > 1) navigate(`/?page=${page - 1}`);
+  };
 
 return (
     <div>

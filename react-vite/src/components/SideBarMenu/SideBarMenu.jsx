@@ -11,7 +11,7 @@ function SideBarMenu() {
         <div className="side_bar_menu_container">
             <div>
                 <li>
-                    <button onClick={()=>navigate("/")}>
+                    <button onClick={()=>navigate("/?page=1")}>
                         Home
                     </button>
                 </li>
@@ -36,11 +36,7 @@ function SideBarMenu() {
                     </li>
                 </div> :
                     <div>
-                         {/* <li>
-                            <button onClick={()=> navigate("/")}>
-                                Questions
-                            </button>
-                        </li> */}
+                         
                     </div>
                 }
             </div>
