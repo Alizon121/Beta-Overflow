@@ -39,14 +39,10 @@ class User(db.Model, UserMixin):
         }
 
     # Add relationship here
-    question = db.relationship("Question", back_populates="user")
+    questions = db.relationship("Question", back_populates="user")
     comments = db.relationship("Comment", back_populates="user_comment")
+    tags = db.relationship("Tag", back_populates="user_tag", cascade="all, delete-orphan")
+
 
     # Join Table Relationship
-    # saved_question = db.relationship(
-    #     "Question", 
-    #     secondary = "saved_questions",
-    #     back_populates="user",
-    #     cascade = "all, delete"
-    #     )
     saved_questions = db.relationship("SavedQuestion", back_populates="user")

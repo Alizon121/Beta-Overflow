@@ -10,13 +10,15 @@ import questionReducer from "./question";
 import commentReducer from "./comment";
 import queryReducer from "./query";
 import savedQuestionReducer from "./savedQuestion";
+import tagReducer from "./tag";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   questions: questionReducer,
   comments: commentReducer,
   query: queryReducer,
-  savedQuestions: savedQuestionReducer
+  savedQuestions: savedQuestionReducer,
+  tags: tagReducer
 });
 
 let enhancer;

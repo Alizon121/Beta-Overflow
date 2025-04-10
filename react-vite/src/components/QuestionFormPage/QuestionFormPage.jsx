@@ -1,17 +1,33 @@
-import { useState, useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useState, useEffect, useMemo } from "react"
+import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { thunkCreateQuestion, thunkLoadAllQuestions } from "../../redux/question"
+import { thunkCreateQuestion } from "../../redux/question"
+import { thunkLoadAllQuestions } from "../../redux/question"
+import { thunkLoadTags } from "../../redux/tag"
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import AddTagModal from "../AddTagModal/AddTagModal"
 import ReactQuill from "react-quill"
+import Select from "react-select"
 import 'react-quill/dist/quill.snow.css';
 import "./QuestionForm.css"
 
 function QuestionFormPage() {
     const [title, setTitle] = useState("")
     const [ questionText, setQuestionText] = useState("")
+    const [selectedTags, setSelectedTags] = useState([])
     const [errors, setErrors] = useState({})
+    // const [isSubmitting, setIsSubmitting] = useState(false);//avoid double submission
+    const tags = useSelector(state => Object.values(state?.tags?.tags))
+    const tagOptions = useMemo(()=>{
+        return tags.map(tag => ({ value: tag.id, label: tag.tag_name }));
+    }, [tags])
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    // Hook for dispatching all tags
+    useEffect(() => {
+        dispatch(thunkLoadTags())
+    }, [dispatch])
 
     // Helper function for discarding question
     const handleDiscard = async() => {
@@ -19,16 +35,24 @@ function QuestionFormPage() {
         setQuestionText("")
         // return
     }
+
+    // Helper function for re-rendering the page when a new tag is added
+    const onAddTag = async () => {
+        await dispatch(thunkLoadTags())
+    }
+
+
     // Submit function
     const handleSubmit = async (e) => {
         e.preventDefault()
+        // setIsSubmitting(true);
         
         // Add Validations here:
         const newErrors = {}
         if (title.length < 5) newErrors.title = "Title must be at least 5 characters"
         if (title.length > 50) newErrors.title = "Title must be less than 50 characters"
 
-        if (questionText.length < 25) newErrors.question = "Question must be at least 25 characters"
+        if (questionText.length < 25) newErrors.question = "Question must be at least 25 characters long"
 
         if (Object.values(newErrors).length > 0) {
             setErrors(newErrors)
@@ -37,7 +61,8 @@ function QuestionFormPage() {
 
         const question = {
             title,
-            question_text: questionText
+            question_text: questionText,
+            tags: selectedTags?.map(tag => tag.value)
         }
 
         try{
@@ -47,6 +72,9 @@ function QuestionFormPage() {
         } catch(error) {
             console.error(error)
         }
+        //  finally {
+        //     setIsSubmitting(false);
+        // }
     }
 
 
@@ -64,22 +92,34 @@ function QuestionFormPage() {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
-                        {/* <textarea
-                            type="text"
-                            placeholder="Add Question!"
-                            value={questionText}
-                            onChange={e => setQuestionText(e.target.value)}
-                        /> */}
-
                         <ReactQuill
                         theme="snow"
                         value={questionText}
                         onChange={setQuestionText}
                         />
                     </div>
+                    <div className="create_question_select_tags">
+                        <h3>Select Tags</h3>
+                        <Select
+                            isMulti
+                            options={tagOptions}
+                            value={selectedTags}
+                            onChange={setSelectedTags}
+                        />
+                    </div>
+                    <div>
+                        <div className="create_question_add_tag_question">Not seeing a tag that you like? Make one here: 
+                            <button type="button" id="question_form_add">
+                                <OpenModalMenuItem
+                                    itemText={"Add a Tag"}
+                                    modalComponent={<AddTagModal onAddTag={onAddTag}/>}
+                                />
+                            </button>
+                        </div>
+                    </div>
             </div>
                 <div className="create_question_buttons">
-                    <button id="create_question_submit_button" type="submit">Submit</button>
+                    <button id="create_question_submit_button" type="submit" >Submit</button>
                     <button id="create_question_dicard_button" type="button" onClick={handleDiscard}>Discard</button>
                 </div>
             </form>

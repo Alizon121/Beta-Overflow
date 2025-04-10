@@ -16,7 +16,6 @@ function UpdateCommentModal({onUpdate, id}) {
     const dispatch = useDispatch()
     const {closeModal} = useModal()
 
-    console.log(comment.length)
     const handleSubmit = async (e) => {
         e.preventDefault()
 
