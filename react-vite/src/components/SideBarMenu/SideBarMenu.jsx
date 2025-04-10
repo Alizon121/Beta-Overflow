@@ -15,6 +15,11 @@ function SideBarMenu() {
                         Home
                     </button>
                 </li>
+                <li>
+                    <button onClick={()=>navigate("/about")}>
+                        About
+                    </button>
+                </li>
 
                 {
                 user ? 

@@ -9,6 +9,7 @@ import SelectedQuestionPage from '../components/SelectedQuestion';
 import QuestionsListPage from '../components/QuestionsList';
 import Layout from './Layout';
 import SavedQuestionsPage from '../components/SavedQuestionsPage/SavedQuestionsPage';
+import AboutPage from '../components/AboutPage/AboutPage';
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
       {
         path: "/saved-questions",
         element: <SavedQuestionsPage/>
+      },
+      {
+        path: "/about",
+        element: <AboutPage/>
       }
     ],
   },
