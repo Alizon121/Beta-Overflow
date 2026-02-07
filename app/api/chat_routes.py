@@ -1,8 +1,14 @@
 from flask import Blueprint, jsonify, request
+from app.models import Question
+from sqlalchemy.orm import joinedload
 from openai import OpenAI
 
 chat_routes = Blueprint('chat', __name__)
 client = OpenAI()
+
+# Query for questions with comments
+def get_questions(limit=5):
+     return (Question.query.options(joinedload(Question.comment)).order_by(Question.created_at.desc()).limit(limit).all())
 
 SYSTEM_PROMPT = """
     You are an AI assistant for a rock climbing Q&A forum.
@@ -15,28 +21,33 @@ SYSTEM_PROMPT = """
     - Cite post titles when relevant
 """
 
-def build_context(posts):
+def build_context(questions):
     context = ""
-    for post in posts:
+    for q in questions:
         context += f"""
-            Title: {post["title"]},
-            Question: {posts["question_text"]}
+            Title: {q.title},
+            Question: {q.question_text}
             Answers: """
-        for a in post["comment_text"]:
-                context += f"{a} -\n"
+        if q.comment:
+            for comment in q.comment:
+                    context += f"{comment.comment_text} -\n"
+        else:
+            context += f"No answers yet.\n"
+            """
         """
-        """
-    return context
+    return context.strip()
 
-@chat_routes.route("/chat", methods=["POST"])
+@chat_routes.route("/", methods=["POST"])
 def chat():
     '''
         Ask openai LLM a message
     '''
 
-    user_message = request.json["message"]
 
-    forum_context = build_context(FORUM_POSTS)
+    user_message = request.json["message"]
+    questions = get_questions(limit=5)
+
+    forum_context = build_context(questions)
 
     response = client.chat.completions.create(
          model="gpt-4o-mini",

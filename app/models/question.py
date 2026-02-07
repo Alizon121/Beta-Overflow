@@ -27,7 +27,7 @@ class Question(db.Model):
     
     # Add relationships here:
     user = db.relationship("User", back_populates="questions")
-    comment = db.relationship("Comment", back_populates="question", cascade="all, delete-orphan")
+    comments = db.relationship("Comment", back_populates="question", cascade="all, delete-orphan")
 
     saved_questions = db.relationship("SavedQuestion", back_populates="question", cascade="all, delete-orphan", passive_deletes=True)
   
