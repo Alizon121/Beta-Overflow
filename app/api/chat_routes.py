@@ -2,9 +2,9 @@ from flask import Blueprint, jsonify, request
 from app.models import Question
 from sqlalchemy.orm import joinedload
 from openai import OpenAI
+import os
 
 chat_routes = Blueprint('chat', __name__)
-client = OpenAI()
 
 # Query for questions with comments
 def get_questions(limit=5):
@@ -21,6 +21,12 @@ SYSTEM_PROMPT = """
     - Cite post titles when relevant
 """
 
+def get_open_API_key():
+     if not os.getenv("OPEN_API_KEY"):
+          raise RuntimeError("OPEN_AP_KEY not set")
+     else:
+          return OpenAI()
+
 def build_context(questions):
     context = ""
     for q in questions:
@@ -28,8 +34,8 @@ def build_context(questions):
             Title: {q.title},
             Question: {q.question_text}
             Answers: """
-        if q.comment:
-            for comment in q.comment:
+        if q.comments:
+            for comment in q.comments:
                     context += f"{comment.comment_text} -\n"
         else:
             context += f"No answers yet.\n"
@@ -43,6 +49,7 @@ def chat():
         Ask openai LLM a message
     '''
 
+    client = get_open_API_key()
 
     user_message = request.json["message"]
     questions = get_questions(limit=5)
