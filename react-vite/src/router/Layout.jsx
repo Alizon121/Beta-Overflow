@@ -8,6 +8,7 @@ import SideBarMenu from "../components/SideBarMenu/SideBarMenu";
 import NavigationLoginPage from "../components/Navigation/NavigationLoginPage";
 import NavigationSignup from "../components/Navigation/NavigationSignup";
 import "./LayoutStyle.css"
+import ChatWidget from "/src/components/ChatWidget/ChatWidget.jsx";
 
 export default function Layout() {
   const dispatch = useDispatch();
@@ -36,15 +37,15 @@ export default function Layout() {
         </div>
        <div className="layout_container">
         <div className="main_content">
-            {isLoaded && <Outlet />}
+            {isLoaded && <Outlet /> }
         </div>
           <div id="side_bar_menu_container">
             {location.pathname !== "/login" && location.pathname !== "/signup" && (
-                <SideBarMenu />
+              <SideBarMenu />
             )}
           </div>
-
        </div>
+        <ChatWidget/>
         <Modal />
       </ModalProvider>
     </>
