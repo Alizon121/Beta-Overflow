@@ -195,3 +195,24 @@
   .chat-actions button:last-child:hover {
     background: #f1f2f3;
   }
+
+  /* Chat Bubble */
+  .chat-bubble {
+    max-width: 80%;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  
+  .chat-bubble.user {
+    background: #2f6f44;
+    color: white;
+    margin-left: auto;
+  }
+  
+  .chat-bubble.assistant {
+    background: #f1f2f3;
+    color: black;
+    margin-right: auto;
+  }

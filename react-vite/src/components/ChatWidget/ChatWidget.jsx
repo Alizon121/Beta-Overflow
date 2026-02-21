@@ -6,12 +6,22 @@ export default function ChatWidget() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
+  const [conversationId, setConversationId] = useState(null);
+  const [messages, setMessages] = useState([]);
 
+  
   const toggleChat = () => {
-    setIsOpen(!isOpen);
-  };
-
+      setIsOpen(!isOpen);
+    };
+    
   const handleSubmit = async () => {
+      const userMessage = {
+        role: "user",
+        content: message
+      }
+    
+      setMessages(prev => [...prev, userMessage])
+
     if (!message.trim()) return;
 
     setLoading(true);
@@ -23,12 +33,24 @@ export default function ChatWidget() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          message: message
+          message: message,
+          conversation_id: conversationId
         })
       });
 
       const data = await res.json();
+      setConversationId(data.conversation_id)
+      setMessages(prev => [
+        ...prev,
+        {
+            role: "assistant",
+            content: data.response
+        }
+      ])
+
       setResponse(data.response);
+
+      return {"response": response}
 
     } catch (err) {
       setResponse("Error contacting AI.");
@@ -60,15 +82,19 @@ export default function ChatWidget() {
           </div>
 
           <div className="chat-body">
-
-            {response && (
-              <div className="chat-response">
-                {response}
-              </div>
-            )}
-
-            {loading && <div>Thinking...</div>}
-
+            {messages.map((msg, index) => (
+                <div
+                    key={index}
+                    className={
+                        msg.role === "user"
+                        ? "chat-bubble user"
+                        : "chat-bubble assistant"
+                    }
+                    >
+                    {msg.content}
+                </div>
+            ))}
+            {loading && <div className="chat-bubble assistant">Thinking...</div>}
           </div>
 
           <div className="chat-footer">

@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { setQuery } from "../../redux/query"
-import { IoMdSearch } from "react-icons/io";
 import "./SearchBarStyles.css"
 
 
