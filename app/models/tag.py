@@ -21,7 +21,7 @@ class Tag(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     tag_name = db.Column(db.String(20), unique = True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id"), name="fk_tags_user_id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)
 
