@@ -27,7 +27,7 @@ function SavedQuestionMenu({id, onDelete}) {
 
         document.addEventListener("click", closeMenu);
         return () => document.removeEventListener("click", closeMenu);
-    }, [setShowMenu]);
+    }, [showMenu, setShowMenu]);
 
     // const closeMenu = () => setShowMenu(false);
 

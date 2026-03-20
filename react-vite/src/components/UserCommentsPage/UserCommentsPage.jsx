@@ -65,7 +65,7 @@ function UserCommentsPage() {
 
     return (
         <div className="user_comments_page_container">
-            <h2>{user?.username}'s Comments</h2>
+            <h2>{user?.username}&apos;s Comments</h2>
             <div className="user_commments_content_container">
                 {comments ? (
                     comments?.length > 0 ? (comments?.map((comment) => {

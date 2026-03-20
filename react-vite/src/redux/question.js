@@ -1,4 +1,3 @@
-import { json } from "react-router-dom"
 import { csrfFetch } from "./csrf"
 
 /*Actions */
@@ -200,7 +199,7 @@ function questionReducer(state = {}, action) {
                 allQuestions: state.allQuestions + 1,
                 questions: [...state.questions, action.payload]
             }
-            case ADD_ANSWER:
+            case ADD_ANSWER: {
                 const initialState = {
                     questions: {
                         comments: [],
@@ -216,7 +215,8 @@ function questionReducer(state = {}, action) {
                         userQuestion: {...initialState.questions.userQuestion},
                         users: [...initialState.questions.users]
                     }
-                } 
+                }
+            }
         case DELETE_QUESTION:
             return {
                 ...state,

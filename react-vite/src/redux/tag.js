@@ -62,15 +62,7 @@ export const thunkCreateTag = (tag) => async dispatch => {
 /************** Reducer Function ***************/
 function tagReducer(state = {tags:{}, tagsByQuestionId:{}}, action) {
     switch(action.type){
-        case LOAD_TAGS:
-            // const newState = {};
-            // action.payload.allTags.forEach(tag => {
-            //     newState[tag.id] = tag;
-            // });
-            // return {
-            //     ...state,
-            //     tags: newState
-            // }
+        case LOAD_TAGS: {
             const allTagsObj = {};
             if (!Array.isArray(action.payload.allTags)) return state;
             action.payload.allTags.forEach(tag => {
@@ -80,7 +72,8 @@ function tagReducer(state = {tags:{}, tagsByQuestionId:{}}, action) {
                 ...state,
                 tags: allTagsObj
             };
-        case LOAD_QUESTION_TAGS:
+        }
+        case LOAD_QUESTION_TAGS: {
             const { questionId, tags } = action.payload;
             return {
                 ...state,
@@ -89,7 +82,8 @@ function tagReducer(state = {tags:{}, tagsByQuestionId:{}}, action) {
                     [questionId]: tags
                 }
             }
-        case CREATE_TAG:
+        }
+        case CREATE_TAG: {
             const newTag = action.payload
             return {
                 ...state,
@@ -98,6 +92,7 @@ function tagReducer(state = {tags:{}, tagsByQuestionId:{}}, action) {
                     [newTag.id]: newTag
                 }
             }
+        }
         default:
             return state
     }

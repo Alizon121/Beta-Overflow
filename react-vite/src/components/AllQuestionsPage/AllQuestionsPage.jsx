@@ -6,7 +6,6 @@ import { thunkLoadAllQuestions } from "../../redux/question"
 import { thunkLoadQuestionTags } from "../../redux/tag"
 import { useSearchParams } from "react-router-dom";
 import parse from 'html-react-parser'
-import "./AllQuestions.css"
 
 function AllQuestionsPage(){ 
 const user = useSelector(state => state?.session?.user)
@@ -19,8 +18,6 @@ const navigate = useNavigate()
 const [disabled, setDisabled] = useState(false)
 const [searchParams] = useSearchParams();
 const page = parseInt(searchParams.get("page")) || 1;
-
-console.log("PAPPAPAPA", page)
 
 useEffect(() => {
     if (questions?.length > 0) {
