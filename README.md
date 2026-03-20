@@ -52,3 +52,5 @@ BetaOverflow is a replica of the StackOverflow application that is intended to b
 <img width="1430" alt="Screenshot 2025-03-11 at 5 05 53 PM" src="https://github.com/user-attachments/assets/ef03b25b-d6f7-4353-96db-217ab858b8a6" />
 
 * A user is able to query for question titles using the search tool located in the navigation header. When a user submits a query, they are redirected to the Question List Page, which will display all results that match the query. The search functionality involves filtering the "questions" state variable using the "query" slice of state, which will then return matched results. There is a limit to 5 results per page, and further results are paginated to boost user experience.
+
+### Getting Started

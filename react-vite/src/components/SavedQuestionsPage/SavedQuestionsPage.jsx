@@ -28,7 +28,7 @@ function SavedQuestionsPage() {
                 dispatch(thunkLoadQuestionTags(question.question_id))
             })
         }
-    }, [dispatch])
+    }, [savedQuestions, dispatch])
 
     useEffect(() => {
         const fetchData = async () => {        
@@ -58,7 +58,7 @@ function SavedQuestionsPage() {
 
     return (
         <div className="saved_question_page_container">
-            <h2>{user.first_name}'s Saved Questions</h2>
+            <h2>{user.first_name}&apos;s Saved Questions</h2>
             <div className="saved_questions_container">
                 {/* We need to use the question ids to render the questions */}
                 {/* We may need to create a new state variable to render all questions */}

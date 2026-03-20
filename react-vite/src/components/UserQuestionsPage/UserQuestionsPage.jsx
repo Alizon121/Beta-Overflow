@@ -73,7 +73,7 @@ function UserQuestionsPage () {
     return (
         <div className="user_questions_container">
             <div className="user_questions_title_count">
-                <h2>{user?.username}'s Questions</h2>
+                <h2>{user?.username}&apos;s Questions</h2>
                 <div className="user_questions_header">
                     <div>{!allUserQuestions ?
                         <div>0 questions</div> 
@@ -89,7 +89,7 @@ function UserQuestionsPage () {
             {userQuestions ? (
             userQuestions?.length > 0 ?
             userQuestions?.map(question => 
-                <div className="user_questions_content_container">
+                <div key={question.id} className="user_questions_content_container">
                     <div key={question.id}>
                         <h4>{question.title}</h4>
                         <div>{parse(question.question_text)}</div>

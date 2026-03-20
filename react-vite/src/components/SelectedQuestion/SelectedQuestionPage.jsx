@@ -50,16 +50,10 @@ function SelectedQuestionPage () {
 
     useEffect(() => {
         if (userSavedQuestions && id) {
-            checkBookMarked()
+            const savedQuestion = userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === Number(id))
+            setBookMarked(savedQuestion?.bookmarked === true)
         }
     }, [userSavedQuestions, id])
-
-    // Function for getting the bookmarked value form the state variable
-    const checkBookMarked = () => {
-        const savedQuestion = userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === Number(id))
-        if (savedQuestion?.bookmarked === true) setBookMarked(true)
-        else setBookMarked(false)
-    }
 
     // Function for re-rendering the thunk
     const onCreate = () => {
@@ -99,8 +93,8 @@ function SelectedQuestionPage () {
                         question ? 
                         <div>
                             <div className="selected_question_subheaders">
-                                <li>Asked on {question?.created_at}</li>
-                                <li>Viewed {count} times</li>
+                                <span>Asked on {question?.created_at}</span>
+                                <span>Viewed {count} times</span>
                             </div>
                             <div className="selected_question_question_content_container">
                                 <div id="selected_question_question">

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./ChatWidget.css";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState("");
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
 
@@ -15,14 +14,15 @@ export default function ChatWidget() {
     };
     
   const handleSubmit = async () => {
-      const userMessage = {
-        role: "user",
-        content: message
-      }
-    
-      setMessages(prev => [...prev, userMessage])
-
     if (!message.trim()) return;
+
+    const userMessage = {
+      role: "user",
+      content: message
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setMessage("");
 
     setLoading(true);
 
@@ -39,21 +39,20 @@ export default function ChatWidget() {
       });
 
       const data = await res.json();
-      setConversationId(data.conversation_id)
+      setConversationId(data.conversation_id);
       setMessages(prev => [
         ...prev,
         {
-            role: "assistant",
-            content: data.response
+          role: "assistant",
+          content: data.reply
         }
-      ])
-
-      setResponse(data.response);
-
-      return {"response": response}
+      ]);
 
     } catch (err) {
-      setResponse("Error contacting AI.");
+      setMessages(prev => [
+        ...prev,
+        { role: "assistant", content: "Error contacting AI." }
+      ]);
     }
 
     setLoading(false);
@@ -62,7 +61,6 @@ export default function ChatWidget() {
   const handleCancel = () => {
     setIsOpen(false);
     setMessage("");
-    setResponse("");
   };
 
   return (

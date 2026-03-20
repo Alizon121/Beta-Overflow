@@ -14,7 +14,7 @@ function Navigation() {
       {
         user?
         <div className="navigation_headers_user">
-            <div class="mountain_home_button">
+            <div className="mountain_home_button">
             <NavLink to={"/?page=1"} class="home_link">
               <LiaMountainSolid/>
               <div>BetaOverflow</div>
@@ -29,7 +29,7 @@ function Navigation() {
         </div>
         :
       <div className="navigation_headers_no_user">
-             <div class="mountain_home_button">
+             <div className="mountain_home_button">
             <NavLink to={"/?page=1"} class="home_link">
               <LiaMountainSolid/>
               <div>BetaOverflow</div>

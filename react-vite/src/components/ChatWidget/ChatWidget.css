@@ -129,8 +129,9 @@
   /* Textarea */
   .chat-footer textarea {
     width: 100%;
+    box-sizing: border-box;
     height: 60px;
-  
+
     resize: none;
   
     border: 1px solid #c4c8cc;
