@@ -93,8 +93,13 @@ function savedQuestionReducer(state = {}, action) {
                 ...state,
                 ...action.payload
             }
+        case DELETE_SAVED_QUESTION:
+            return {
+                ...state,
+                allSavedQuestions: state.allSavedQuestions?.filter(sq => sq.question_id !== action.payload) || []
+            }
         default:
-            return state    
+            return state
     }
 }
 

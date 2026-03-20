@@ -59,7 +59,8 @@ export const thunkUpdateComment = (id, updatedComment) => async dispatch => {
     })
 
     if (response.ok) {
-        dispatch(updateComment(id))
+        const data = await response.json()
+        dispatch(updateComment(data))
     }
 }
 
@@ -80,7 +81,7 @@ function commentReducer(state = {}, action) {
         case UPDATE_COMMENT:
             return {
                 ...state,
-                comments: [...state.comments]
+                comments: state.comments?.map(c => c.id === action.payload.id ? action.payload : c) || []
             }
         case CLEAR_COMMENTS:
             return {
