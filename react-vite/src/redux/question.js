@@ -1,7 +1,7 @@
-import { json } from "react-router-dom"
 import { csrfFetch } from "./csrf"
 
 /*Actions */
+// LOAD_ALL_QUESTIONS loads all questions in a paginated format
 const LOAD_ALL_QUESTIONS = "questions/loadAllQuestions"
 
 const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
@@ -9,6 +9,8 @@ const LOAD_USER_QUESTIONS = "questions/loadUserQuestions"
 const LOAD_ALL_QUESTION_TITLES = "questions/loadAllQuestionTitles"
 
 const LOAD_SELECTED_QUESTION = "questions/loadSelectedQuestions"
+
+const LOAD_ALL_QUESTIONS_WITH_CONTENT = "questions/loadAllQuestionsWithContent"
 
 const CREATE_QUESTION = "questions/createQuestion"
 
@@ -50,6 +52,11 @@ const loadSelectedQuestions = (question) => ({
     payload: question
 })
 
+const loadAllQuestionsWithContent = (question) => ({
+    type: LOAD_ALL_QUESTIONS_WITH_CONTENT,
+    payload: question
+})
+
 const deleteQuestion = (question) => ({
     type: DELETE_QUESTION,
     payload: question
@@ -61,7 +68,7 @@ const updateQuestion = (question) => ({
 })
 
 /**************************Thunk Actions *******************/ 
-
+// This thunk aciton only loads all questions in a paginated format
 export const thunkLoadAllQuestions = (page) => async dispatch => {
     const response = await fetch(`/api/questions/${page}`)
     if (response.ok) {
@@ -103,6 +110,15 @@ export const thunkLoadUserQuestions = (page) => async dispatch => {
     }
 }
 
+export const thunkLoadQuestionsWithContent = () => async dispatch => {
+    const response = await csrfFetch('/api/questions/all')
+
+    if (response.ok) {
+        const data = await response.json()
+        dispatch(loadAllQuestionsWithContent(data))
+    }
+}
+
 export const thunkCreateQuestion = (question) => async dispatch => {
     const response = await csrfFetch("/api/questions/", {
         method: 'POST',
@@ -123,7 +139,6 @@ export const thunkAddAnswer = (id, answer) => async dispatch => {
 
     if (response.ok) {
         const data = await response.json()
-        console.log("DATATATAT", data)
         dispatch(addAnswer(data.comment))
     }
 }
@@ -173,13 +188,18 @@ function questionReducer(state = {}, action) {
             return {
                 ...action.payload
             }
+
+        case LOAD_ALL_QUESTIONS_WITH_CONTENT:
+            return {
+                ...action.payload
+            }
         case CREATE_QUESTION:
             return {
                 ...state,
                 allQuestions: state.allQuestions + 1,
                 questions: [...state.questions, action.payload]
             }
-            case ADD_ANSWER:
+            case ADD_ANSWER: {
                 const initialState = {
                     questions: {
                         comments: [],
@@ -195,17 +215,18 @@ function questionReducer(state = {}, action) {
                         userQuestion: {...initialState.questions.userQuestion},
                         users: [...initialState.questions.users]
                     }
-                } 
+                }
+            }
         case DELETE_QUESTION:
             return {
                 ...state,
                 allUserQuestions: state.allUserQuestions -1,
-                questions: state?.questions?.filter(question => question.id !== action.payload)
+                userQuestions: state?.questions?.filter(question => question.id !== action.payload)
             }
         case UPDATE_QUESTION:
             return {
                 ...state,
-                questions: [...state.questions]
+                questions: [...state.userQuestions]
             }
         default:
             return state

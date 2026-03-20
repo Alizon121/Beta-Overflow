@@ -18,14 +18,26 @@ function SignupFormPage() {
 
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
+  const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      return setErrors({
-        confirmPassword:
-          "Confirm Password field must be the same as the Password field",
-      });
+    setErrors({})
+
+    const newErrors = {}
+
+    if (password !== confirmPassword) newErrors.confirmPassword = "Passwords must match"
+    if (username.length < 4) newErrors.username = "Username must be at least 4 characters."
+    if (password.length < 6) newErrors.password = "Password must be greater than 6 characters."
+    if (!validateEmail(email)) newErrors.email = "Email is invalid"
+
+    if (Object.values(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
     }
 
     const serverResponse = await dispatch(
@@ -48,7 +60,7 @@ function SignupFormPage() {
   return (
     <div className="signup_container">
       <h2>Sign Up</h2>
-      {errors.server && <p>{errors.server}</p>}
+      {errors.server && <p className="error">{errors.server}</p>}
       <form onSubmit={handleSubmit}>
         <div className="signup_content_container">
           <div className="signup_inputs">
@@ -60,7 +72,7 @@ function SignupFormPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-              {errors.email && <p>{errors.email}</p>}
+              {errors.email && <p className="error">{errors.email}</p>}
             </div>
 
             <div className="signup_first_name_container">
@@ -71,9 +83,8 @@ function SignupFormPage() {
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
-              {errors.firstName && <p>{errors.firstName}</p>}
+              {errors.firstName && <p className="error">{errors.firstName}</p>}
             </div>
-
 
             <div className="signup_last_name_container">
               <label>Last Name</label>
@@ -83,11 +94,8 @@ function SignupFormPage() {
                   onChange={(e) => setLastName(e.target.value)}
                   required
                 />
-              {errors.lastName && <p>{errors.lastName}</p>}
+              {errors.lastName && <p className="error">{errors.lastName}</p>}
             </div>
-
-
-
 
             <div className="signup_username_container">
               <label>Username</label>
@@ -97,7 +105,7 @@ function SignupFormPage() {
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
-              {errors.username && <p>{errors.username}</p>}
+              {errors.username && <p className="error">{errors.username}</p>}
             </div>
 
             <div className="signup_password_container">
@@ -108,7 +116,7 @@ function SignupFormPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-              {errors.password && <p>{errors.password}</p>}
+              {errors.password && <p className="error">{errors.password}</p>}
             </div>
               
             <div className="signup_confirm_password_container">
@@ -119,7 +127,7 @@ function SignupFormPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-              {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
             </div>
           </div>
           <div className="signup_button_container">

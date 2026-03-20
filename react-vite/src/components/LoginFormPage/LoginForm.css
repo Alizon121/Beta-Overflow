@@ -90,3 +90,15 @@
     text-decoration: none;
     color: blue;
 }
+
+.login_error_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login_error_container .error {
+    margin: 0px;
+    color: red;
+    font-weight: bold;
+}

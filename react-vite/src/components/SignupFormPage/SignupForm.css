@@ -8,6 +8,12 @@
     border-radius: 8px;
 }
 
+.signup_container .error {
+    margin: 0px;
+    color: red;
+    font-weight: bold;
+}
+
 .signup_container h2 {
     width: 80%;
     text-align: center;

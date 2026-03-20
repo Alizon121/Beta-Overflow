@@ -22,7 +22,7 @@ def get_user_comments(page):
 
     # If there are no comments, then send a response
     if len(comments.items) < 1:
-        return jsonify({"Message": "You currently have no comments"})
+        return jsonify({"Message": "You currently have no comments"}), 404
 
     return jsonify({"comments": [comment.to_dict() for comment in comments.items]})
 

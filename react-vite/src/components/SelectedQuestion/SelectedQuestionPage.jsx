@@ -3,22 +3,40 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { thunkLoadSelectionQuestion } from "../../redux/question";
 import CreateCommentSection from "../CreateCommentSection";
+import { FaRegBookmark } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa6";
+import parse from 'html-react-parser'
 import "./SelectedQuestion.css"
+import { thunkAddSavedQuestion, thunkDeleteSavedQuestion, thunkLoadAllSavedQuestions } from "../../redux/savedQuestion";
+import { thunkLoadQuestionTags } from "../../redux/tag";
 
 function SelectedQuestionPage () {
     const {id} = useParams()
     const [count, setCount] = useState()
+    const [bookMarked, setBookMarked] = useState(false);
     const hasRunEffect = useRef(false)
     const dispatch = useDispatch()
+    const user = useSelector(state => state?.session?.user)
     const question = useSelector(state => state?.questions?.userQuestion)
+    const tagsByQuestionId = useSelector(state => state?.tags?.tagsByQuestionId)
     const comments = useSelector(state => state?.questions?.comments)
     const users = useSelector(state => state?.questions?.users)
+    const userSavedQuestions = useSelector(state => state?.savedQuestions?.allSavedQuestions)
 
 
     useEffect(() => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
+        dispatch(thunkLoadAllSavedQuestions())
     }, [dispatch, id])
 
+    // Render the tags
+    useEffect(() => {
+        if (question) {
+            dispatch(thunkLoadQuestionTags(question?.id))
+        }   
+    },[question, dispatch])
+
+    // Use for counting visits
     useEffect(() => {
         if (!hasRunEffect.current){
             hasRunEffect.current=true
@@ -30,33 +48,81 @@ function SelectedQuestionPage () {
         }
     }, [id])
 
+    useEffect(() => {
+        if (userSavedQuestions && id) {
+            const savedQuestion = userSavedQuestions?.find(savedQuestion => savedQuestion.question_id === Number(id))
+            setBookMarked(savedQuestion?.bookmarked === true)
+        }
+    }, [userSavedQuestions, id])
+
     // Function for re-rendering the thunk
     const onCreate = () => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
     }
 
+    // Function for changing bookmarking
+        const toggleBookMark = () => {
+            setBookMarked(!bookMarked)
+
+            if (!bookMarked) {
+                dispatch(thunkAddSavedQuestion(id));
+            } else {
+                dispatch(thunkDeleteSavedQuestion(id));
+            }
+        }
 
     return (
         <div className="selected_question_page_container">
-            <h2>{question?.title}</h2>
-            <div>
-                <div className="selected_question_subheaders">
-                    <li>Asked on {question?.created_at}</li>
-                    <li>Viewed {count} times</li>
-                </div>
-                <div className="selected_question_question_content_container">
-                    <div id="selected_question_question">{question?.question_text}</div>
-                </div>
+            <div className="selected_question_content_container">
+                {question ? (
+                    <h2 className="selected_question_title">
+                        {question?.title}
+                        <div id="selected_question_bookmark" onClick={toggleBookMark}>
+                            {user ? 
+                                (!bookMarked)
+                                    ? <FaRegBookmark size={18} />
+                                    : <FaBookmark size={18} />
+                                : <div></div>
+                            }
+                        </div>
+                    </h2>
+                ) : (
+                    <h2>Loading Question Title...</h2>
+                )}
+                    {
+                        question ? 
+                        <div>
+                            <div className="selected_question_subheaders">
+                                <span>Asked on {question?.created_at}</span>
+                                <span>Viewed {count} times</span>
+                            </div>
+                            <div className="selected_question_question_content_container">
+                                <div id="selected_question_question">
+                                    {question?.question_text ? parse(question.question_text): ''}
+                                </div>
+                            </div>
+                            <div>
+                                {tagsByQuestionId[question?.id]?.map(tag => (
+                                    <span id="all_questions_tag" key={tag.id}>{tag.tag_name}</span>
+                                ))}
+                            </div>
+                        </div>:
+                        <h3>Loading Question...</h3>
+                    }
+            </div>
 
+            <div className="selected_comment_main_container">
                 <div className="selected_question_comment_container">
-                    <h3>Responses</h3>
+                    <h2>Responses</h2>
                     <div className="selected_question_comment_content_container">
                         {(typeof comments !== "string") ? 
                         comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map(comment => {
                             const selectedUserInfo = users?.find(user => user.id === comment.user_id)
                             return (
-                                <div key={comment?.id}>
-                                    <div id="selected_question_comment_text">{comment?.comment_text}</div>
+                                <div key={comment?.id} className="selected_q_response_container">
+                                    <div id="selected_question_comment_text">
+                                        {comment?.comment_text ? parse(comment?.comment_text): ''}
+                                        </div>
                                     <div className="selected_question_comment_">
                                         {selectedUserInfo && 
                                             <div className="selected_question_comment_username_date">

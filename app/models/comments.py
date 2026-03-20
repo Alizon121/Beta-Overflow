@@ -25,4 +25,4 @@ class Comment(db.Model):
     
     # Add relationships here:
     user_comment = db.relationship("User", back_populates="comments")
-    question = db.relationship("Question", back_populates="comment")
+    question = db.relationship("Question", back_populates="comments")

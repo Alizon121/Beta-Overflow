@@ -7,6 +7,7 @@ Create Date: 2025-02-19 13:09:06.958374
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import func
 
 import os
 environment = os.getenv("FLASK_ENV")
@@ -42,6 +43,35 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('saved_questions',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('question_id', sa.Integer(), nullable=False),
+    sa.Column('bookmarked', sa.Boolean(), default=False, nullable=False),
+    sa.Column('created_at', sa.DateTime(), default=func.now(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), default=func.now(), nullable=False, onupdate=func.now()),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete="CASCADE"),
+    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ondelete="CASCADE"),
+    sa.PrimaryKeyConstraint('user_id', 'question_id')
+    )
+    op.create_table('tags',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('tag_name', sa.Text(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), default=func.now(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), default=func.now(), nullable=False, onupdate=func.now()),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete="CASCADE"),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('tag_name')
+    )
+    op.create_table('question_tags',
+    sa.Column('tag_id', sa.Integer(), nullable=False),
+    sa.Column('question_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['tag_id'], ['tags.id'], ondelete="CASCADE"),
+    sa.ForeignKeyConstraint(['question_id'], ['questions.id'], ondelete="CASCADE"),
+    sa.PrimaryKeyConstraint('tag_id', 'question_id')
+    )
+
+
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.add_column(sa.Column('first_name', sa.String(length=100), nullable=False))
         batch_op.add_column(sa.Column('last_name', sa.String(length=100), nullable=False))
@@ -52,6 +82,9 @@ def upgrade():
        op.execute(f"ALTER TABLE questions SET SCHEMA {SCHEMA};")
        op.execute(f"ALTER TABLE comments SET SCHEMA {SCHEMA};")
        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
+       op.execute(f"ALTER TABLE saved_questions SET SCHEMA {SCHEMA};")
+       op.execute(f"ALTER TABLE tags SET SCHEMA {SCHEMA};")
+       op.execute(f"ALTER TABLE question_tags SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 
@@ -64,4 +97,7 @@ def downgrade():
 
     op.drop_table('comments')
     op.drop_table('questions')
+    op.drop_table('saved_questions')
+    op.drop_table('tags')
+    op.drop_table('question_tags')
     # ### end Alembic commands ###

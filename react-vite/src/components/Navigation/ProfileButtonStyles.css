@@ -25,6 +25,9 @@
     height: 25px;
     border-radius: 5px;
     cursor: pointer;
+    font-family: karma;
+    font-size: 15px;
+    font-weight: 500;
 }
 
 #profile_button_logout button:hover {
