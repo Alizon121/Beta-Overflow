@@ -20,6 +20,11 @@ function SideBarMenu() {
                         About
                     </button>
                 </li>
+                <li>
+                    <button onClick={()=>navigate("/route-advisor")}>
+                        Route Advisor
+                    </button>
+                </li>
 
                 {
                 user ? 

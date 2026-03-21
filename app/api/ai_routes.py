@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from app.models import db, Question, ChatConversation, ChatMessage
 from sqlalchemy.orm import joinedload
 from app.services.ai_client import get_groq_client
+import json
 
 ai_routes = Blueprint('chat', __name__)
 
@@ -120,3 +121,94 @@ def chat():
     return jsonify({
         "reply": reply
     })
+
+
+ROUTE_ADVISOR_SYSTEM_PROMPT = """
+You are an expert rock climbing route advisor with deep knowledge of climbing areas worldwide.
+
+When given criteria (crag/location, country, state/region, grade, style, rating preference, and popularity), suggest up to 5 real climbing routes that best match.
+
+Respond ONLY with valid JSON in this exact format (no markdown, no extra text):
+{
+  "routes": [
+    {
+      "name": "Route Name",
+      "grade": "5.10a",
+      "style": "Sport",
+      "crag": "Crag or Area Name",
+      "description": "Brief description of the route character, rock type, and what makes it notable.",
+      "rating": 4.5
+    }
+  ]
+}
+
+Rules:
+- Suggest only real, well-documented routes when possible
+- Match the requested grade accurately (YDS for sport/trad, V-scale for bouldering)
+- If most_climbed is true, prioritize classic and iconic routes at that location
+- If rating_preference is "highly_rated", only include routes with 4+ star reputations
+- If rating_preference is "top_rated", only include routes with 4.5+ star reputations
+- Return an empty routes array if no routes match, and add a "message" field explaining why
+- Never fabricate routes; if the area is unknown, say so in a message field
+"""
+
+
+@ai_routes.route("/suggest-routes", methods=["POST"])
+def suggest_routes():
+    '''
+    Suggest up to 5 climbing routes based on user criteria
+    '''
+    client = get_groq_client()
+
+    data = request.json or {}
+    crag_location = data.get("crag_location", "").strip()
+    country = data.get("country", "").strip()
+    if data.get("state", "") != None:
+         state= data.get("state", "").strip() == True
+    else:
+          state = None
+    if data.get("region", "") != None:
+         region= data.get("region", "").strip() == True
+    else:
+          region = None
+    grade = data.get("grade", "").strip()
+    style = data.get("style", "").strip()
+    rating_preference = data.get("rating_preference", "any")
+    most_climbed = data.get("most_climbed", False)
+
+    if not crag_location or not grade or not style:
+        return jsonify({"error": "crag_location, grade, and style are required"}), 400
+
+    user_query = (
+        f"Suggest climbing routes at: {crag_location}. "
+        f"In {country}" + (f", {state}" if state else "") + (f", {region}" if region else "") + ". "
+        f"Grade: {grade}. Style: {style}. "
+        f"Rating preference: {rating_preference}. "
+        f"Prioritize most-climbed/classic routes: {'yes' if most_climbed else 'no'}."
+    )
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "system", "content": ROUTE_ADVISOR_SYSTEM_PROMPT},
+            {"role": "user", "content": user_query}
+        ],
+        temperature=0.3
+    )
+
+    raw = response.choices[0].message.content.strip()
+
+    try:
+        result = json.loads(raw)
+    except json.JSONDecodeError:
+        start = raw.find("{")
+        end = raw.rfind("}") + 1
+        if start != -1 and end > start:
+            try:
+                result = json.loads(raw[start:end])
+            except json.JSONDecodeError:
+                result = {"routes": [], "message": "Could not parse route suggestions."}
+        else:
+            result = {"routes": [], "message": "Could not parse route suggestions."}
+
+    return jsonify(result)
