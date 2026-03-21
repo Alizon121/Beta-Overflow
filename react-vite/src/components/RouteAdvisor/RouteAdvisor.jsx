@@ -2,6 +2,49 @@ import { useState, useEffect } from "react"
 import { GRADES_BOULDER, GRADES_SPORT_TRAD, STYLES, US_STATES } from "../../variables/route_vars"
 import "./RouteAdvisor.css"
 
+const MAX_DEPTH = 5
+const LEVEL_LABELS = ["Area", "Sub-Area", "Crag", "Zone", "Wall"]
+
+// Defined outside the component so it can recurse without stale-closure issues.
+// setLevels from useState is guaranteed stable by React so it's safe to pass around.
+async function fetchLevel(parentName, levelIndex, setLevels) {
+  if (levelIndex >= MAX_DEPTH) return
+
+  // Insert a loading placeholder at this depth, removing anything deeper
+  setLevels(prev => {
+    const next = prev.slice(0, levelIndex)
+    next.push({ options: [], selected: "", loading: true, error: "" })
+    return next
+  })
+
+  try {
+    const res = await fetch(`/api/ai/areas?location=${encodeURIComponent(parentName)}`)
+    const data = await res.json()
+
+    if (data.error || !data.areas?.length) {
+      // No children — remove this level; the parent is the leaf
+      setLevels(prev => prev.slice(0, levelIndex))
+      return
+    }
+
+    const areas = data.areas
+    const firstSelected = areas[0].name
+
+    setLevels(prev => {
+      // Guard against a stale result if the user changed a parent while this was in-flight
+      if (prev[levelIndex]?.loading !== true) return prev
+      const next = [...prev]
+      next[levelIndex] = { options: areas, selected: firstSelected, loading: false, error: "" }
+      return next
+    })
+
+    // Automatically drill one more level to detect whether a Crag dropdown is needed
+    fetchLevel(firstSelected, levelIndex + 1, setLevels)
+  } catch {
+    setLevels(prev => prev.slice(0, levelIndex))
+  }
+}
+
 function StarRating({ rating }) {
   const full = Math.floor(rating)
   const half = rating - full >= 0.5
@@ -35,61 +78,50 @@ function RouteAdvisor() {
   const [country, setCountry] = useState("USA")
   const [state, setState] = useState("")
   const [region, setRegion] = useState("")
-  const [areas, setAreas] = useState([])
-  const [areasLoading, setAreasLoading] = useState(false)
-  const [areasError, setAreasError] = useState("")
-  const [cragLocation, setCragLocation] = useState("")
+
+  // Dynamic hierarchy: levels[i] = { options, selected, loading, error }
+  const [levels, setLevels] = useState([])
+
   const [style, setStyle] = useState("Sport")
   const [grade, setGrade] = useState("5.10a")
   const [ratingPreference, setRatingPreference] = useState("any")
   const [mostClimbed, setMostClimbed] = useState(false)
+
   const [routes, setRoutes] = useState([])
   const [message, setMessage] = useState("")
   const [source, setSource] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const gradeOptions = style === "Boulder" ? GRADES_BOULDER : GRADES_SPORT_TRAD
+  const gradeOptions = style === "Bouldering" ? GRADES_BOULDER : GRADES_SPORT_TRAD
+  const locationLookup = country === "USA" ? state : region
 
-  // Fetch OpenBeta areas whenever the lookup location changes
+  // Reset and re-fetch the entire hierarchy when state/region changes
   useEffect(() => {
-    const lookupLocation = country === "USA" ? state : region
-    if (!lookupLocation) {
-      setAreas([])
-      setCragLocation("")
-      return
-    }
+    setLevels([])
+    if (locationLookup) fetchLevel(locationLookup, 0, setLevels)
+  }, [locationLookup])
 
-    const controller = new AbortController()
-    setAreasLoading(true)
-    setAreasError("")
-    setAreas([])
-    setCragLocation("")
-
-    fetch(`/api/ai/areas?location=${encodeURIComponent(lookupLocation)}`, {
-      signal: controller.signal,
+  // When the user picks a different option at level N, clear everything below
+  // and fetch children of the new selection
+  const handleLevelChange = (levelIndex, newValue) => {
+    setLevels(prev => {
+      const next = prev.slice(0, levelIndex + 1)
+      next[levelIndex] = { ...next[levelIndex], selected: newValue }
+      return next
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setAreasError("Could not load areas from OpenBeta.")
-        } else {
-          setAreas(data.areas || [])
-          if (data.areas?.length > 0) setCragLocation(data.areas[0].name)
-        }
-      })
-      .catch((err) => {
-        if (err.name !== "AbortError") setAreasError("Could not load areas from OpenBeta.")
-      })
-      .finally(() => setAreasLoading(false))
+    fetchLevel(newValue, levelIndex + 1, setLevels)
+  }
 
-    return () => controller.abort()
-  }, [country, state, region])
+  // The search location is the deepest level that has a selection and is not still loading
+  const searchLocation = [...levels]
+    .reverse()
+    .find(l => l.selected && !l.loading)?.selected || ""
 
   const handleStyleChange = (e) => {
     const newStyle = e.target.value
     setStyle(newStyle)
-    setGrade(newStyle === "Boulder" ? "V0" : "5.10a")
+    setGrade(newStyle === "Bouldering" ? "V0" : "5.10a")
   }
 
   const handleSubmit = async (e) => {
@@ -105,7 +137,7 @@ function RouteAdvisor() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          crag_location: cragLocation,
+          crag: searchLocation,
           country,
           state: country === "USA" ? state : null,
           region: country !== "USA" ? region : null,
@@ -130,7 +162,7 @@ function RouteAdvisor() {
     }
   }
 
-  const locationReady = country === "USA" ? !!state : !!region
+  const locationReady = !!locationLookup
 
   return (
     <div className="route_advisor_container">
@@ -174,7 +206,7 @@ function RouteAdvisor() {
               className="route_advisor_select"
               value={state}
               onChange={(e) => setState(e.target.value)}
-            >
+            > 
               <option value="">— select a state —</option>
               {US_STATES.map((s) => (
                 <option key={s} value={s}>{s}</option>
@@ -195,45 +227,37 @@ function RouteAdvisor() {
           </label>
         )}
 
-        {/* Area / Crag — populated from OpenBeta */}
-        <label className="route_advisor_label">
-          Area / Crag
-          {areasLoading && (
-            <span className="route_areas_loading">Loading areas…</span>
-          )}
-          {areasError && !areasLoading && (
-            <span className="route_areas_error">{areasError}</span>
-          )}
-          {!locationReady && !areasLoading && (
+        {/* Placeholder shown before a state/region is chosen */}
+        {!locationReady && (
+          <label className="route_advisor_label">
+            Area
             <select className="route_advisor_select" disabled>
               <option>— select a {country === "USA" ? "state" : "region"} first —</option>
             </select>
-          )}
-          {locationReady && !areasLoading && areas.length > 0 && (
-            <select
-              className="route_advisor_select"
-              value={cragLocation}
-              onChange={(e) => setCragLocation(e.target.value)}
-              required
-            >
-              {areas.map((a) => (
-                <option key={a.name} value={a.name}>
-                  {a.name}{a.totalClimbs ? ` (${a.totalClimbs} routes)` : ""}
-                </option>
-              ))}
-            </select>
-          )}
-          {locationReady && !areasLoading && areas.length === 0 && !areasError && (
-            <input
-              className="route_advisor_input"
-              type="text"
-              placeholder="No OpenBeta areas found — enter a crag name manually"
-              value={cragLocation}
-              onChange={(e) => setCragLocation(e.target.value)}
-              required
-            />
-          )}
-        </label>
+          </label>
+        )}
+
+        {/* Dynamic hierarchy levels */}
+        {locationReady && levels.map((level, i) => (
+          <label key={i} className="route_advisor_label">
+            {LEVEL_LABELS[i] ?? `Level ${i + 1}`}
+            {level.loading ? (
+              <span className="route_areas_loading">Loading…</span>
+            ) : level.error ? (
+              <span className="route_areas_error">{level.error}</span>
+            ) : level.options.length > 0 ? (
+              <select
+                className="route_advisor_select"
+                value={level.selected}
+                onChange={(e) => handleLevelChange(i, e.target.value)}
+              >
+                {level.options.map((a) => (
+                  <option key={a.name} value={a.name}>{a.name}</option>
+                ))}
+              </select>
+            ) : null}
+          </label>
+        ))}
 
         {/* Style */}
         <label className="route_advisor_label">
@@ -290,7 +314,7 @@ function RouteAdvisor() {
         <button
           className="route_advisor_submit"
           type="submit"
-          disabled={loading || !cragLocation}
+          disabled={loading || !searchLocation}
         >
           {loading ? "Finding routes…" : "Find Routes"}
         </button>

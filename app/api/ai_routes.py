@@ -131,13 +131,13 @@ OPENBETA_API = "https://api.openbeta.io"
 
 # Returns the direct child areas of a state/country (one level deep).
 # Used to populate the crag dropdown on the frontend.
+# Note: no exactMatch or totalClimbs — using only fields confirmed in the schema.
 AREAS_BY_LOCATION_QUERY = """
 query AreasByLocation($location: String!) {
-  areas(filter: { area_name: { match: $location, exactMatch: true } }) {
+  areas(filter: { area_name: { match: $location } }) {
     area_name
     children {
       area_name
-      totalClimbs
     }
   }
 }
@@ -157,7 +157,7 @@ VSCALE_ORDER = [f"V{i}" for i in range(18)]
 STYLE_FIELD_MAP = {
     "sport": "sport",
     "trad": "trad",
-    "boulder": "boulder",
+    "bouldering": "bouldering",
     "top rope": "tr",
     "aid": "aid",
     "mixed": "mixed",
@@ -173,27 +173,24 @@ query FindRoutes($areaName: String!) {
     climbs {
       name
       grades { yds vscale }
-      type { sport trad boulder tr aid mixed alpine }
+      type { sport trad bouldering tr aid mixed alpine }
       content { description }
-      metadata { starRating }
     }
     children {
       area_name
       climbs {
         name
         grades { yds vscale }
-        type { sport trad boulder tr aid mixed alpine }
+        type { sport trad bouldering tr aid mixed alpine }
         content { description }
-        metadata { starRating }
       }
       children {
         area_name
         climbs {
           name
           grades { yds vscale }
-          type { sport trad boulder tr aid mixed alpine }
+          type { sport trad bouldering tr aid mixed alpine }
           content { description }
-          metadata { starRating }
         }
       }
     }
@@ -207,11 +204,26 @@ def _openbeta_request(query, variables):
     req = urllib.request.Request(
         OPENBETA_API,
         data=payload,
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "Mozilla/5.0 (compatible; beta-overflow-app/1.0)",
+        },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        return json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            result = json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"OpenBeta HTTP {e.code}: {body}") from e
+
+    if "errors" in result:
+        messages = [err.get("message", str(err)) for err in result["errors"]]
+        raise RuntimeError(f"OpenBeta GraphQL errors: {'; '.join(messages)}")
+
+    print("DEBUGUGUG OpenBeta response:", result)
+    return result
 
 
 def _collect_climbs(areas):
@@ -235,14 +247,15 @@ def _grade_neighbors(grade, is_boulder, spread=1):
     return set(order[max(0, idx - spread):idx + spread + 1])
 
 
-def _search_openbeta(crag_location, grade, style, rating_preference, most_climbed):
+def _search_openbeta(crag_location, grade, style):
     """
     Query OpenBeta GraphQL for routes matching the criteria.
     Returns a list of up to 5 route dicts, or None if nothing was found.
     """
     try:
         data = _openbeta_request(OPENBETA_QUERY, {"areaName": crag_location})
-    except Exception:
+    except Exception as e:
+        print(f"[OpenBeta /suggest-routes] {e}")
         return None
 
     areas = (data.get("data") or {}).get("areas") or []
@@ -253,7 +266,7 @@ def _search_openbeta(crag_location, grade, style, rating_preference, most_climbe
     if not all_climbs:
         return None
 
-    is_boulder = style.lower() == "boulder"
+    is_boulder = style.lower() == "bouldering"
     style_key = STYLE_FIELD_MAP.get(style.lower())
     grade_field = "vscale" if is_boulder else "yds"
 
@@ -272,30 +285,17 @@ def _search_openbeta(crag_location, grade, style, rating_preference, most_climbe
         if not pool:
             pool = styled
 
-    # Sort by starRating descending (OpenBeta uses a 0–4 scale)
-    pool.sort(key=lambda c: (c.get("metadata") or {}).get("starRating") or 0, reverse=True)
-
-    # Apply rating preference (thresholds on 0–4 scale; fall back if too strict)
-    thresholds = {"highly_rated": 3.0, "top_rated": 3.5}
-    threshold = thresholds.get(rating_preference)
-    if threshold:
-        filtered = [c for c in pool if ((c.get("metadata") or {}).get("starRating") or 0) >= threshold]
-        if filtered:
-            pool = filtered
-
     routes = []
     for c in pool[:5]:
         grades = c.get("grades") or {}
-        meta = c.get("metadata") or {}
         content = c.get("content") or {}
-        star = meta.get("starRating")
         routes.append({
             "name": c.get("name", "Unknown"),
             "grade": grades.get(grade_field) or grade,
             "style": style,
             "crag": c.get("_area_name") or crag_location,
             "description": content.get("description") or "No description available.",
-            "rating": round(float(star), 1) if isinstance(star, (int, float)) else None,
+            "rating": None,
         })
 
     return routes if routes else None
@@ -341,8 +341,9 @@ def get_areas():
 
     try:
         data = _openbeta_request(AREAS_BY_LOCATION_QUERY, {"location": location})
-    except Exception:
-        return jsonify({"error": "Failed to reach OpenBeta"}), 502
+    except Exception as e:
+        print(f"[OpenBeta /areas] {e}")
+        return jsonify({"error": str(e)}), 502
 
     top_level = (data.get("data") or {}).get("areas") or []
     crags = []
@@ -350,12 +351,9 @@ def get_areas():
         for child in parent.get("children") or []:
             name = child.get("area_name", "").strip()
             if name:
-                crags.append({
-                    "name": name,
-                    "totalClimbs": child.get("totalClimbs") or 0,
-                })
+                crags.append({"name": name})
 
-    crags.sort(key=lambda c: c["totalClimbs"], reverse=True)
+    crags.sort(key=lambda c: c["name"])
     return jsonify({"areas": crags})
 
 
@@ -363,26 +361,36 @@ def get_areas():
 def suggest_routes():
     """Suggest up to 5 climbing routes. Queries OpenBeta first, falls back to LLM."""
     data = request.json or {}
-    crag_location = data.get("crag_location", "").strip()
-    country = data.get("country", "").strip()
-    state = data.get("state", "").strip() if data.get("state", "") else None
-    region = data.get("region", "").strip() if data.get("region", "") else None
-    grade = data.get("grade", "").strip()
-    style = data.get("style", "").strip()
+#     Helper function to safely extract and clean string fields
+    def _str(key):
+        return (data.get(key) or "").strip() or None
+
+    country  = _str("country") or ""
+    state    = _str("state")
+    region   = _str("region")
+    area     = _str("area")
+    sub_area = _str("sub_area")
+    zone     = _str("zone")
+    crag     = _str("crag")
+    grade    = _str("grade") or ""
+    style    = _str("style") or ""
     rating_preference = data.get("rating_preference", "any")
     most_climbed = data.get("most_climbed", False)
 
-    if not crag_location or not grade or not style:
-        return jsonify({"error": "crag_location, grade, and style are required"}), 400
+    # Use the most specific location provided (deepest level wins)
+    search_location = crag or zone or sub_area or area
+
+    if not search_location or not grade or not style:
+        return jsonify({"error": "a location, grade, and style are required"}), 400
 
     # Primary: OpenBeta real route database
-    routes = _search_openbeta(crag_location, grade, style, rating_preference, most_climbed)
+    routes = _search_openbeta(search_location, grade, style)
     if routes:
         return jsonify({"routes": routes, "source": "OpenBeta"})
 
-    # Fallback: LLM (covers crags not yet in OpenBeta)
+    # Fallback: LLM (covers areas not yet in OpenBeta)
     client = get_groq_client()
-    location_parts = [p for p in [crag_location, country, state, region] if p]
+    location_parts = [p for p in [country, state, region, area, sub_area, zone, crag] if p]
     user_query = (
         f"Suggest climbing routes at: {', '.join(location_parts)}. "
         f"Grade: {grade}. Style: {style}. "
