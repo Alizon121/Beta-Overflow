@@ -91,6 +91,19 @@
   cursor: not-allowed;
 }
 
+.route_areas_loading {
+  font-size: 13px;
+  color: #777;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.route_areas_error {
+  font-size: 13px;
+  color: #c0392b;
+  margin-top: 2px;
+}
+
 .route_advisor_error {
   color: #c0392b;
   font-size: 14px;
@@ -104,9 +117,47 @@
   margin-top: 8px;
 }
 
+.route_results_header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
 .route_results_title {
   font-size: 18px;
   font-weight: 700;
+  margin: 0;
+}
+
+.route_source_badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.route_source_openbeta {
+  background: #d4edda;
+  color: #276340;
+  border: 1px solid #b2dfcc;
+}
+
+.route_source_ai {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
+.route_ai_disclaimer {
+  font-size: 13px;
+  color: #856404;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  padding: 8px 12px;
   margin-bottom: 14px;
 }
 
