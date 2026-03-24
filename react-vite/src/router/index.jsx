@@ -10,6 +10,7 @@ import QuestionsListPage from '../components/QuestionsList';
 import Layout from './Layout';
 import SavedQuestionsPage from '../components/SavedQuestionsPage/SavedQuestionsPage';
 import AboutPage from '../components/AboutPage/AboutPage';
+import RouteAdvisor from '../components/RouteAdvisor/RouteAdvisor';
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage/>
+      },
+      {
+        path: "/route-finder",
+        element: <RouteAdvisor/>
       }
     ],
   },
