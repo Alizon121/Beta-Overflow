@@ -26,8 +26,8 @@ function SelectedQuestionPage () {
 
     useEffect(() => {
         dispatch(thunkLoadSelectionQuestion(Number(id)))
-        dispatch(thunkLoadAllSavedQuestions())
-    }, [dispatch, id])
+        if (user) dispatch(thunkLoadAllSavedQuestions())
+    }, [dispatch, id, user])
 
     // Render the tags
     useEffect(() => {

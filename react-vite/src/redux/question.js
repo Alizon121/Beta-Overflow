@@ -162,7 +162,8 @@ export const updateQuestionThunk = (id, updatedQuestion) => async dispatch => {
     })
 
     if (response.ok) {
-        dispatch(updateQuestion(id))
+        const data = await response.json()
+        dispatch(updateQuestion(data))
     }
 }
 
@@ -199,34 +200,20 @@ function questionReducer(state = {}, action) {
                 allQuestions: state.allQuestions + 1,
                 questions: [...state.questions, action.payload]
             }
-            case ADD_ANSWER: {
-                const initialState = {
-                    questions: {
-                        comments: [],
-                        userQuestion: {},
-                        users:[]
-                    }
-                }
-                return {
-                    ...initialState.questions,
-                    questions:{
-                       ...initialState.questions,
-                        comments: [...initialState.questions.comments, action.payload],
-                        userQuestion: {...initialState.questions.userQuestion},
-                        users: [...initialState.questions.users]
-                    }
-                }
+        case ADD_ANSWER:
+            return {
+                ...state,
+                comments: [...(state.comments || []), action.payload]
             }
         case DELETE_QUESTION:
             return {
                 ...state,
-                allUserQuestions: state.allUserQuestions -1,
-                userQuestions: state?.questions?.filter(question => question.id !== action.payload)
+                questions: state.questions?.filter(question => question.id !== action.payload) || []
             }
         case UPDATE_QUESTION:
             return {
                 ...state,
-                questions: [...state.userQuestions]
+                questions: state.questions?.map(q => q.id === action.payload.id ? action.payload : q) || []
             }
         default:
             return state

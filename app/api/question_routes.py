@@ -219,7 +219,7 @@ def handle_comments(id):
             return jsonify({"Error": "Unable to locate the question"}), 404
         
         # Locate comments
-        comments = Question.query.get(id).comment
+        comments = Question.query.get(id).comments
 
         # Query for all the users
         users = User.query.all()
