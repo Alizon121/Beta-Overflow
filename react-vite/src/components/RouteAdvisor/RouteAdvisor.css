@@ -1,0 +1,246 @@
+.route_advisor_container {
+  max-width: 680px;
+  margin: 30px auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+}
+
+.route_advisor_title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.route_advisor_subtitle {
+  color: #555;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.route_advisor_form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.route_advisor_label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.route_advisor_input,
+.route_advisor_select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  background: #fff;
+}
+
+.route_advisor_input:focus,
+.route_advisor_select:focus {
+  outline: 2px solid #e35c00;
+  border-color: transparent;
+}
+
+.route_advisor_checkbox_label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+}
+
+.route_advisor_checkbox_label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.route_advisor_submit {
+  padding: 10px 20px;
+  background-color: #e35c00;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.15s;
+}
+
+.route_advisor_submit:hover:not(:disabled) {
+  background-color: #c44e00;
+}
+
+.route_advisor_submit:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.route_areas_loading {
+  font-size: 13px;
+  color: #777;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.route_areas_error {
+  font-size: 13px;
+  color: #c0392b;
+  margin-top: 2px;
+}
+
+.route_advisor_error {
+  color: #c0392b;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.route_advisor_message {
+  color: #555;
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.route_results_header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.route_results_title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.route_source_badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.route_source_openbeta {
+  background: #d4edda;
+  color: #276340;
+  border: 1px solid #b2dfcc;
+}
+
+.route_source_ai {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
+.route_ai_disclaimer {
+  font-size: 13px;
+  color: #856404;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.route_card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.route_card_header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.route_name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+.route_grade_badge {
+  background: #e35c00;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.route_meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #555;
+  flex-wrap: wrap;
+}
+
+.route_style {
+  background: #eef;
+  border: 1px solid #ccd;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #336;
+}
+
+.route_crag {
+  color: #777;
+}
+
+.route_stars {
+  color: #e8a000;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.route_description {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.route_no_description {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+  font-style: italic;
+}
+
+.route_external_link {
+  color: #e8a000;
+  text-decoration: underline;
+}
+
+.route_external_link:hover {
+  color: #c07000;
+}
