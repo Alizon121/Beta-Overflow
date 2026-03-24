@@ -21,8 +21,8 @@ function SideBarMenu() {
                     </button>
                 </li>
                 <li>
-                    <button onClick={()=>navigate("/route-advisor")}>
-                        Route Advisor
+                    <button onClick={()=>navigate("/route-finder")}>
+                        Route Finder
                     </button>
                 </li>
 

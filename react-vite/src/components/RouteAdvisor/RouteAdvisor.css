@@ -228,3 +228,19 @@
   line-height: 1.5;
   margin: 0;
 }
+
+.route_no_description {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+  font-style: italic;
+}
+
+.route_external_link {
+  color: #e8a000;
+  text-decoration: underline;
+}
+
+.route_external_link:hover {
+  color: #c07000;
+}

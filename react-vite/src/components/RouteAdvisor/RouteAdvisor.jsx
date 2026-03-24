@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { GRADES_BOULDER, GRADES_SPORT_TRAD, STYLES, US_STATES } from "../../variables/route_vars"
+import RouteCard from "./RouteCard"
 import "./RouteAdvisor.css"
 
 const MAX_DEPTH = 5
@@ -7,7 +8,8 @@ const LEVEL_LABELS = ["Area", "Sub-Area", "Crag", "Zone", "Wall"]
 
 // Defined outside the component so it can recurse without stale-closure issues.
 // setLevels from useState is guaranteed stable by React so it's safe to pass around.
-async function fetchLevel(parentName, levelIndex, setLevels) {
+// parentName: the area whose children we want; ancestorName: the grandparent used to scope the search.
+async function fetchLevel(parentName, levelIndex, setLevels, ancestorName = "") {
   if (levelIndex >= MAX_DEPTH) return
 
   // Insert a loading placeholder at this depth, removing anything deeper
@@ -18,7 +20,10 @@ async function fetchLevel(parentName, levelIndex, setLevels) {
   })
 
   try {
-    const res = await fetch(`/api/ai/areas?location=${encodeURIComponent(parentName)}`)
+    const url = ancestorName
+      ? `/api/ai/areas?location=${encodeURIComponent(parentName)}&parent=${encodeURIComponent(ancestorName)}`
+      : `/api/ai/areas?location=${encodeURIComponent(parentName)}`
+    const res = await fetch(url)
     const data = await res.json()
 
     if (data.error || !data.areas?.length) {
@@ -38,41 +43,14 @@ async function fetchLevel(parentName, levelIndex, setLevels) {
       return next
     })
 
-    // Automatically drill one more level to detect whether a Crag dropdown is needed
-    fetchLevel(firstSelected, levelIndex + 1, setLevels)
+    // Automatically drill one more level to detect whether a Crag dropdown is needed.
+    // Pass the current parentName as the ancestor so the next query is scoped geographically.
+    fetchLevel(firstSelected, levelIndex + 1, setLevels, parentName)
   } catch {
     setLevels(prev => prev.slice(0, levelIndex))
   }
 }
 
-function StarRating({ rating }) {
-  const full = Math.floor(rating)
-  const half = rating - full >= 0.5
-  const stars = []
-  for (let i = 0; i < 5; i++) {
-    if (i < full) stars.push("★")
-    else if (i === full && half) stars.push("½")
-    else stars.push("☆")
-  }
-  return <span className="route_stars">{stars.join("")} {rating.toFixed(1)}</span>
-}
-
-function RouteCard({ route }) {
-  return (
-    <div className="route_card">
-      <div className="route_card_header">
-        <span className="route_name">{route.name}</span>
-        <span className="route_grade_badge">{route.grade}</span>
-      </div>
-      <div className="route_meta">
-        <span className="route_style">{route.style}</span>
-        <span className="route_crag">{route.crag}</span>
-        {route.rating != null && <StarRating rating={route.rating} />}
-      </div>
-      <p className="route_description">{route.description}</p>
-    </div>
-  )
-}
 
 function RouteAdvisor() {
   const [country, setCountry] = useState("USA")
@@ -84,8 +62,8 @@ function RouteAdvisor() {
 
   const [style, setStyle] = useState("Sport")
   const [grade, setGrade] = useState("5.10a")
-  const [ratingPreference, setRatingPreference] = useState("any")
-  const [mostClimbed, setMostClimbed] = useState(false)
+  // const [ratingPreference, setRatingPreference] = useState("any")
+  // const [mostClimbed, setMostClimbed] = useState(false)
 
   const [routes, setRoutes] = useState([])
   const [message, setMessage] = useState("")
@@ -103,20 +81,23 @@ function RouteAdvisor() {
   }, [locationLookup])
 
   // When the user picks a different option at level N, clear everything below
-  // and fetch children of the new selection
+  // and fetch children of the new selection, scoped by the parent at level N-1.
   const handleLevelChange = (levelIndex, newValue) => {
     setLevels(prev => {
       const next = prev.slice(0, levelIndex + 1)
       next[levelIndex] = { ...next[levelIndex], selected: newValue }
       return next
     })
-    fetchLevel(newValue, levelIndex + 1, setLevels)
+    const ancestor = levelIndex > 0 ? levels[levelIndex - 1]?.selected : locationLookup
+    fetchLevel(newValue, levelIndex + 1, setLevels, ancestor)
   }
 
-  // The search location is the deepest level that has a selection and is not still loading
-  const searchLocation = [...levels]
-    .reverse()
-    .find(l => l.selected && !l.loading)?.selected || ""
+  // Build an ordered list of settled (non-loading) selections, deepest last.
+  const readyLevels = levels.filter(l => l.selected && !l.loading)
+  // The search location is the deepest settled selection.
+  const searchLocation = readyLevels[readyLevels.length - 1]?.selected || ""
+  // The parent is the level just above it (falls back to state/region when at level 0).
+  const searchParent = readyLevels[readyLevels.length - 2]?.selected || locationLookup
 
   const handleStyleChange = (e) => {
     const newStyle = e.target.value
@@ -138,13 +119,14 @@ function RouteAdvisor() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           crag: searchLocation,
+          crag_parent: searchParent || null,
           country,
           state: country === "USA" ? state : null,
           region: country !== "USA" ? region : null,
           grade,
           style,
-          rating_preference: ratingPreference,
-          most_climbed: mostClimbed,
+          // rating_preference: ratingPreference,
+          // most_climbed: mostClimbed,
         }),
       })
       const data = await res.json()
@@ -166,7 +148,7 @@ function RouteAdvisor() {
 
   return (
     <div className="route_advisor_container">
-      <h2 className="route_advisor_title">Route Advisor</h2>
+      <h2 className="route_advisor_title">Route Finder</h2>
       <p className="route_advisor_subtitle">
         Select a location and criteria to get up to 5 route suggestions.
       </p>
@@ -285,30 +267,6 @@ function RouteAdvisor() {
               <option key={g} value={g}>{g}</option>
             ))}
           </select>
-        </label>
-
-        {/* Rating preference */}
-        <label className="route_advisor_label">
-          Rating Preference
-          <select
-            className="route_advisor_select"
-            value={ratingPreference}
-            onChange={(e) => setRatingPreference(e.target.value)}
-          >
-            <option value="any">Any rating</option>
-            <option value="highly_rated">Highly rated (3+ / 4)</option>
-            <option value="top_rated">Top rated (3.5+ / 4)</option>
-          </select>
-        </label>
-
-        {/* Most climbed */}
-        <label className="route_advisor_checkbox_label">
-          <input
-            type="checkbox"
-            checked={mostClimbed}
-            onChange={(e) => setMostClimbed(e.target.checked)}
-          />
-          Prioritize most-climbed / classic routes
         </label>
 
         <button

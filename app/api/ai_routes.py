@@ -129,15 +129,30 @@ def chat():
 
 OPENBETA_API = "https://api.openbeta.io"
 
-# Returns the direct child areas of a state/country (one level deep).
-# Used to populate the crag dropdown on the frontend.
-# Note: no exactMatch or totalClimbs — using only fields confirmed in the schema.
+# Returns the direct child areas of a location (one level deep).
+# Used to populate the hierarchy dropdowns on the frontend.
 AREAS_BY_LOCATION_QUERY = """
 query AreasByLocation($location: String!) {
   areas(filter: { area_name: { match: $location } }) {
     area_name
     children {
       area_name
+    }
+  }
+}
+"""
+
+# Used when a parent area is known: queries the parent and navigates to the
+# target area's children, avoiding false matches from same-named areas elsewhere.
+AREAS_BY_PARENT_QUERY = """
+query AreasByParent($parent: String!) {
+  areas(filter: { area_name: { match: $parent } }) {
+    area_name
+    children {
+      area_name
+      children {
+        area_name
+      }
     }
   }
 }
@@ -164,8 +179,7 @@ STYLE_FIELD_MAP = {
     "alpine": "alpine",
 }
 
-# Queries 3 levels of area hierarchy to cover parent areas (e.g. "Red River Gorge")
-# that contain sub-crags which contain the actual routes.
+# Global name search — used as a fallback when no parent context is available.
 OPENBETA_QUERY = """
 query FindRoutes($areaName: String!) {
   areas(filter: { area_name: { match: $areaName } }) {
@@ -191,6 +205,43 @@ query FindRoutes($areaName: String!) {
           grades { yds vscale }
           type { sport trad bouldering tr aid mixed alpine }
           content { description }
+        }
+      }
+    }
+  }
+}
+"""
+
+# Scoped search: queries the known parent area and navigates down to the target
+# area's climbs, preventing same-named areas in other regions from leaking in.
+OPENBETA_QUERY_VIA_PARENT = """
+query FindRoutesViaParent($parentName: String!) {
+  areas(filter: { area_name: { match: $parentName } }) {
+    area_name
+    children {
+      area_name
+      climbs {
+        name
+        grades { yds vscale }
+        type { sport trad bouldering tr aid mixed alpine }
+        content { description }
+      }
+      children {
+        area_name
+        climbs {
+          name
+          grades { yds vscale }
+          type { sport trad bouldering tr aid mixed alpine }
+          content { description }
+        }
+        children {
+          area_name
+          climbs {
+            name
+            grades { yds vscale }
+            type { sport trad bouldering tr aid mixed alpine }
+            content { description }
+          }
         }
       }
     }
@@ -247,22 +298,45 @@ def _grade_neighbors(grade, is_boulder, spread=1):
     return set(order[max(0, idx - spread):idx + spread + 1])
 
 
-def _search_openbeta(crag_location, grade, style):
+def _search_openbeta(crag_location, grade, style, parent_location=None):
     """
     Query OpenBeta GraphQL for routes matching the criteria.
+
+    When parent_location is provided, queries the parent area and navigates
+    down to the exact crag — preventing same-named areas in other regions
+    from leaking into results.
+
     Returns a list of up to 5 route dicts, or None if nothing was found.
     """
-    try:
-        data = _openbeta_request(OPENBETA_QUERY, {"areaName": crag_location})
-    except Exception as e:
-        print(f"[OpenBeta /suggest-routes] {e}")
-        return None
+    if parent_location:
+        try:
+            data = _openbeta_request(OPENBETA_QUERY_VIA_PARENT, {"parentName": parent_location})
+        except Exception as e:
+            print(f"[OpenBeta /suggest-routes via parent] {e}")
+            return None
 
-    areas = (data.get("data") or {}).get("areas") or []
-    if not areas:
-        return None
+        parent_areas = (data.get("data") or {}).get("areas") or []
+        crag_lower = crag_location.lower()
+        target_areas = []
+        for p in parent_areas:
+            for child in p.get("children") or []:
+                if child.get("area_name", "").lower() == crag_lower:
+                    target_areas.append(child)
 
-    all_climbs = _collect_climbs(areas)
+        if not target_areas:
+            return None
+        all_climbs = _collect_climbs(target_areas)
+    else:
+        try:
+            data = _openbeta_request(OPENBETA_QUERY, {"areaName": crag_location})
+        except Exception as e:
+            print(f"[OpenBeta /suggest-routes] {e}")
+            return None
+
+        areas = (data.get("data") or {}).get("areas") or []
+        if not areas:
+            return None
+        all_climbs = _collect_climbs(areas)
     if not all_climbs:
         return None
 
@@ -334,24 +408,50 @@ Rules:
 
 @ai_routes.route("/areas", methods=["GET"])
 def get_areas():
-    """Return child areas of a state or country from OpenBeta, sorted by climb count."""
+    """Return child areas of a location from OpenBeta.
+
+    When `parent` is supplied, queries the parent area and navigates down to
+    `location`'s children — this prevents same-named areas in other regions
+    from polluting the dropdown.
+    """
     location = request.args.get("location", "").strip()
+    parent = request.args.get("parent", "").strip()
     if not location:
         return jsonify({"error": "location query param is required"}), 400
 
-    try:
-        data = _openbeta_request(AREAS_BY_LOCATION_QUERY, {"location": location})
-    except Exception as e:
-        print(f"[OpenBeta /areas] {e}")
-        return jsonify({"error": str(e)}), 502
-
-    top_level = (data.get("data") or {}).get("areas") or []
     crags = []
-    for parent in top_level:
-        for child in parent.get("children") or []:
-            name = child.get("area_name", "").strip()
-            if name:
-                crags.append({"name": name})
+
+    if parent:
+        # Query the known parent, then find the matching child and return its children.
+        try:
+            data = _openbeta_request(AREAS_BY_PARENT_QUERY, {"parent": parent})
+        except Exception as e:
+            print(f"[OpenBeta /areas] {e}")
+            return jsonify({"error": str(e)}), 502
+
+        parent_areas = (data.get("data") or {}).get("areas") or []
+        location_lower = location.lower()
+        for p in parent_areas:
+            for child in p.get("children") or []:
+                if child.get("area_name", "").lower() == location_lower:
+                    for grandchild in child.get("children") or []:
+                        name = grandchild.get("area_name", "").strip()
+                        if name:
+                            crags.append({"name": name})
+    else:
+        # No parent context — fall back to a direct name search.
+        try:
+            data = _openbeta_request(AREAS_BY_LOCATION_QUERY, {"location": location})
+        except Exception as e:
+            print(f"[OpenBeta /areas] {e}")
+            return jsonify({"error": str(e)}), 502
+
+        top_level = (data.get("data") or {}).get("areas") or []
+        for area in top_level:
+            for child in area.get("children") or []:
+                name = child.get("area_name", "").strip()
+                if name:
+                    crags.append({"name": name})
 
     crags.sort(key=lambda c: c["name"])
     return jsonify({"areas": crags})
@@ -371,7 +471,8 @@ def suggest_routes():
     area     = _str("area")
     sub_area = _str("sub_area")
     zone     = _str("zone")
-    crag     = _str("crag")
+    crag        = _str("crag")
+    crag_parent = _str("crag_parent")
     grade    = _str("grade") or ""
     style    = _str("style") or ""
     rating_preference = data.get("rating_preference", "any")
@@ -384,7 +485,7 @@ def suggest_routes():
         return jsonify({"error": "a location, grade, and style are required"}), 400
 
     # Primary: OpenBeta real route database
-    routes = _search_openbeta(search_location, grade, style)
+    routes = _search_openbeta(search_location, grade, style, parent_location=crag_parent)
     if routes:
         return jsonify({"routes": routes, "source": "OpenBeta"})
 

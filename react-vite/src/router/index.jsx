@@ -57,7 +57,7 @@ export const router = createBrowserRouter([
         element: <AboutPage/>
       },
       {
-        path: "/route-advisor",
+        path: "/route-finder",
         element: <RouteAdvisor/>
       }
     ],
