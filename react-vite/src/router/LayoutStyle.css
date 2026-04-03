@@ -1,22 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Karma:wght@300;400;500;600;700&display=swap');
-
-body, html {
-    font-family: karma;
-    margin: 0px;
+/* ============================================================
+   APP SHELL — sidebar left, nav top-right, content fills rest
+   ============================================================ */
+.app_shell {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background-color: var(--bg-base);
 }
 
-.layout_container{
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: stretch;
-    width: 100%;
-    min-height: 100vh;
+/* Fixed-width left sidebar */
+.app_sidebar {
+  width: 220px;
+  min-width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  z-index: 100;
 }
 
-.main_content{
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding: 40px;
+/* Right column: nav bar + scrollable content */
+.app_right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
+/* Scrollable content area */
+.main_content {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+}
+
+/* ============================================================
+   AUTH PAGES (login / signup) — no sidebar
+   ============================================================ */
+.auth_shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+}
+
+.auth_content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

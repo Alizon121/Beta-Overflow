@@ -1,45 +1,73 @@
 .add_tag_modal_container {
-    height: 190px;
-    width: 270px;
-    border: 1px solid rgb(201,201,201);
-    border-radius: 8px;
+  min-height: 190px;
+  width: 300px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.add_tag_modal_container h2 {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .add_tag_modal_container input {
-    width: 210px;
-    padding: 5px
+  width: 100%;
+  padding: 8px 10px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.add_tag_modal_container input:focus {
+  border-color: var(--accent);
+  outline: none;
 }
 
 .add_tag_form_content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .add_tag_modal_buttons_container {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .add_tag_modal_buttons_container button {
-    border: none;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 14px;
-    width: 75px;
-    cursor: pointer;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 #add_tag_modal_submit_button {
-    background-color: #2089ca;
-    color: #fff;
+  background-color: var(--accent);
+  color: #fff;
 }
 
-#add_tag_modal_submit_button:hover{
-    background-color: #1a75ad;
+#add_tag_modal_submit_button:hover {
+  background-color: var(--accent-hover);
 }
 
-#add_tag_modal_cancel_button:hover{
-    background-color: #bebebe;
+#add_tag_modal_cancel_button {
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+}
+
+#add_tag_modal_cancel_button:hover {
+  color: var(--text-primary);
 }

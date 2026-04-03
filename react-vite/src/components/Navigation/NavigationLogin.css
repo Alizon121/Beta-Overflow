@@ -1,18 +1,25 @@
 .navigation_login {
-    display: flex;
-    justify-content: space-between;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border: 1px solid rgb(201, 201, 201);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 24px;
+  height: 56px;
 }
 
 .navigation_login li {
-    list-style: none;
-    /* max-width: ; */
+  list-style: none;
 }
 
 .navigation_login a {
-    text-decoration: none;
-    color: black;
-    font-weight: 500;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.15s;
+}
+
+.navigation_login a:hover {
+  color: var(--text-primary);
 }

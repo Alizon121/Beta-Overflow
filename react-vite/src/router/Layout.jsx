@@ -15,39 +15,45 @@ export default function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
   const location = useLocation()
 
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
+
   useEffect(() => {
-    if (location.pathname !== "/"&& location.pathname !== "/login" && location.pathname !== "/signup")  {
+    if (!isAuthPage) {
       dispatch(thunkAuthenticate()).then(() => setIsLoaded(true));
-    }
-    else {
+    } else {
       setIsLoaded(true)
     }
-  }, [dispatch, location.pathname]);
+  }, [isAuthPage, dispatch, location.pathname]);
 
-  return (
-    <>
+  if (isAuthPage) {
+    return (
       <ModalProvider>
-        <div>
-          {location.pathname === "/login"?
-            <NavigationLoginPage />:
-            location.pathname === "/signup" ?
-            <NavigationSignup/> :
-            <Navigation/>
-          }
-        </div>
-       <div className="layout_container">
-        <div className="main_content">
-            {isLoaded && <Outlet /> }
-        </div>
-          <div id="side_bar_menu_container">
-            {location.pathname !== "/login" && location.pathname !== "/signup" && (
-              <SideBarMenu />
-            )}
+        <div className="auth_shell">
+          {location.pathname === "/login" ? <NavigationLoginPage /> : <NavigationSignup />}
+          <div className="auth_content">
+            {isLoaded && <Outlet />}
           </div>
-       </div>
-        <ChatWidget/>
+        </div>
         <Modal />
       </ModalProvider>
-    </>
+    );
+  }
+
+  return (
+    <ModalProvider>
+      <div className="app_shell">
+        <aside className="app_sidebar">
+          <SideBarMenu />
+        </aside>
+        <div className="app_right">
+          <Navigation />
+          <main className="main_content">
+            {isLoaded && <Outlet />}
+          </main>
+        </div>
+      </div>
+      <ChatWidget />
+      <Modal />
+    </ModalProvider>
   );
 }

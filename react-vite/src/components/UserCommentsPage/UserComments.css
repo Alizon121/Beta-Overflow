@@ -1,58 +1,81 @@
 .user_comments_page_container {
-    margin-left: 10px;
-    width:100%;
-    justify-content: start;
+  width: 100%;
+  max-width: 860px;
+}
+
+.user_comments_page_container h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 20px;
 }
 
 .user_comments_title_comment_buttons {
-    margin-top: 10px;
-    margin-left: 10px;
-    border: 1px solid rgb(201, 201, 201);
-    padding: 5px;
-    border-radius: 8px;
-    list-style: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Initial shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 8px;
+  list-style: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.user_comments_title_comment_buttons:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
 }
 
 .user_comments_content {
-    margin-left: 10px;
-}
-
-.user_comments_title_comment_buttons:hover{
-    transform: scale(1); /* Slight zoom */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
-
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .user_comments_question_header h4 {
-    font-size: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
 }
+
 .user_comments_buttons_container {
-    display: flex;
-    gap: 10px;
-    margin-top: 5px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .user_comments_buttons_container button {
-    list-style: none;
-    padding: 5px;
-    border: none;
-    width: 75px;
-    border-radius: 5px;
-    cursor: pointer;
+  list-style: none;
+  padding: 6px 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font);
+  transition: background-color 0.15s;
 }
 
 #user_comments_update_button {
-    background-color: #2089ca;
-    color: #fff;
+  background-color: var(--accent-muted);
+  color: var(--accent);
+  border: 1px solid transparent;
 }
 
 #user_comments_update_button:hover {
-    background-color: #2079b1;
+  background-color: var(--accent);
+  color: #fff;
 }
 
-#user_comments_delete_button:hover{
-    background-color: #aaaaaa;
+#user_comments_delete_button {
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+}
+
+#user_comments_delete_button:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+  border-color: var(--error);
 }

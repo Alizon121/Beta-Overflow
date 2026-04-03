@@ -1,46 +1,64 @@
-.create_comment_container{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 500px;
-    max-width: 500px;
-    height: 500px;
+.create_comment_container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 500px;
+  max-width: 500px;
 }
 
 .create_comment_container form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 350px;
-}
-
-.create_comment_container .error{
-    margin: 0px
-}
-
-.creat_comment_rq_container{
-    margin-bottom: 1rem;
-}
-
-.quill .ql-container{
-    height: 150px;
-}
-
-.create_comment_container button {
-    background-color: #2089ca;
-    border: none;
-    color: #fff;
-    border-radius: 5px;
-    padding: 5px;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .create_comment_container .error {
-    color: red;
-    font-weight: bold;
+  margin: 0;
+  color: var(--error);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-#create_comment_post_container button:hover{
-    background-color: #2079b1;
-    cursor: pointer;
+.creat_comment_rq_container {
+  margin-bottom: 8px;
+}
+
+.quill .ql-container {
+  height: 150px;
+}
+
+.quill .ql-toolbar.ql-snow {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-medium);
+}
+
+.quill .ql-toolbar .ql-stroke { stroke: var(--text-secondary); }
+.quill .ql-toolbar .ql-fill { fill: var(--text-secondary); }
+
+.quill .ql-container.ql-snow {
+  background-color: var(--bg-input);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.quill .ql-editor { color: var(--text-primary); }
+
+.create_comment_container button {
+  background-color: var(--accent);
+  border: none;
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 10px;
+  transition: background-color 0.15s;
+}
+
+.create_comment_container button:hover {
+  background-color: var(--accent-hover);
 }

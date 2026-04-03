@@ -1,3 +1,21 @@
 .about_content_container {
-    font-size: large;
+  max-width: 720px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.about_content_container h1,
+.about_content_container h2,
+.about_content_container h3 {
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.about_content_container a {
+  color: var(--accent);
+}
+
+.about_content_container a:hover {
+  text-decoration: underline;
 }

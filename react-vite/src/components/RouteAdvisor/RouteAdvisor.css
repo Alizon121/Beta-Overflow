@@ -1,56 +1,62 @@
 .route_advisor_container {
-  max-width: 680px;
-  margin: 30px auto;
-  padding: 24px;
-  font-family: Arial, sans-serif;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .route_advisor_title {
   font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
 .route_advisor_subtitle {
-  color: #555;
+  color: var(--text-secondary);
   margin-bottom: 24px;
   font-size: 14px;
 }
 
+/* Form card */
 .route_advisor_form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
 }
 
 .route_advisor_label {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .route_advisor_input,
 .route_advisor_select {
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 9px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
   font-size: 14px;
-  font-family: Arial, sans-serif;
-  background: #fff;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  transition: border-color 0.15s;
 }
 
 .route_advisor_input:focus,
 .route_advisor_select:focus {
-  outline: 2px solid #e35c00;
-  border-color: transparent;
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-muted);
 }
 
 .route_advisor_checkbox_label {
@@ -59,7 +65,7 @@
   gap: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-secondary);
   cursor: pointer;
 }
 
@@ -67,66 +73,70 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+  accent-color: var(--accent);
 }
 
 .route_advisor_submit {
-  padding: 10px 20px;
-  background-color: #e35c00;
+  padding: 10px 22px;
+  background-color: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 5px;
-  font-size: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
   font-weight: 600;
+  font-family: var(--font);
   cursor: pointer;
   align-self: flex-start;
   transition: background-color 0.15s;
 }
 
 .route_advisor_submit:hover:not(:disabled) {
-  background-color: #c44e00;
+  background-color: var(--accent-hover);
 }
 
 .route_advisor_submit:disabled {
-  background-color: #aaa;
+  background-color: var(--text-muted);
   cursor: not-allowed;
 }
 
 .route_areas_loading {
-  font-size: 13px;
-  color: #777;
+  font-size: 12px;
+  color: var(--text-muted);
   font-style: italic;
   margin-top: 2px;
 }
 
 .route_areas_error {
-  font-size: 13px;
-  color: #c0392b;
+  font-size: 12px;
+  color: var(--error);
   margin-top: 2px;
 }
 
 .route_advisor_error {
-  color: #c0392b;
+  color: var(--error);
   font-size: 14px;
   margin-bottom: 16px;
 }
 
 .route_advisor_message {
-  color: #555;
+  color: var(--text-muted);
   font-size: 14px;
   font-style: italic;
   margin-top: 8px;
 }
 
+/* Results */
 .route_results_header {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .route_results_title {
   font-size: 18px;
   font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -134,40 +144,47 @@
   font-size: 11px;
   font-weight: 700;
   padding: 3px 8px;
-  border-radius: 10px;
+  border-radius: 20px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .route_source_openbeta {
-  background: #d4edda;
-  color: #276340;
-  border: 1px solid #b2dfcc;
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .route_source_ai {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffc107;
+  background-color: var(--accent-muted);
+  color: var(--accent);
+  border: 1px solid rgba(249, 115, 22, 0.3);
 }
 
 .route_ai_disclaimer {
   font-size: 13px;
-  color: #856404;
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 4px;
+  color: var(--accent);
+  background-color: var(--accent-muted);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-radius: var(--radius-sm);
   padding: 8px 12px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
+/* Route cards */
 .route_card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 14px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.route_card:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
 }
 
 .route_card_header {
@@ -180,14 +197,14 @@
 .route_name {
   font-size: 16px;
   font-weight: 700;
-  color: #222;
+  color: var(--text-primary);
 }
 
 .route_grade_badge {
-  background: #e35c00;
+  background-color: var(--accent);
   color: #fff;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 2px 10px;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
 }
@@ -195,52 +212,54 @@
 .route_meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 10px;
   font-size: 13px;
-  color: #555;
+  color: var(--text-muted);
   flex-wrap: wrap;
 }
 
 .route_style {
-  background: #eef;
-  border: 1px solid #ccd;
-  border-radius: 4px;
-  padding: 2px 7px;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
   font-weight: 600;
-  font-size: 12px;
-  color: #336;
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .route_crag {
-  color: #777;
+  color: var(--text-muted);
 }
 
 .route_stars {
-  color: #e8a000;
+  color: var(--accent);
   font-size: 14px;
   letter-spacing: 1px;
 }
 
 .route_description {
   font-size: 14px;
-  color: #444;
-  line-height: 1.5;
+  color: var(--text-secondary);
+  line-height: 1.6;
   margin: 0;
 }
 
 .route_no_description {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   margin: 0;
   font-style: italic;
 }
 
 .route_external_link {
-  color: #e8a000;
+  color: var(--accent);
   text-decoration: underline;
 }
 
 .route_external_link:hover {
-  color: #c07000;
+  color: var(--accent-hover);
 }
